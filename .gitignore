@@ -18,10 +18,10 @@ log.txt
 /coverage
 
 # Ionic
-/.ionic
-/www
-/platforms
-/plugins
+frontend/doenerguide/.ionic
+frontend/doenerguide/www
+frontend/doenerguide/platforms
+frontend/doenerguide/plugins
 
 # Compiled output
 /dist
@@ -30,7 +30,7 @@ log.txt
 /bazel-out
 
 # Node
-/node_modules
+*node_modules
 npm-debug.log
 yarn-error.log
 
