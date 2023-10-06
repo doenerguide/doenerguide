@@ -1,0 +1,7 @@
+{
+  "name": "doenerguide",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
