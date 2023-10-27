@@ -18,10 +18,11 @@ log.txt
 /coverage
 
 # Ionic
-frontend/doenerguide/.ionic
-frontend/doenerguide/www
-frontend/doenerguide/platforms
-frontend/doenerguide/plugins
+doenerguide/.ionic
+doenerguide/www
+doenerguide/platforms
+doenerguide/plugins
+doenerguide/.angular
 
 # Compiled output
 /dist
