@@ -22,7 +22,6 @@ doenerguide/.ionic
 doenerguide/www
 doenerguide/platforms
 doenerguide/plugins
-doenerguide/.angular
 
 # Compiled output
 /dist
@@ -55,14 +54,14 @@ yarn-error.log
 
 
 # Miscellaneous
-/.angular
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
+*/.angular
+*/.angular/cache
+*.sass-cache/
+*/connect.lock
+*/coverage
+*/libpeerconnection.log
+*testem.log
+*/typings
 
 # System files
 .DS_Store
