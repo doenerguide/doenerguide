@@ -28,10 +28,10 @@
         </ion-input>
       </div>
       <div id="buttons">
-        <ion-button id="login" [disabled]="true" onclick="">login</ion-button>
-        <ion-button [disabled]="false">signup</ion-button>
+        <ion-button id="login" [disabled]="true" onclick="login()">login</ion-button>
+        <ion-button [disabled]="false" onclick="signup()">signup</ion-button>
       </div>
-      <ion-button [disabled]="false" size="small" fill="outline">continue as guest</ion-button>
+      <ion-button [disabled]="false" size="small" fill="outline" onclick="guest()">continue as guest</ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

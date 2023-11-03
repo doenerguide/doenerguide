@@ -35,7 +35,34 @@ function loginButton(event?: KeyboardEvent) {
   } else {
     loginbutton.disabled = false;
     if (event?.keyCode == 13) {
-      loginbutton.click();
+      login();
     }
   }
+}
+
+
+//function called when login button is clicked
+function login() {
+  console.log("login");
+  //get email & password from input fields
+  var email = document.getElementById('email') as HTMLInputElement;
+  var password = document.getElementById('password') as HTMLInputElement;
+  var email_value = email.value
+  var password_value = password.value
+
+  //connection to backend
+
+  //if login is successful switch to home page
+}
+
+
+//function called when signup button is clicked
+function signup() {
+  //switch to signup page
+}
+
+
+//function calles when continue as guest button is clicked
+function guest() {
+  //switch to home page
 }
