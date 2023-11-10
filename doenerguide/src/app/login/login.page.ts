@@ -12,9 +12,9 @@ import { RouterModule } from '@angular/router';
   imports: [IonicModule, CommonModule, FormsModule, RouterModule],
 })
 export class LoginPage implements OnInit {
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }
 
 //add event listener on keypress
@@ -50,12 +50,7 @@ function login() {
   //if login is successful switch to home page
 }
 
-//function called when signup button is clicked
-function signup() {
-  //switch to signup page
-}
-
 //function calles when continue as guest button is clicked
 function guest() {
-  //switch to home page
+  //login with guest account
 }

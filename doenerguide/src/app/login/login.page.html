@@ -42,7 +42,6 @@
         >
         <ion-button
           [disabled]="false"
-          onclick="signup()"
           [routerLink]="['/signup']"
           >signup</ion-button
         >
@@ -52,6 +51,7 @@
         size="small"
         fill="outline"
         onclick="guest()"
+        [routerLink]="['/home']"
         >continue as guest</ion-button
       >
     </ion-card-content>
