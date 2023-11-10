@@ -37,9 +37,7 @@
         </ion-input>
       </div>
       <div id="buttons">
-        <ion-button id="login" [disabled]="true" onclick="login()"
-          >login</ion-button
-        >
+        <ion-button id="login" [disabled]="true" (click)="login()">login</ion-button>
         <ion-button
           [disabled]="false"
           [routerLink]="['/signup']"

@@ -10,21 +10,30 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 @app.route('/login', methods=['POST'])
 def login():
     body = request.get_json()
-    username = body['email']
+    email = body['email']
     password = body['password']
-    if dbm.check_login(username, password):
+    if dbm.check_login(email, password):
         return jsonify({'success': True})
     else:
         return jsonify({'success': False})
     
-@app.route('/register', methods=['POST'])
-def register():
+@app.route('/signup', methods=['POST'])
+def signup():
     body = request.get_json()
-    username = body['email']
+    email = body['email']
     password = body['password']
     vorname = body['vorname']
     nachname = body['nachname']
-    if dbm.add_user(username, password, vorname, nachname):
+    if dbm.add_user(email, password, vorname, nachname):
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False})
+    
+@app.route('/get_user', methods=['POST'])
+def get_user():
+    body = request.get_json()
+    email = body['email']
+    if dbm.get_user(email):
         return jsonify({'success': True})
     else:
         return jsonify({'success': False})
