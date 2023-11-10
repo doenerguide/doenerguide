@@ -10,7 +10,7 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 @app.route('/login', methods=['POST'])
 def login():
     body = request.get_json()
-    username = body['username']
+    username = body['email']
     password = body['password']
     if dbm.check_login(username, password):
         return jsonify({'success': True})
@@ -20,7 +20,7 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     body = request.get_json()
-    username = body['username']
+    username = body['email']
     password = body['password']
     vorname = body['vorname']
     nachname = body['nachname']

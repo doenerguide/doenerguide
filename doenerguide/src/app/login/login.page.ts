@@ -38,7 +38,7 @@ function login() {
   $.ajax({
     url: endpoint + '/login',
     type: 'POST',
-    data: JSON.stringify({ email: email_value, password: password_value }),
+    data: JSON.stringify({"email": email_value, "password": password_value }),
     contentType: 'application/json; charset=utf-8',
     dataType: 'json',
     headers: {
