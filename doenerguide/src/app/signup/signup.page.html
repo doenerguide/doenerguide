@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>signup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">signup</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-card>
+    <img id="icon" alt="User Icon" src="/assets/icon/logo.png" />
+    <ion-card-header>
+      <ion-card-title>signup</ion-card-title>
+      <ion-card-subtitle>Welcome to DönerGuide!</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      Please fill out all information below to register your new account.
+      <div id="input">
+        <ion-input id="name" labelPlacement="floating" placeholder="name">
+          <div slot="label">name</div>
+        </ion-input>
+        <ion-input id="prename" labelPlacement="floating" placeholder="prename">
+          <div slot="label">prename</div>
+        </ion-input>
+        <ion-input id="email" labelPlacement="floating" placeholder="your email here">
+          <div slot="label">email</div>
+        </ion-input>
+        <ion-input id="password" labelPlacement="floating" placeholder="your password here" type="password">
+          <div slot="label">password</div>
+        </ion-input>
+        <ion-input id="password_confirm" labelPlacement="floating" placeholder="confirm your password here" type="password">
+          <div slot="label">password confirmation</div>
+        </ion-input>
+      </div>
+      <ion-button [disabled]="false" size="medium" onclick="signup()">signup</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
