@@ -1,0 +1,8 @@
+img {
+  width: 30px;
+}
+
+.tab-selected img {
+  filter: invert(39%) sepia(97%) saturate(1734%) hue-rotate(205deg)
+    brightness(99%) contrast(106%);
+}
