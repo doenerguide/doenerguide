@@ -29,7 +29,7 @@ def add_user(mail, password, vorname, nachname):
 
 def get_user(mail):
     conn = create_connection()
-    cursor = conn.execute("SELECT * FROM [USERS] WHERE [Mail] = ?", (mail))
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [Mail] = ?", (mail,))
     data = cursor.fetchall()
     conn.close()
     if len(data) == 0:
