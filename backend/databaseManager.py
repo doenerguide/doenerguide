@@ -26,3 +26,13 @@ def add_user(mail, password, vorname, nachname):
     conn.execute("INSERT INTO [USERS] (ID, Mail, Password, Vorname, Nachname) VALUES (NULL, ?, ?, ?, ?)", (mail, password, vorname, nachname))
     conn.commit()
     conn.close()
+
+def get_user(mail):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [Mail] = ?", (mail))
+    data = cursor.fetchall()
+    conn.close()
+    if len(data) == 0:
+        return False
+    else:
+        return True

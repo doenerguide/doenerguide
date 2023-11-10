@@ -83,6 +83,12 @@ export class SignupPage implements OnInit {
           }
           return;
         }
+      },
+      error: function (xhr: any, status: string, error: any) {
+        console.log(xhr.responseText);
+        console.log(status);
+        console.log(error);
+        return;
       }
     });
 
