@@ -16,22 +16,44 @@
       <ion-card-subtitle>Welcome to DönerGuide!</ion-card-subtitle>
       <img id="icon" alt="User Icon" src="/assets/icon/logo.png" />
     </ion-card-header>
-  
+
     <ion-card-content>
       Please enter your credentials to login, signup or continue as guest.
       <div id="input">
-        <ion-input id="email" labelPlacement="floating" placeholder="your email here">
+        <ion-input
+          id="email"
+          labelPlacement="floating"
+          placeholder="your email here"
+        >
           <div slot="label">email</div>
         </ion-input>
-        <ion-input id="password" labelPlacement="floating" placeholder="your password here" type="password">
+        <ion-input
+          id="password"
+          labelPlacement="floating"
+          placeholder="your password here"
+          type="password"
+        >
           <div slot="label">password</div>
         </ion-input>
       </div>
       <div id="buttons">
-        <ion-button id="login" [disabled]="true" onclick="login()">login</ion-button>
-        <ion-button [disabled]="false" onclick="signup()">signup</ion-button>
+        <ion-button id="login" [disabled]="true" onclick="login()"
+          >login</ion-button
+        >
+        <ion-button
+          [disabled]="false"
+          onclick="signup()"
+          [routerLink]="['/signup']"
+          >signup</ion-button
+        >
       </div>
-      <ion-button [disabled]="false" size="small" fill="outline" onclick="guest()">continue as guest</ion-button>
+      <ion-button
+        [disabled]="false"
+        size="small"
+        fill="outline"
+        onclick="guest()"
+        >continue as guest</ion-button
+      >
     </ion-card-content>
   </ion-card>
 </ion-content>
