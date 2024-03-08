@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>signup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">signup</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-card>
+    <img id="icon" alt="User Icon" src="/assets/icon/logo.png" />
+    <ion-card-header>
+      <ion-card-title>signup</ion-card-title>
+      <ion-card-subtitle>Welcome to DönerGuide!</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      Please fill out all information below to register your new account.
+      <div id="input">
+        <ion-input id="vorname" labelPlacement="floating" placeholder="name">
+          <div slot="label">Vorname</div>
+        </ion-input>
+        <ion-input id="nachname" labelPlacement="floating" placeholder="prename">
+          <div slot="label">Nachname</div>
+        </ion-input>
+        <ion-input id="email" labelPlacement="floating" placeholder="your email here" helperText="Geben Sie eine gültige E-Mail-Adressse an">
+          <div slot="label">E-Mail</div>
+        </ion-input>
+        <ion-input id="password" labelPlacement="floating" placeholder="your password here" type="password" helperText="Mindestlänge 8 Zeichen">
+          <div slot="label">Passwort</div>
+        </ion-input>
+        <ion-input id="password_confirm" labelPlacement="floating" placeholder="confirm your password here" type="password">
+          <div slot="label">Passwort wiederholen</div>
+        </ion-input>
+        <ion-item id="nutzungsbedingungen">
+          <ion-checkbox id="terms" slot="">Nutzungsbedingungen</ion-checkbox>
+        </ion-item>
+      </div>
+      <div slot="label" id="error_message"></div>
+      <ion-button id="signup" [disabled]="true" size="medium" (click)="signup()">signup</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

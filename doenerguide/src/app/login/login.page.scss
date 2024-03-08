@@ -1,0 +1,51 @@
+ion-header {
+    display: none;
+}
+
+ion-card {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    width: 80%;
+    height: 80%;
+}
+
+ion-card {
+    text-align: center;
+}
+
+#icon {
+    height: 15vmax;
+    width: 15vmax;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 25%;
+}
+
+#input {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-evenly;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+
+ion-input {
+    width: 100%;
+    margin-bottom: 2.5%;
+    text-align: left;
+}
+
+ion-card-content {
+    margin-top: 2%;
+}
+
+#buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
