@@ -5,7 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import * as $ from 'jquery';
 
-let endpoint = "https://doenerguide.onrender.com";
+// let endpoint = "https://doenerguide.onrender.com";
+let endpoint = "http://127.0.0.1:5050";
 
 @Component({
   selector: 'app-login',
