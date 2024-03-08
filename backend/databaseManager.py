@@ -39,7 +39,7 @@ def add_user(mail, password, vorname, nachname):
     except sqlite3.Error as e:
         print(e)
         conn.close()
-        return "Mail already exists"
+        return False
     conn.commit()
     conn.close()
     return True

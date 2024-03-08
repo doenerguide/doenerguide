@@ -27,8 +27,8 @@ def signup():
     if dbm.add_user(email, password, vorname, nachname):
         return jsonify({'success': True})
     else:
-        return jsonify({'success': False, "error": "Mail already exists"})
+        return jsonify({'success': False})
     
     
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=5050)
