@@ -29,11 +29,11 @@ export class LoginPage implements OnInit {
     $.ajax({
       url: endpoint + '/login',
       type: 'POST',
-      data: JSON.stringify({"email": email_value, "password": password_value }),
+      data: JSON.stringify({ "email": email_value, "password": password_value }),
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       headers: {
-          "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*"
       },
       success: function (data: any) {
         if (data["success"]) {
@@ -53,7 +53,8 @@ export class LoginPage implements OnInit {
       },
     });
   }
-  
+
+
   loginButton() {
     let email = document.getElementById('email') as HTMLInputElement;
     let password = document.getElementById('password') as HTMLInputElement;
@@ -72,7 +73,7 @@ export class LoginPage implements OnInit {
     console.log('guest');
   }
 
-  
+
   ngOnInit() { }
 }
 

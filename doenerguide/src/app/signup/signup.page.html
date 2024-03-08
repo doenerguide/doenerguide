@@ -26,15 +26,18 @@
         <ion-input id="nachname" labelPlacement="floating" placeholder="prename">
           <div slot="label">Nachname</div>
         </ion-input>
-        <ion-input id="email" labelPlacement="floating" placeholder="your email here">
+        <ion-input id="email" labelPlacement="floating" placeholder="your email here" helperText="Geben Sie eine gültige E-Mail-Adressse an">
           <div slot="label">E-Mail</div>
         </ion-input>
-        <ion-input id="password" labelPlacement="floating" placeholder="your password here" type="password">
+        <ion-input id="password" labelPlacement="floating" placeholder="your password here" type="password" helperText="Mindestlänge 8 Zeichen">
           <div slot="label">Passwort</div>
         </ion-input>
         <ion-input id="password_confirm" labelPlacement="floating" placeholder="confirm your password here" type="password">
           <div slot="label">Passwort wiederholen</div>
         </ion-input>
+        <ion-item id="nutzungsbedingungen">
+          <ion-checkbox id="terms" slot="end">Nutzungsbedingungen</ion-checkbox>
+        </ion-item>
       </div>
       <div slot="label" id="error_message"></div>
       <ion-button id="signup" [disabled]="true" size="medium" (click)="signup()">signup</ion-button>

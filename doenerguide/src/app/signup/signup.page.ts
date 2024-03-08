@@ -69,11 +69,11 @@ export class SignupPage implements OnInit {
     $.ajax({
       url: endpoint + '/get_user',
       type: 'POST',
-      data: JSON.stringify({"email": email_value}),
+      data: JSON.stringify({ "email": email_value }),
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       headers: {
-          "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*"
       },
       success: function (data: any) {
         if (data["success"]) {
@@ -96,11 +96,11 @@ export class SignupPage implements OnInit {
     $.ajax({
       url: endpoint + '/signup',
       type: 'POST',
-      data: JSON.stringify({"vorname": vorname_value, "nachname": nachname_value, "email": email_value, "password": password_value, "password_confirm": password_confirm_value }),
+      data: JSON.stringify({ "vorname": vorname_value, "nachname": nachname_value, "email": email_value, "password": password_value, "password_confirm": password_confirm_value }),
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       headers: {
-          "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*"
       },
       success: function (data: any) {
         if (data["success"]) {
@@ -128,6 +128,11 @@ export class SignupPage implements OnInit {
     let password = document.getElementById('password') as HTMLInputElement;
     let password_confirm = document.getElementById('password_confirm') as HTMLInputElement;
     let signupbutton = document.getElementById('signup') as HTMLButtonElement;
+    let terms = document.getElementById('terms') as HTMLInputElement;
+    if (!terms.checked) {
+      signupbutton.disabled = true;
+      return false;
+    }
     if (vorname.value == "") {
       signupbutton.disabled = true;
       return false;
@@ -152,7 +157,7 @@ export class SignupPage implements OnInit {
     return true;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
 }
 
