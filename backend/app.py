@@ -23,7 +23,11 @@ def register():
     password = body['password']
     vorname = body['vorname']
     nachname = body['nachname']
-    if dbm.add_user(username, password, vorname, nachname):
+    res = dbm.add_user(username, password, vorname, nachname)
+    if res == True:
         return jsonify({'success': True})
     else:
-        return jsonify({'success': False})
+        return jsonify({'success': False, 'error': res})
+    
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
