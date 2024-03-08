@@ -36,11 +36,11 @@
           <div slot="label">Passwort wiederholen</div>
         </ion-input>
         <ion-item id="nutzungsbedingungen">
-          <ion-checkbox id="terms" slot="">Nutzungsbedingungen</ion-checkbox>
+          <ion-checkbox id="terms" slot="" (ionChange)="signupButton()">Nutzungsbedingungen</ion-checkbox>
         </ion-item>
       </div>
       <div slot="label" id="error_message"></div>
-      <ion-button id="signup" [disabled]="true" size="medium" (click)="signup()">signup</ion-button>
+      <ion-button id="signup" [disabled]="true" size="medium">signup</ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>
