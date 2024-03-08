@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import * as $ from 'jquery';
 
-let endpoint = "https://doenerguide.onrender.com";
+// let endpoint = "https://doenerguide.onrender.com";
+let endpoint = "http://127.0.0.1:5050";
 
 
 @Component({
@@ -67,19 +68,24 @@ export class SignupPage implements OnInit {
     }
 
     $.ajax({
-      url: endpoint + '/get_user',
+      url: endpoint + '/signup',
       type: 'POST',
-      data: JSON.stringify({ "email": email_value }),
+      data: JSON.stringify({ "email": email_value, "password": password_value, "vorname": vorname_value, "nachname": nachname_value }),
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
       success: function (data: any) {
+        let error_message = document.getElementById('error_message');
         if (data["success"]) {
-          let error_message = document.getElementById('error_message');
           if (error_message) {
-            error_message.innerHTML = 'E-Mail Adresse wird bereits verwendet';
+            error_message.innerHTML = 'Erfolgreich registriert';
+          }
+          return;
+        } else {
+          if (error_message) {
+            error_message.innerHTML = 'Diese E-Mail Adresse ist bereits registriert';
           }
           return;
         }
@@ -90,34 +96,6 @@ export class SignupPage implements OnInit {
         console.log(error);
         return;
       }
-    });
-
-    // ajax request to endpoint /signup with body {vorname: vorname_value, nachname: nachname_value, email: email_value, password: password_value, password_confirm: password_confirm_value}
-    $.ajax({
-      url: endpoint + '/signup',
-      type: 'POST',
-      data: JSON.stringify({ "vorname": vorname_value, "nachname": nachname_value, "email": email_value, "password": password_value, "password_confirm": password_confirm_value }),
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      },
-      success: function (data: any) {
-        if (data["success"]) {
-          window.location.href = '/home';
-        } else {
-          //if login is not successful show error message
-          let error_message = document.getElementById('error_message');
-          if (error_message) {
-            error_message.innerHTML = 'Es ist ein Fehler aufgetreten';
-          }
-        }
-      },
-      error: function (xhr: any, status: string, error: any) {
-        console.log(xhr.responseText);
-        console.log(status);
-        console.log(error);
-      },
     });
   }
 
@@ -161,6 +139,9 @@ export class SignupPage implements OnInit {
 
 }
 
+
+// CLAUDIUS BITTE UM BEHEBUNG DES FEHLERS!
+// EventListener mit keyup eigentlich gute Idee, aber wenn man alle Werte eingibt und dann erst die Checkbox anklickt, dann wird der Button nicht enabled.
 
 document.addEventListener('keyup', (event) => {
   let isEnabled = SignupPage.prototype.signupButton();
