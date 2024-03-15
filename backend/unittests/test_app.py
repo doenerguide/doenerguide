@@ -1,11 +1,10 @@
-import app
-from flask import jsonify
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 import json
-from app import app
 import unittest
 import sys
-sys.path.insert(0, 'doenerguide/backend/tests')
+
+sys.path.append('backend')
+from app import app
 
 
 class TestLogin(unittest.TestCase):
