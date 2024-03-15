@@ -1,20 +1,73 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title> DönerGuide </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <img src="assets/logo_header.png" alt="DönerGuide Logo" />
     </ion-toolbar>
   </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col
+        size="12"
+        size-sm="6"
+        size-md="4"
+        size-lg="2"
+        *ngFor="let shop of shownShops"
+      >
+        <ion-card>
+          <img src="{{ shop.imageUrl }}" alt="{{ shop.name }}" />
+          <ion-card-header>
+            <ion-card-title>
+              {{shop.name}}
+              <app-rating [rating]="shop.rating"> </app-rating>
+            </ion-card-title>
+            <ion-card-subtitle>{{shop.address}}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item lines="none">
+                <ion-icon slot="start" name="pricetag-outline"></ion-icon>
+                <app-price [priceCategory]="shop.priceCategory"> </app-price>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-icon
+                  slot="start"
+                  name="time-outline"
+                  [color]="checkOpeningColor(shop)"
+                ></ion-icon>
+                {{shop.openingHours.opens}} - {{shop.openingHours.closes}}
+              </ion-item>
+              <ion-item
+                lines="none"
+                *ngIf="enabledFlags(shop.flags).length > 0"
+              >
+                <ion-icon
+                  slot="start"
+                  name="checkmark-outline"
+                  color="open"
+                ></ion-icon>
+                {{enabledFlags(shop.flags).join(", ")}}
+              </ion-item>
+              <ion-item
+                lines="none"
+                *ngIf="disabledFlags(shop.flags).length > 0"
+              >
+                <ion-icon
+                  slot="start"
+                  name="close-outline"
+                  color="danger"
+                ></ion-icon>
+                {{disabledFlags(shop.flags).join(", ")}}
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
