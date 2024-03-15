@@ -8,4 +8,5 @@ import { IonicModule } from '@ionic/angular';
   styleUrls: ['./navigation.component.scss'],
   imports: [IonicModule],
 })
-export class NavigationComponent {}
+export class NavigationComponent { }
+

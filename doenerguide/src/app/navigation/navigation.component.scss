@@ -3,6 +3,9 @@ img {
 }
 
 .tab-selected img {
-  filter: invert(61%) sepia(68%) saturate(403%) hue-rotate(346deg)
-    brightness(86%) contrast(92%);
+  filter: invert(61%) sepia(68%) saturate(403%) hue-rotate(346deg) brightness(86%) contrast(92%);
+}
+
+ion-tab-button:hover * {
+  filter: invert(61%) sepia(68%) saturate(403%) hue-rotate(346deg) brightness(86%) contrast(92%);
 }
