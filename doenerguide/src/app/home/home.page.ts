@@ -113,4 +113,20 @@ export class HomePage implements OnInit {
     }
     return disabledFlags;
   }
+
+  getUserLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log('Latitude: ' + position.coords.latitude);
+        console.log('Longitude: ' + position.coords.longitude);
+      });
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+    }
+  }
+
+  ionViewWillEnter() {
+    this.getUserLocation();
+  }
 }
+
