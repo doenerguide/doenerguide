@@ -3,7 +3,10 @@ import json
 import unittest
 import sys
 
-sys.path.append('backend')
+import os
+abs_path = os.path.abspath(__file__)
+print(abs_path)
+sys.path.append(os.path.dirname(os.path.dirname(abs_path)))
 from app import app
 
 
