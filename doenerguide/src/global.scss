@@ -39,3 +39,20 @@
   justify-content: center;
   height: 100%;
 }
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}
+
+.size {
+  font-size: 2em;
+}
+
+hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #e0e0e0;
+}
