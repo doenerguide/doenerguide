@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 @Component({
@@ -8,5 +8,4 @@ import { IonicModule } from '@ionic/angular';
   styleUrls: ['./navigation.component.scss'],
   imports: [IonicModule],
 })
-export class NavigationComponent { }
-
+export class NavigationComponent {}
