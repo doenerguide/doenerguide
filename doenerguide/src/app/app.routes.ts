@@ -19,15 +19,14 @@ export const routes: Routes = [
         path: 'shop/:id',
         loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
       },
+      {
+        path: 'login',
+        loadComponent: () => import('./login/login.page').then(m => m.LoginPage)
+      },
+      {
+        path: 'signup',
+        loadComponent: () => import('./signup/signup.page').then(m => m.SignupPage)
+      },
     ],
-  },
-  {
-    path: 'login',
-    loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
-  },
-  {
-    path: 'signup',
-    loadComponent: () =>
-      import('./signup/signup.page').then((m) => m.SignupPage),
   },
 ];

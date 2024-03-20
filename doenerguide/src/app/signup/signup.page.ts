@@ -139,10 +139,6 @@ export class SignupPage implements OnInit {
 
 }
 
-
-// CLAUDIUS BITTE UM BEHEBUNG DES FEHLERS!
-// EventListener mit keyup eigentlich gute Idee, aber wenn man alle Werte eingibt und dann erst die Checkbox anklickt, dann wird der Button nicht enabled.
-
 document.addEventListener('keyup', (event) => {
   let isEnabled = SignupPage.prototype.signupButton();
   if (event.key === 'Enter' && isEnabled) {
