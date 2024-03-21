@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { NavigationComponent } from '../navigation/navigation.component';
-import { Shop } from '../interfaces/shop';
+import { Shop, ShopFunctions } from '../interfaces/shop';
 import { RatingComponent } from '../rating/rating.component';
 import { CommonModule } from '@angular/common';
 import { PriceComponent } from '../price/price.component';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { ShopFunctions } from '../interfaces/shop';
+import { ToastController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +25,12 @@ import { ShopFunctions } from '../interfaces/shop';
 })
 export class HomePage implements OnInit {
   shownShops: Shop[] = [];
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private toastCtrl: ToastController,
+    private router: Router
+  ) {}
 
   shopFunctions = ShopFunctions;
 
@@ -45,6 +51,22 @@ export class HomePage implements OnInit {
 
   ionViewWillEnter() {
     this.getUserLocation();
+    if (this.activatedRoute.snapshot.paramMap.get('message')) {
+      this.toastCtrl
+        .create({
+          message: this.activatedRoute.snapshot.paramMap.get('message')!,
+          duration: 2000,
+          color: 'success',
+          icon: 'checkmark-circle-outline',
+          position: 'top',
+        })
+        .then((toast) => {
+          toast.present();
+          this.router.navigate(['.'], {
+            queryParams: { message: null },
+            queryParamsHandling: 'merge',
+          });
+        });
+    }
   }
 }
-
