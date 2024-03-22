@@ -4,7 +4,7 @@ from flask_cors import CORS
 import databaseManager as dbm
 
 app = flask.Flask(__name__)
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}})
 
 
 @app.route('/login', methods=['POST'])
