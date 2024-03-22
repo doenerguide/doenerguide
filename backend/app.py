@@ -32,10 +32,10 @@ def signup():
 
 @app.route('/getShops', methods=['GET'])
 def getShops():
-    lat = float(request.args.get('lat'))
-    long = float(request.args.get('long'))
+    lat = float(request.args.get('lat').replace('"', ''))
+    long = float(request.args.get('long').replace('"', ''))
     radius = float(request.args.get('radius'))
-    price_category = int(request.args.get('price_category'))
+    price_category = int(request.args.get('price_category'.replace('"', '')))
     flags = request.args.get('flags')
     return jsonify(dbm.get_shops(lat, long, radius, price_category, flags))
     

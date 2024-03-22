@@ -37,6 +37,16 @@ export class HomePage implements OnInit {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log('Latitude: ' + position.coords.latitude);
         console.log('Longitude: ' + position.coords.longitude);
+        fetch(`http://localhost:5050/getShops?lat=${position.coords.latitude}&long=${position.coords.longitude}&radius=100000&price_category=0&flags=[]`)
+          .then(response => response.json())
+          .then(data => {
+            // Handle the response data here
+            console.log(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+
       });
     } else {
       console.log('Geolocation is not supported by this browser.');
@@ -47,4 +57,5 @@ export class HomePage implements OnInit {
     this.getUserLocation();
   }
 }
+
 
