@@ -68,9 +68,6 @@ yarn-error.log
 Thumbs.db
 backend/__pycache__/databaseManager.cpython-312.pyc
 backend/__pycache__/app.cpython-312.pyc
-<<<<<<< HEAD
-backend/database.db
-backend/database.db
 =======
 
 # Byte-compiled / optimized / DLL files
