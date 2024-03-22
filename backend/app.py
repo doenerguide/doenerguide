@@ -29,6 +29,15 @@ def signup():
     else:
         return jsonify({'success': False})
     
+
+@app.route('/getShops', methods=['GET'])
+def getShops():
+    lat = float(request.args.get('lat'))
+    long = float(request.args.get('long'))
+    radius = float(request.args.get('radius'))
+    price_category = int(request.args.get('price_category'))
+    flags = request.args.get('flags')
+    return jsonify(dbm.get_shops(lat, long, radius, price_category, flags))
     
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5050)

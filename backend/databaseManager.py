@@ -58,3 +58,12 @@ def create_shop(name, image_url, address, price_category, opening_hours, flags, 
     conn.commit()
     conn.close()
     return "Shop wurde erfolgreich erstellt."
+
+def get_shops(lat, long, radius, price_category, flags):
+    lat = int(lat*10**6)
+    long = int(long*10**6)
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [lat] BETWEEN ? AND ? AND [long] BETWEEN ? AND ? AND [priceCategory] = ? AND [flags] LIKE ?", (lat-radius, lat+radius, long-radius, long+radius, price_category, flags))
+    data = cursor.fetchall()
+    conn.close()
+    return data
