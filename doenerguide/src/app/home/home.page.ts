@@ -41,7 +41,7 @@ export class HomePage implements OnInit {
           .then(response => response.json())
           .then(data => {
             // Handle the response data here
-            console.log(data);
+            console.log('Data: ' + data);
           })
           .catch(error => {
             console.error('Error:', error);
