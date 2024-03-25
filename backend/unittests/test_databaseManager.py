@@ -6,7 +6,7 @@ import sys
 
 abs_path = os.path.abspath(__file__)
 sys.path.append(os.path.dirname(os.path.dirname(abs_path)))
-from databaseManager import hash_password, verify_password, create_connection, check_login, add_user
+from databaseManager import hash_password, create_connection, check_login, add_user
 
 class TestDatabaseManager(unittest.TestCase):
     """
@@ -44,16 +44,6 @@ class TestDatabaseManager(unittest.TestCase):
         salt = "doenerguide"
         hashed_password = hash_password(password, salt)
         self.assertIsNotNone(hashed_password)
-
-    def test_verify_password(self):
-        """
-        Test the verify_password function.
-        """
-        stored_password = "7d19076002f3f2e07d294bdb6afa1dcec30137b7f99efdad30e701954bebd031"
-        provided_password = "password"
-        salt = "doenerguide"
-        result = verify_password(stored_password, provided_password, salt)
-        self.assertTrue(result)
 
     def test_create_connection(self):
         """

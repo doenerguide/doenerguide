@@ -55,14 +55,10 @@ function doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
   }
 }
 
-function fetch_doenerlaeden(lat: number, long:number, radius: number) {
-  fetch(`http://localhost:5050/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`)
-  .then(response => response.json())
-  .then(data => {
-    return data.map((doenerladen: any) => {
-      return doenerladen_tuple_to_map(doenerladen, lat, long);
-    });
-  })
+async function fetch_doenerlaeden(lat: number, long: number, radius: number): Promise<Shop[]> {
+  const response = await fetch(`http://localhost:5050/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`);
+  const data = await response.json();
+  return data.map((doenerladen: any) => doenerladen_tuple_to_map(doenerladen, lat, long));
 }
 
 
@@ -91,10 +87,18 @@ export class HomePage implements OnInit {
   }
 
   getUserLocation() {
-    var lat = 0;
-    var long = 0;
-    if (navigator.geolocation){
-    }
+    navigator.geolocation.getCurrentPosition((position) => {
+      let lat = position.coords.latitude;
+      let long = position.coords.longitude;
+      fetch_doenerlaeden(lat, long, 10000000).then((shops: Shop[]) => {
+        this.shownShops = shops;
+      });
+    }, (error) => {
+      console.error('Error getting user location:', error);
+      fetch_doenerlaeden(0, 0, 10000000).then((shops: Shop[]) => {
+        this.shownShops = shops;
+      });
+    });
   }
 
 
