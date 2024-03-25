@@ -2,7 +2,10 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export var environment = {
+/**
+ * Represents the environment configuration for the application.
+ */
+export let environment = {
   production: false,
   shops: []
 };
