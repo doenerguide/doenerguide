@@ -71,18 +71,6 @@ function doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
   }
 }
 
-/**
- * Fetches doenerlaeden (kebab shops) based on the provided latitude, longitude, and radius.
- * @param lat - The latitude of the location.
- * @param long - The longitude of the location.
- * @param radius - The search radius in meters.
- * @returns A Promise that resolves to an array of Shop objects.
- */
-async function fetch_doenerlaeden(lat: number, long: number, radius: number): Promise<Shop[]> {
-  const response = await fetch(`http://localhost:5050/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`);
-  const data = await response.json();
-  return data.map((doenerladen: any) => doenerladen_tuple_to_map(doenerladen, lat, long));
-}
 
 
 @Component({
@@ -100,11 +88,15 @@ async function fetch_doenerlaeden(lat: number, long: number, radius: number): Pr
   ],
 })
 
+
 /**
  * Represents the home page of the application.
  */
 export class HomePage implements OnInit {
   shownShops: Shop[] = [];
+  lat: number = 52.520008;
+  long: number = 13.404954;
+  radius: number = 5;
 
   shopFunctions = ShopFunctions;
 
@@ -112,18 +104,32 @@ export class HomePage implements OnInit {
     this.shownShops = environment.shops;
   }
 
+  pinFormatter(value: number) {
+    return `${value}km`;
+  }
+
+  change_radius(event: any) {
+    this.radius = event.detail.value;
+    this.set_shops();
+  }
+
+  set_shops() {
+    fetch(`http://localhost:5050/getShops?lat=${this.lat}&long=${this.long}&radius=${this.radius}&price_category=0&flags=[]`).then((response) => {
+      response.json().then((data) => {
+        let shops = data.map((shop: any) => doenerladen_tuple_to_map(shop, this.lat, this.long));
+        this.shownShops = shops;
+      });
+    });
+  }
+
   getUserLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
-      let lat = position.coords.latitude;
-      let long = position.coords.longitude;
-      fetch_doenerlaeden(lat, long, 10000000).then((shops: Shop[]) => {
-        this.shownShops = shops;
-      });
+      this.lat = position.coords.latitude;
+      this.long = position.coords.longitude;
+      this.set_shops();
     }, (error) => {
       console.error('Error getting user location:', error);
-      fetch_doenerlaeden(0, 0, 10000000).then((shops: Shop[]) => {
-        this.shownShops = shops;
-      });
+      this.set_shops();
     });
   }
 
@@ -132,3 +138,4 @@ export class HomePage implements OnInit {
     this.getUserLocation();
   }
 }
+

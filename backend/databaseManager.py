@@ -62,8 +62,9 @@ def create_shop(name, image_url, address, price_category, opening_hours, flags, 
 def get_shops(lat, long, radius, price_category, flags):
     lat = int(lat*10**6)
     long = int(long*10**6)
-    radius = int(radius*10**6)
-    print(lat, long, radius, price_category, flags)
+    radius = int(radius/111*10**6)
+    if radius == 0:
+        radius = 0.09/111*10**6
     conn = create_connection()
     cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [lat] BETWEEN ? AND ? AND [long] BETWEEN ? AND ?", (lat - radius, lat + radius, long - radius, long + radius))
     data = cursor.fetchall()
