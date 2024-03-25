@@ -9,6 +9,63 @@ import { RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ShopFunctions } from '../interfaces/shop';
 
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
+}
+
+function lat_long_to_distance(lat1: number, lon1: number, lat2: number, lon2: number, digits: number = 2) {
+  var R = 6373.0;
+  var lat1 = deg2rad(lat1);
+  var lon1 = deg2rad(lon1);
+  var lat2 = deg2rad(lat2);
+  var lon2 = deg2rad(lon2);
+
+  var dlon = lon2 - lon1;
+  var dlat = lat2 - lat1;
+
+  var a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  var distance = R * c;
+  return distance.toFixed(digits);
+}
+
+function doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
+  var d_lat = doenerladen[9] / 1000000;
+  var d_long = doenerladen[10] / 1000000;
+  var address = doenerladen[3] + " (" + lat_long_to_distance(lat, long, d_lat, d_long, 1) + "km)";
+  return {
+    id: doenerladen[0],
+    name: doenerladen[1],
+    imageUrl: doenerladen[2],
+    address: address,
+    rating: doenerladen[4],
+    priceCategory: doenerladen[5],
+    flags: {
+      acceptCard: doenerladen[6].includes("Kartenzahlung"),
+      stampCard: doenerladen[6].includes("Stempelkarte"),
+    },
+    openingHours: {
+      opens: doenerladen[7].split("-")[0],
+      closes: doenerladen[7].split("-")[1],
+    },
+    tel: doenerladen[8],
+    lat: doenerladen[9],
+    lng: doenerladen[10],
+  }
+}
+
+function fetch_doenerlaeden(lat: number, long:number, radius: number) {
+  fetch(`http://localhost:5050/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`)
+  .then(response => response.json())
+  .then(data => {
+    return data.map((doenerladen: any) => {
+      return doenerladen_tuple_to_map(doenerladen, lat, long);
+    });
+  })
+}
+
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -23,6 +80,7 @@ import { ShopFunctions } from '../interfaces/shop';
     RouterModule,
   ],
 })
+
 export class HomePage implements OnInit {
   shownShops: Shop[] = [];
 
@@ -33,29 +91,14 @@ export class HomePage implements OnInit {
   }
 
   getUserLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log('Latitude: ' + position.coords.latitude);
-        console.log('Longitude: ' + position.coords.longitude);
-        fetch(`http://localhost:5050/getShops?lat=${position.coords.latitude}&long=${position.coords.longitude}&radius=100000&price_category=0&flags=[]`)
-          .then(response => response.json())
-          .then(data => {
-            // Handle the response data here
-            console.log('Data: ' + data);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-
-      });
-    } else {
-      console.log('Geolocation is not supported by this browser.');
+    var lat = 0;
+    var long = 0;
+    if (navigator.geolocation){
     }
   }
+
 
   ionViewWillEnter() {
     this.getUserLocation();
   }
 }
-
-

@@ -11,9 +11,10 @@ export interface Shop {
     opens: string;
     closes: string;
   };
-  mapsUrl: string;
   tel: string;
   flags: Flags;
+  lat: number;
+  lng: number;
 }
 
 export class ShopFunctions {
