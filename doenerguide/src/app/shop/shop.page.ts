@@ -19,9 +19,9 @@ export class ShopPage implements OnInit {
   shop: Shop | undefined;
   shopFunctions = ShopFunctions;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
-    this.shop = environment.shops.find((shop) => shop.id === this.id);
+    this.shop = environment.shops.find((shop: Shop) => shop.id === this.id);
   }
 }

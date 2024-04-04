@@ -34,6 +34,10 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./favorites/favorites.page').then((m) => m.FavoritesPage),
       },
+      {
+        path: 'map',
+        loadComponent: () => import('./map/map.page').then(m => m.MapPage)
+      },
     ],
   },
 ];
