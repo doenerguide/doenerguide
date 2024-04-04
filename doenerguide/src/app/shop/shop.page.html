@@ -26,23 +26,23 @@
         <ion-icon
           slot="start"
           name="time-outline"
-          [color]="shopFunctions.checkOpeningColor(shop!)"
+          [color]="shopFunctions.checkOpeningColor(shop ?? undefined)"
         ></ion-icon>
         {{shop?.openingHours?.opens}} - {{shop?.openingHours?.closes}}
       </ion-item>
       <ion-item
         lines="none"
-        *ngIf="shopFunctions.enabledFlags(shop!.flags).length > 0"
+        *ngIf="shopFunctions.enabledFlags(shop?.flags).length > 0"
       >
         <ion-icon slot="start" name="checkmark-outline" color="open"></ion-icon>
-        {{shopFunctions.enabledFlags(shop!.flags).join(", ")}}
+        {{shopFunctions.enabledFlags(shop?.flags).join(", ")}}
       </ion-item>
       <ion-item
         lines="none"
-        *ngIf="shopFunctions.disabledFlags(shop!.flags).length > 0"
+        *ngIf="shopFunctions.disabledFlags(shop?.flags).length > 0"
       >
         <ion-icon slot="start" name="close-outline" color="danger"></ion-icon>
-        {{shopFunctions.disabledFlags(shop!.flags).join(", ")}}
+        {{shopFunctions.disabledFlags(shop?.flags).join(", ")}}
       </ion-item>
     </ion-list>
     <hr />
@@ -50,7 +50,7 @@
       <ion-icon slot="start" name="map-outline"></ion-icon>
       Google Maps
     </ion-button> -->
-    <ion-button expand="block" [href]="'tel:' + shop!.tel">
+    <ion-button expand="block" [href]="'tel:' + shop?.tel">
       <ion-icon slot="start" name="call-outline"></ion-icon>
       Anrufen
     </ion-button>

@@ -11,7 +11,7 @@
         snaps="true"
         color="primary"
         pin="true"
-        [value]="5"
+        [value]="radius"
         [pinFormatter]="pinFormatter"
         (ionChange)="change_radius($event)"
       >
@@ -91,7 +91,7 @@
           <div class="buttons">
             <ion-button
               fill="clear"
-              [routerLink]="['/shop', shop.id]"
+              [routerLink]="['/shop', {shop: shop | json}]"
               routerDirection="forward"
             >
               Mehr Infos >
