@@ -4,17 +4,8 @@
     <!-- input slider -->
     <ion-item>
       <ion-label>Entfernung</ion-label>
-      <ion-range
-        min="0"
-        max="100"
-        step="0.5"
-        snaps="true"
-        color="primary"
-        pin="true"
-        [value]="5"
-        [pinFormatter]="pinFormatter"
-        (ionChange)="change_radius($event)"
-      >
+      <ion-range min="0" max="1000" step="0.5" snaps="true" color="primary" pin="true" [value]="5"
+        [pinFormatter]="pinFormatter" (ionChange)="change_radius($event)">
         <ion-icon size="small" slot="start" name="pricetag-outline"></ion-icon>
         <ion-icon slot="end" name="pricetag-outline"></ion-icon>
       </ion-range>
@@ -30,13 +21,7 @@
   </ion-header>
   <ion-grid>
     <ion-row>
-      <ion-col
-        size="12"
-        size-sm="6"
-        size-md="4"
-        size-lg="2"
-        *ngFor="let shop of shownShops"
-      >
+      <ion-col size="12" size-sm="6" size-md="4" size-lg="2" *ngFor="let shop of shownShops">
         <ion-card>
           <img src="{{ shop.imageUrl }}" alt="{{ shop.name }}" />
           <ion-card-header class="title">
@@ -53,47 +38,27 @@
             <ion-list>
               <ion-item lines="none">
                 <ion-icon slot="start" name="pricetag-outline"></ion-icon>
-                <app-price [priceCategory]="shop.priceCategory"> </app-price>
+                <app-price [priceCategory]="shop.priceCategory"></app-price>
               </ion-item>
               <ion-item lines="none">
-                <ion-icon
-                  slot="start"
-                  name="time-outline"
-                  [color]="shopFunctions.checkOpeningColor(shop)"
-                ></ion-icon>
-                {{shop.openingHours.opens}} - {{shop.openingHours.closes}}
+                <ion-icon slot="start" name="time-outline" [color]="shopFunctions.checkOpeningColor(shop)"></ion-icon>
+                <ng-container *ngFor="let openingHour of shop.openingHours">
+                  {{ openingHour.open === '00:00' && openingHour.close === '00:00' ? 'Heute geschlossen' : openingHour.open + ' - ' + openingHour.close }}<br>
+                </ng-container>
               </ion-item>
-              <ion-item
-                lines="none"
-                *ngIf="shopFunctions.enabledFlags(shop.flags).length > 0"
-              >
-                <ion-icon
-                  slot="start"
-                  name="checkmark-outline"
-                  color="open"
-                ></ion-icon>
+              <ion-item lines="none" *ngIf="shopFunctions.enabledFlags(shop.flags).length > 0">
+                <ion-icon slot="start" name="checkmark-outline" color="open"></ion-icon>
                 {{shopFunctions.enabledFlags(shop.flags).join(", ")}}
               </ion-item>
-              <ion-item
-                lines="none"
-                *ngIf="shopFunctions.disabledFlags(shop.flags).length > 0"
-              >
-                <ion-icon
-                  slot="start"
-                  name="close-outline"
-                  color="danger"
-                ></ion-icon>
+              <ion-item lines="none" *ngIf="shopFunctions.disabledFlags(shop.flags).length > 0">
+                <ion-icon slot="start" name="close-outline" color="danger"></ion-icon>
                 {{shopFunctions.disabledFlags(shop.flags).join(", ")}}
               </ion-item>
             </ion-list>
           </ion-card-content>
 
           <div class="buttons">
-            <ion-button
-              fill="clear"
-              [routerLink]="['/shop', shop.id]"
-              routerDirection="forward"
-            >
+            <ion-button fill="clear" [routerLink]="['/shop', shop.id]" routerDirection="forward">
               Mehr Infos >
             </ion-button>
           </div>

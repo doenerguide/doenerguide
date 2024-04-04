@@ -9,6 +9,33 @@ import { RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ShopFunctions } from '../interfaces/shop';
 
+export async function getUserLocation() {
+  try {
+    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+    environment.lat = position.coords.latitude;
+    environment.long = position.coords.longitude;
+    await new Promise<any[]>((resolve, reject) => {
+      set_shops().then((res: any[]) => {
+        resolve(res);
+      });
+    });
+  } catch (error) {
+    console.error('Error getting user location:', error);
+  }
+}
+
+export async function set_shops(lat: number = environment.lat, long: number = environment.long, radius: number = environment.radius): Promise<any[]> {
+  return fetch(`http://localhost:5050/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`).then((response) => {
+    return response.json().then((data) => {
+      let shops = data.map((shop: any) => doenerladen_tuple_to_map(shop, lat, long));
+      environment.shops = shops;
+      return shops;
+    });
+  });
+}
+
 function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
@@ -50,6 +77,14 @@ function doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
   var d_lat = doenerladen[9] / 1000000;
   var d_long = doenerladen[10] / 1000000;
   var address = doenerladen[3] + " (" + lat_long_to_distance(lat, long, d_lat, d_long, 1) + "km)";
+  var weekday = new Date().toLocaleString('de-DE', { weekday: 'long' });
+  doenerladen[7] = JSON.parse(doenerladen[7].replace(/'/g, '"'));
+  var hoursToday = doenerladen[7][weekday];
+  var openingHours: { open: any; close: any; }[] = Object.keys(hoursToday).map((day: string) => ({
+    open: hoursToday[day].open,
+    close: hoursToday[day].close,
+  }));
+  console.log("TEESZ");
   return {
     id: doenerladen[0],
     name: doenerladen[1],
@@ -58,13 +93,11 @@ function doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
     rating: doenerladen[4],
     priceCategory: doenerladen[5],
     flags: {
-      acceptCard: doenerladen[6].includes("Kartenzahlung"),
+      acceptCreditCard: doenerladen[6].includes("Kreditkarte"),
+      acceptDebitCard: doenerladen[6].includes("Debitkarte"),
       stampCard: doenerladen[6].includes("Stempelkarte"),
     },
-    openingHours: {
-      opens: doenerladen[7].split("-")[0],
-      closes: doenerladen[7].split("-")[1],
-    },
+    openingHours: openingHours,
     tel: doenerladen[8],
     lat: doenerladen[9],
     lng: doenerladen[10],
@@ -94,9 +127,6 @@ function doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
  */
 export class HomePage implements OnInit {
   shownShops: Shop[] = [];
-  lat: number = 52.520008;
-  long: number = 13.404954;
-  radius: number = 5;
 
   shopFunctions = ShopFunctions;
 
@@ -108,34 +138,15 @@ export class HomePage implements OnInit {
     return `${value}km`;
   }
 
-  change_radius(event: any) {
-    this.radius = event.detail.value;
-    this.set_shops();
+  async change_radius(event: any) {
+    environment.radius = event.detail.value;
+    await set_shops();
+    this.shownShops = environment.shops;
   }
 
-  set_shops() {
-    fetch(`http://localhost:5050/getShops?lat=${this.lat}&long=${this.long}&radius=${this.radius}&price_category=0&flags=[]`).then((response) => {
-      response.json().then((data) => {
-        let shops = data.map((shop: any) => doenerladen_tuple_to_map(shop, this.lat, this.long));
-        this.shownShops = shops;
-      });
-    });
-  }
-
-  getUserLocation() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.lat = position.coords.latitude;
-      this.long = position.coords.longitude;
-      this.set_shops();
-    }, (error) => {
-      console.error('Error getting user location:', error);
-      this.set_shops();
-    });
-  }
-
-
-  ionViewWillEnter() {
-    this.getUserLocation();
+  async ionViewWillEnter() {
+    await getUserLocation();
+    this.shownShops = environment.shops;
   }
 }
 

@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild, inject } from '@an
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { environment } from 'src/environments/environment';
+import { getUserLocation } from '../home/home.page';
 
 declare let google: any;
 
@@ -15,9 +17,10 @@ declare let google: any;
 export class MapPage implements OnInit {
 
   @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
-  center = { lat: 48.783333, lng: 9.183333 };
+  center = { lat: environment.lat, lng: environment.long };
   map: any;
   marker: any;
+  infoWindow: any;
   mapListener: any;
   markerListener: any;
   intersectionObserver: any;
@@ -27,17 +30,10 @@ export class MapPage implements OnInit {
 
   ngOnInit() { }
 
-  ngAfterViewInit() {
+  async ionViewDidEnter() {
+    await getUserLocation();
+    this.center = { lat: environment.lat, lng: environment.long };
     this.loadMap();
-
-    this.intersectionObserver = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('drop');
-          this.intersectionObserver.unobserve(entry.target);
-        }
-      }
-    });
   }
 
   async loadMap() {
@@ -45,24 +41,27 @@ export class MapPage implements OnInit {
 
     const mapEl = this.mapElementRef.nativeElement;
 
-    const location = new google.maps.LatLng(48.783333, 9.183333);
+    const location = new google.maps.LatLng(this.center.lat, this.center.lng);
 
     this.map = new Map(mapEl, {
       center: location,
       zoom: 14,
       mapId: "37c2487cae047b8d",
-      // scaleControl: false,
-      // streetViewControl: false,
-      // zoomControl: false,
-      // overviewMapControl: false,
-      mapTypeControl: true,
-      // fullscreenControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      zoomControl: true,
+      overviewMapControl: false,
+      mapTypeControl: false,
+      fullscreenControl: false
     });
 
+    console.log('shops: ', environment.shops);
     this.renderer.addClass(mapEl, 'visible');
-    this.addMarker(location,'<h1>Store A</h1><p>Store Description</p>');
-    this.addMarker(new google.maps.LatLng(48.793333, 9.193333),'<h1>Store B</h1><p>Store Description</p>');
+    for (const shop of environment.shops as any[]) {
+      this.addMarker(new google.maps.LatLng(shop.lat/1000000, shop.lng/1000000), "<img src='" + shop.imageUrl + "' style='width: 20em; height: auto;'><h2>" + shop.name + "</h2><p>" + shop.address + "</p><p>Rating: " + shop.rating + "</p><p>Price category: " + shop.priceCategory + "</p><p>Opening hours: " + shop.openingHours.opens + " - " + shop.openingHours.closes + "</p><p>Accepts card: " + shop.flags.acceptCard + "</p><p>Has stamp card: " + shop.flags.stampCard + "</p><a href='" + shop.mapsUrl + "'>Open in Google Maps</a><p>Tel: " + shop.tel + "</p>");
+    }
   }
+
 
   addMarker(location: any, info: string) {
     const markerIcon = {
@@ -82,7 +81,17 @@ export class MapPage implements OnInit {
     });
   
     marker.addListener('click', () => {
-      infoWindow.open(this.map, marker);
+      if (infoWindow.getMap()) {
+        infoWindow.close();
+        this.infoWindow = null;
+      } else {
+        if (this.infoWindow) {
+          this.infoWindow.close();
+          this.infoWindow = null;
+        }
+        infoWindow.open(this.map, marker);
+        this.infoWindow = infoWindow;
+      }
     });
   
     marker.addListener("dragend", (event: any) => {
