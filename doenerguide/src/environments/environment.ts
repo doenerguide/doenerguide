@@ -5,7 +5,8 @@
 /**
  * Represents the environment configuration for the application.
  */
-export let environment = {
+export const environment = {
   production: false,
-  shops: []
+  shops: [],
+  endpoint: 'http://127.0.0.1:5050',
 };

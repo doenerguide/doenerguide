@@ -9,9 +9,9 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { ToastController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
-// let endpoint = "https://doenerguide.onrender.com";
-let endpoint = 'http://127.0.0.1:5050';
+let endpoint = environment.endpoint;
 
 @Component({
   selector: 'app-signup',
