@@ -40,7 +40,9 @@ def parse_opening_hours(opening_hours_text):
 
 def getData(url):
     driver.get(url)
-    time.sleep(2)
+    lat, long = re.search(r'@(\d+\.\d+),(\d+\.\d+)', driver.page_source).groups()
+    lat = float(lat)
+    long = float(long)
     try:
         driver.find_element(By.CLASS_NAME, "aSftqf")
         print("Shop closed")
@@ -61,6 +63,14 @@ def getData(url):
         priceCategory = driver.find_element(By.CLASS_NAME, "mgr77e").text.count("€")
     except:
         priceCategory = 0
+    tel = ""
+    tel_elements = driver.find_elements(By.CLASS_NAME, "AeaXub")
+    for t in tel_elements:
+        print(t.get_attribute("outerHTML"))
+        if "Odf5Vc google-symbols NhBTye PHazN" in t.get_attribute("outerHTML"):
+            print("Found tel")
+            tel = t.text.replace("\n", "").strip()
+            break
     try:
         dropdownspan = driver.find_element(By.CLASS_NAME, "ZDu9vd")
         driver.execute_script("arguments[0].click();", dropdownspan)
@@ -75,22 +85,18 @@ def getData(url):
         except:
             print("Shop has no opening hours")
             return None, None, None, None, None, None, None, None, None, None
-        time.sleep(2)
-        opening = driver.find_element(By.CLASS_NAME, "eK4R0e").text
+        opening = ""
+        while opening == "":
+            try:
+                opening = driver.find_element(By.CLASS_NAME, "eK4R0e").text
+            except:
+                pass
         backButton = driver.find_element(By.CLASS_NAME, "hYBOP.FeXq4d")
         backButton.click()
     openingHours = parse_opening_hours(opening)
     if openingHours == {}:
         print("Parsing opening hours failed")
         return None, None, None, None, None, None, None, None, None, None
-    time.sleep(0.5)
-    try:
-        tel = driver.find_elements(By.CLASS_NAME, "Io6YTe.fontBodyMedium.kR99db")[3].text
-        if not tel.replace(" ", "").replace("+", "").replace("-", "").isdigit():
-            tel = ""
-    except:
-        tel = ""
-    time.sleep(0.5)
     try:
         button = driver.find_elements(By.CLASS_NAME, "hh2c6")[2]
         driver.execute_script("arguments[0].click();", button)
@@ -105,9 +111,6 @@ def getData(url):
         if "WeoVJe" in i_class:
             continue
         flags += i.text + ", "
-    url = driver.current_url
-    lat = float(url.split("@")[1].split(",")[0])
-    long = float(url.split("@")[1].split(",")[1].split(",")[0])
 
     return name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long
 
@@ -122,7 +125,7 @@ if __name__ == "__main__":
     successful_shops = []
     for i, url in enumerate(urls):
         # clear the console
-        print("\033[H\033[J")
+        # print("\033[H\033[J")
         print("Creating shop: " + url.split("/")[5])
         print("URL: " + url)
         print("Success: " + str(len(successful_shops)) + " Failed: " + str(len(failed_shops)))
