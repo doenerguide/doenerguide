@@ -33,7 +33,6 @@ def getStadt(url):
     scrolled_at_bottom = False
     while not scrolled_at_bottom:
         driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight)", bar)
-        time.sleep(2)
         try:
             driver.find_element(By.CLASS_NAME, "HlvSq")
             scrolled_at_bottom = True
