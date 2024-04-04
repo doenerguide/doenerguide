@@ -1,5 +1,6 @@
 export interface Flags {
-  acceptCard: boolean;
+  acceptCreditCard: boolean;
+  acceptDebitCard: boolean;
   stampCard: boolean;
 }
 
@@ -9,8 +10,10 @@ export interface IFlags {
 
 export function getPrettyPrint(flag: string) {
   switch (flag) {
-    case 'acceptCard':
-      return 'Kartenzahlung';
+    case 'acceptCreditCard':
+      return 'Kreditkarte';
+    case 'acceptDebitCard':
+      return 'Debitkarte';
     case 'stampCard':
       return 'Stempelkarte';
     default:

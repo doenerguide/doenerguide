@@ -58,7 +58,7 @@
             <ion-list>
               <ion-item lines="none">
                 <ion-icon slot="start" name="pricetag-outline"></ion-icon>
-                <app-price [priceCategory]="shop.priceCategory"> </app-price>
+                <app-price [priceCategory]="shop.priceCategory"></app-price>
               </ion-item>
               <ion-item lines="none">
                 <ion-icon
@@ -66,7 +66,11 @@
                   name="time-outline"
                   [color]="shopFunctions.checkOpeningColor(shop)"
                 ></ion-icon>
-                {{shop.openingHours.opens}} - {{shop.openingHours.closes}}
+                <ng-container *ngFor="let openingHour of shop.openingHours">
+                  {{ openingHour.open === '00:00' && openingHour.close ===
+                  '00:00' ? 'Heute geschlossen' : openingHour.open + ' - ' +
+                  openingHour.close }}<br />
+                </ng-container>
               </ion-item>
               <ion-item
                 lines="none"

@@ -1,8 +1,7 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
-export const environment = {
-  production: true,
+export let environment = {
+  lat: 52.520008,
+  long: 13.404954,
+  radius: 5,
   endpoint: 'https://backend.doenerguide.envyz.de',
+  production: true,
 };

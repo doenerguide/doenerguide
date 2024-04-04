@@ -65,18 +65,20 @@ def update_user_favoriten(user_id, favoriten):
     conn.close()
     return True
 
-def create_shop(name, image_url, address, price_category, opening_hours, flags, lat, long):
+def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long):
     name = str(name)
-    image_url = str(image_url)
+    imageURL = str(imageURL)
     address = str(address)
-    price_category = int(price_category)
-    opening_hours = str(opening_hours)
+    rating = int(rating)
+    priceCategory = int(priceCategory)
     flags = str(flags)
+    openingHours = str(openingHours)
+    tel = str(tel)
     lat = int(lat*10**6)
     long = int(long*10**6)
     conn = create_connection()
     try:
-        conn.execute("INSERT INTO [SHOPS] (name, imageURL, address, priceCategory, openingHours, flags, lat, long) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, image_url, address, price_category, opening_hours, flags, lat, long))
+        conn.execute("INSERT INTO [SHOPS] (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long))
     except sqlite3.Error as e:
         conn.close()
         return "Es gab einen Fehler beim Erstellen des Shops.\n\n" + str(e)

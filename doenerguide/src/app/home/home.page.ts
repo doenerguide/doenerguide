@@ -54,6 +54,11 @@ export class HomePage implements OnInit {
     return `${value}km`;
   }
 
+  change_radius(event: any) {
+    this.radius = event.detail.value;
+    this.set_shops();
+  }
+
   async setShops() {
     this.shownShops = await this.databaseSrv.getShops(
       this.lat,
@@ -62,43 +67,21 @@ export class HomePage implements OnInit {
     );
   }
 
-  async change_radius(event: any) {
-    this.radius = event.detail.value;
-    this.setShops();
-  }
-
   getUserLocation() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.lat = position.coords.latitude;
         this.long = position.coords.longitude;
-        this.setShops();
+        this.set_shops();
       },
       (error) => {
         console.error('Error getting user location:', error);
-        this.setShops();
+        this.set_shops();
       }
     );
   }
 
   ionViewWillEnter() {
     this.getUserLocation();
-    if (this.activatedRoute.snapshot.paramMap.get('message')) {
-      this.toastCtrl
-        .create({
-          message: this.activatedRoute.snapshot.paramMap.get('message')!,
-          duration: 2000,
-          color: 'success',
-          icon: 'checkmark-circle-outline',
-          position: 'top',
-        })
-        .then((toast) => {
-          toast.present();
-          this.router.navigate(['.'], {
-            queryParams: { message: null },
-            queryParamsHandling: 'merge',
-          });
-        });
-    }
   }
 }
