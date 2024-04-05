@@ -62,6 +62,6 @@ jobs:
           envs: APPTOKEN, USERNAME
           script: |
             echo $APPTOKEN | docker login -u $USERNAME --password-stdin
-            cd ~/doenerguide
-            docker-compose -f ~/doenerguide/docker-compose.yml pull
-            docker-compose -f ~/doenerguide/docker-compose.yml up backend -d
+            cd ~/doenerguide_back
+            docker-compose -f ~/doenerguide_back/docker-compose.yml pull
+            docker-compose -f ~/doenerguide_back/docker-compose.yml up backend -d
