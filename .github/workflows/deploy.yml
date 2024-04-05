@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: "./docker-compose.yml"
-          target: "~/doenerguide/"
+          target: "doenerguide"
       - name: Run remote docker pull
         uses: appleboy/ssh-action@master
         env:
