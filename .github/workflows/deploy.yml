@@ -47,6 +47,12 @@ jobs:
             git clone git@github.com:$REPO_URL ~/doenerguide_repo
             cp ~/doenerguide_repo/docker-compose.yml ~/doenerguide/docker-compose.yml
             rm -Rf ~/doenerguide_repo
+      - name: testing ipv6 for command
+        run: |
+          curl -m 9 --ipv6 --verbose https://google.com
+      - name: testing for server
+        run: |
+          ping -6 2a01:4f8:271:29ac:66:64:2:1
       - name: Run remote docker pull
         uses: appleboy/ssh-action@master
         env:
@@ -57,6 +63,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           protocol: tcp6
+          port: 22
           envs: APPTOKEN, USERNAME
           script: |
             echo $APPTOKEN | docker login -u $USERNAME --password-stdin
