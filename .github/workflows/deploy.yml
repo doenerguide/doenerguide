@@ -53,15 +53,17 @@ jobs:
         env:
           APPTOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
           USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           protocol: tcp6
           port: 22
-          envs: APPTOKEN, USERNAME
+          envs: APPTOKEN, USERNAME, PASSWORD
           script: |
             echo $APPTOKEN | docker login -u $USERNAME --password-stdin
             cd ~/doenerguide_back
-            docker-compose -f ~/doenerguide_back/docker-compose.yml pull
-            docker-compose -f ~/doenerguide_back/docker-compose.yml up backend -d
+            echo $PASSWORD | sudo -S su
+            docker compose -f ~/doenerguide_back/docker-compose.yml pull
+            docker compose -f ~/doenerguide_back/docker-compose.yml up backend -d
