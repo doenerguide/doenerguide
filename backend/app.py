@@ -9,6 +9,16 @@ CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, 
 
 @app.route('/login', methods=['POST'])
 def login():
+    """
+    Handles the login functionality.
+
+    Retrieves the email and password from the request body and checks if the login credentials are valid.
+    If the login is successful, returns a JSON response with {'success': True}.
+    If the login fails, returns a JSON response with {'success': False}.
+
+    Returns:
+        A JSON response indicating the success or failure of the login attempt.
+    """
     body = request.get_json()
     email = body['email'].lower()
     password = body['password']
@@ -19,6 +29,14 @@ def login():
     
 @app.route('/signup', methods=['POST'])
 def signup():
+    """
+    Sign up a new user.
+
+    This function handles the POST request to the '/signup' endpoint and creates a new user in the database.
+
+    Returns:
+        A JSON response indicating the success of the operation.
+    """
     body = request.get_json()
     email = body['email'].lower()
     password = body['password']
@@ -31,7 +49,20 @@ def signup():
     
 
 @app.route('/getShops', methods=['GET'])
-def getShops():
+def get_shops():
+    """
+    Retrieves a list of shops based on the provided latitude, longitude, radius, price category, and flags.
+
+    Parameters:
+    - lat (float): The latitude of the location.
+    - long (float): The longitude of the location.
+    - radius (float): The search radius in kilometers.
+    - price_category (int): The price category of the shops.
+    - flags (str): Additional flags for filtering the shops.
+
+    Returns:
+    - list: A list of shops matching the provided criteria.
+    """
     lat = float(request.args.get('lat').replace('"', ''))
     long = float(request.args.get('long').replace('"', ''))
     radius = float(request.args.get('radius'))

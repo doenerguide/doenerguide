@@ -40,18 +40,20 @@ def add_user(mail, password, vorname, nachname):
     conn.close()
     return True
 
-def create_shop(name, image_url, address, price_category, opening_hours, flags, lat, long):
+def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long):
     name = str(name)
-    image_url = str(image_url)
+    imageURL = str(imageURL)
     address = str(address)
-    price_category = int(price_category)
-    opening_hours = str(opening_hours)
+    rating = int(rating)
+    priceCategory = int(priceCategory)
     flags = str(flags)
+    openingHours = str(openingHours)
+    tel = str(tel)
     lat = int(lat*10**6)
     long = int(long*10**6)
     conn = create_connection()
     try:
-        conn.execute("INSERT INTO [SHOPS] (name, imageURL, address, priceCategory, openingHours, flags, lat, long) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, image_url, address, price_category, opening_hours, flags, lat, long))
+        conn.execute("INSERT INTO [SHOPS] (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long))
     except sqlite3.Error as e:
         conn.close()
         return "Es gab einen Fehler beim Erstellen des Shops.\n\n" + str(e)
@@ -62,8 +64,12 @@ def create_shop(name, image_url, address, price_category, opening_hours, flags, 
 def get_shops(lat, long, radius, price_category, flags):
     lat = int(lat*10**6)
     long = int(long*10**6)
+    radius = int(radius/111*10**6)
+    if radius == 0:
+        radius = 0.09/111*10**6
     conn = create_connection()
-    cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [lat] BETWEEN ? AND ? AND [long] BETWEEN ? AND ? AND [priceCategory] = ? AND [flags] LIKE ?", (lat-radius, lat+radius, long-radius, long+radius, price_category, flags))
+    cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [lat] BETWEEN ? AND ? AND [long] BETWEEN ? AND ?", (lat - radius, lat + radius, long - radius, long + radius))
     data = cursor.fetchall()
+    print(data)
     conn.close()
     return data
