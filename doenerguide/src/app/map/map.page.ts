@@ -43,23 +43,122 @@ export class MapPage implements OnInit {
 
     const location = new google.maps.LatLng(this.center.lat, this.center.lng);
 
-    this.map = new Map(mapEl, {
+    this.map = new google.maps.Map(mapEl, {
       center: location,
-      zoom: 14,
-      mapId: "37c2487cae047b8d",
+      zoom: 13.25 - 0.085 * environment.radius,
       scaleControl: false,
       streetViewControl: false,
       zoomControl: true,
       overviewMapControl: false,
       mapTypeControl: false,
-      fullscreenControl: false
+      fullscreenControl: false,
+      styles: [
+        { elementType: "geometry", stylers: [{ color: "#1F1F1F" }] },
+        { elementType: "labels.text.stroke", stylers: [{ color: "#1F1F1F" }] },
+        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+        {
+          featureType: "administrative.locality",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#E1E6EC" }],
+        },
+        {
+          featureType: "poi",
+          elementType: "labels.text.fill",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "poi",
+          elementType: "labels",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "poi.park",
+          elementType: "geometry",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "poi.park",
+          elementType: "labels.text.fill",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "road",
+          elementType: "geometry",
+          stylers: [{ color: "#38414e" }],
+        },
+        {
+          featureType: "road",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#212a37" }],
+        },
+        {
+          featureType: "road",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#9ca5b3" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "geometry",
+          stylers: [{ color: "#746855" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#1f2835" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#f3d19c" }],
+        },
+        {
+          featureType: "transit",
+          elementType: "geometry",
+          stylers: [{ color: "#2f3948" }],
+        },
+        {
+          featureType: "transit.station",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#d59563" }],
+        },
+        {
+          featureType: "water",
+          elementType: "geometry",
+          stylers: [{ color: "#17263c" }],
+        },
+        {
+          featureType: "water",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#515c6d" }],
+        },
+        {
+          featureType: "water",
+          elementType: "labels.text.stroke",
+          stylers: [{ color: "#17263c" }],
+        },
+      ],
+      disableDefaultUI: true,
     });
 
     console.log('shops: ', environment.shops);
+    this.set_circle(this.map, location, environment.radius * 1000);
     this.renderer.addClass(mapEl, 'visible');
     for (const shop of environment.shops as any[]) {
-      this.addMarker(new google.maps.LatLng(shop.lat/1000000, shop.lng/1000000), "<img src='" + shop.imageUrl + "' style='width: 20em; height: auto;'><h2>" + shop.name + "</h2><p>" + shop.address + "</p><p>Rating: " + shop.rating + "</p><p>Price category: " + shop.priceCategory + "</p><p>Opening hours: " + shop.openingHours.opens + " - " + shop.openingHours.closes + "</p><p>Accepts card: " + shop.flags.acceptCard + "</p><p>Has stamp card: " + shop.flags.stampCard + "</p><a href='" + shop.mapsUrl + "'>Open in Google Maps</a><p>Tel: " + shop.tel + "</p>");
+      this.addMarker(new google.maps.LatLng(shop.lat, shop.lng), "<img src='" + shop.imageUrl + "' style='width: 20em; height: auto;'><h2>" + shop.name + "</h2><p>" + shop.address + "</p><p>Rating: " + shop.rating + "</p><p>Price category: " + shop.priceCategory + "</p><p>Opening hours: " + shop.openingHours.opens + " - " + shop.openingHours.closes + "</p><p>Accepts card: " + shop.flags.acceptCard + "</p><p>Has stamp card: " + shop.flags.stampCard + "</p><a href='" + shop.mapsUrl + "'>Open in Google Maps</a><p>Tel: " + shop.tel + "</p>");
     }
+  }
+
+  set_circle = (map: any, center: any, radius: number) => {
+    return new google.maps.Circle({
+      strokeColor: "#1E7FF3",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#1AADEB",
+      fillOpacity: 0.1,
+      map,
+      center,
+      radius,
+    });
   }
 
 
@@ -72,14 +171,14 @@ export class MapPage implements OnInit {
     const marker = new google.maps.Marker({
       position: location,
       map: this.map,
-      draggable: true,
+      // draggable: true,
       icon: markerIcon,
     });
   
     const infoWindow = new google.maps.InfoWindow({
       content: `<div style="color: black !important;">${info}</div>`
     });
-  
+
     marker.addListener('click', () => {
       if (infoWindow.getMap()) {
         infoWindow.close();
@@ -100,6 +199,7 @@ export class MapPage implements OnInit {
       this.map.panTo(event.latLng);
     });
   }
+
 
   ngOnDestroy(): void {
     if (this.mapListener) {
