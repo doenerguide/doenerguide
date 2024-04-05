@@ -33,9 +33,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: List files
-        run: ls -a
-        shell: bash
       - name: copy files to target server
         uses: appleboy/scp-action@master
         with:
