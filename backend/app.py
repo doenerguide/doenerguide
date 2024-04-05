@@ -71,4 +71,5 @@ def get_shops():
     return jsonify(dbm.get_shops(lat, long, radius, price_category, flags))
     
 if __name__ == '__main__':
+    print("Running backend server of DönerGuide...")
     app.run(debug=True, host='0.0.0.0', port=8000)

@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import hashlib
+import logging
 
 def hash_password(password, salt):
     password_hash = hashlib.sha256((password + salt).encode('utf-8')).hexdigest()
@@ -9,6 +10,7 @@ def hash_password(password, salt):
 def create_connection():
     path = os.path.dirname(os.path.abspath(__file__))
     db_file = path + "/database.db"
+    logging.debug("Using database file: " + db_file)
     print("Using database file: " + db_file)
     conn = None
     try:
