@@ -49,8 +49,8 @@ def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHo
     flags = str(flags)
     openingHours = str(openingHours)
     tel = str(tel)
-    lat = int(lat*10**6)
-    long = int(long*10**6)
+    lat = float(lat)
+    long = float(long)
     maps_url = str(maps_url)
     conn = create_connection()
     try:
@@ -63,14 +63,22 @@ def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHo
     return "Shop wurde erfolgreich erstellt."
 
 def get_shops(lat, long, radius, price_category, flags):
-    lat = int(lat*10**6)
-    long = int(long*10**6)
-    radius = int(radius/111*10**6)
-    if radius == 0:
-        radius = 0.09/111*10**6
     conn = create_connection()
-    cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [lat] BETWEEN ? AND ? AND [long] BETWEEN ? AND ?", (lat - radius, lat + radius, long - radius, long + radius))
+    cursor = conn.execute("""
+        SELECT *
+        FROM [SHOPS]
+        WHERE (
+            6371 * acos (
+                cos ( radians(?) )
+                * cos( radians( lat ) )
+                * cos( radians( long ) - radians(?) )
+                + sin ( radians(?) )
+                * sin( radians( lat ) )
+            )
+        ) <= ?
+        AND (priceCategory = ? OR ? = 0)
+    """, (lat, long, lat, radius, price_category, price_category))
+    
     data = cursor.fetchall()
-    print(data)
     conn.close()
     return data

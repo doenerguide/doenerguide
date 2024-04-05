@@ -97,6 +97,7 @@ def getData(url):
     if openingHours == {}:
         print("Parsing opening hours failed")
         return None, None, None, None, None, None, None, None, None, None
+    time.sleep(0.2)
     try:
         button = driver.find_elements(By.CLASS_NAME, "hh2c6")[2]
         driver.execute_script("arguments[0].click();", button)
@@ -106,13 +107,15 @@ def getData(url):
     time.sleep(0.2)
     flags = ""
     zahlung = driver.find_elements(By.CLASS_NAME, "hpLkke")
+    time.sleep(0.1)
     for i in zahlung:
         i_class = i.get_attribute("class")
         if "WeoVJe" in i_class:
             continue
         flags += i.text + ", "
+    maps_url = url
 
-    return name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, url
+    return name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url
 
 if __name__ == "__main__":
     with open("backend/shops_url.txt", "r") as f:

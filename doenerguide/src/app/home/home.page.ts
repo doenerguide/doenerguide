@@ -74,8 +74,8 @@ function lat_long_to_distance(lat1: number, lon1: number, lat2: number, lon2: nu
  * @returns The map object representing the doenerladen.
  */
 function doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
-  var d_lat = doenerladen[9] / 1000000;
-  var d_long = doenerladen[10] / 1000000;
+  var d_lat = doenerladen[9];
+  var d_long = doenerladen[10];
   var address = doenerladen[3] + " (" + lat_long_to_distance(lat, long, d_lat, d_long, 1) + "km)";
   var weekday = new Date().toLocaleString('de-DE', { weekday: 'long' });
   doenerladen[7] = JSON.parse(doenerladen[7].replace(/'/g, '"'));
