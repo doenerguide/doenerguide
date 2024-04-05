@@ -33,14 +33,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: copy files to target server
-        uses: appleboy/scp-action@master
+      - name: Clone repo and copy docker files
+        uses: appleboy/ssh-action@master
+        env:
+          REPO_URL: ${{ github.repository.owner }}/${{ github.repository.repo }}.git
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: "./docker-compose.yml"
-          target: "/home/dodo/doenerguide"
+          protocol: tcp6
+          envs: REPO_URL
+          script: |
+            git clone git@github.com:$REPO_URL ~/doenerguide_repo
+            cp ~/doenerguide_repo/docker-compose.yml ~/doenerguide/docker-compose.yml
+            rm -Rf ~/doenerguide_repo
       - name: Run remote docker pull
         uses: appleboy/ssh-action@master
         env:
@@ -50,6 +56,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          protocol: tcp6
           envs: APPTOKEN, USERNAME
           script: |
             echo $APPTOKEN | docker login -u $USERNAME --password-stdin
