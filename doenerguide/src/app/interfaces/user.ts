@@ -5,5 +5,5 @@ export interface User {
   email: string;
   vorname: string;
   nachname: string;
-  favorites: Shop[];
+  favoriten: Shop[];
 }

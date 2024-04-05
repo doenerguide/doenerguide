@@ -1,22 +1,23 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button [defaultHref]="refferer"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <div class="title">
-        <p>{{shop?.name}}</p>
-        <ion-icon name="heart-outline" class="size"></ion-icon>
-      </div>
-    </ion-toolbar>
-    <img [src]="shop?.imageUrl" alt="Shop" />
-  </ion-header>
   <div class="informationGrid">
+    <div class="title">
+      <p>{{shop?.name}}</p>
+      <ion-icon
+        [name]="userSrv.getFavoriteIds().includes(shop!.id) ? 'heart' : 'heart-outline'"
+        class="size"
+        [color]="userSrv.getFavoriteIds().includes(shop!.id) ? 'danger' : 'medium'"
+        (click)="userSrv.toggleFavorite(shop!)"
+      ></ion-icon>
+    </div>
+    <img [src]="shop?.imageUrl" alt="Shop" />
     <ion-list>
       <ion-item lines="none">
         <ion-icon slot="start" name="pricetag-outline"></ion-icon>

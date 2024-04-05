@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PriceComponent } from '../price/price.component';
 import { DatabaseService } from '../services/database.service';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-shop',
@@ -21,11 +22,13 @@ export class ShopPage implements OnInit {
   //shop: Shop | undefined;
 
   shop: Shop | null = null;
+  refferer: string = '/';
   shopFunctions = ShopFunctions;
 
   constructor(
     private databaseSrv: DatabaseService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public userSrv: UserService
   ) {}
 
   /*ngOnInit() {
@@ -36,6 +39,8 @@ export class ShopPage implements OnInit {
     this.route.params.subscribe((params) => {
       console.log(params);
       this.shop = JSON.parse(params['shop']) as Shop;
+      this.refferer = params['refferer'];
+      console.log(this.refferer);
     });
   }
 }
