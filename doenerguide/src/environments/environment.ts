@@ -8,5 +8,5 @@
 export const environment = {
   production: false,
   shops: [],
-  endpoint: 'http://127.0.0.1:5050',
+  endpoint: 'https://backend.doenerguide.envyz.de',
 };

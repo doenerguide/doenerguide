@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Shop } from '../interfaces/shop';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -15,14 +16,14 @@ export class DatabaseService {
     ) {
       return this.shopCache.find((shop) => shop.id === id) as Shop;
     }
-    let response = await fetch(`http://localhost:5050/getShop?id=${id}`);
+    let response = await fetch(`${environment.endpoint}/getShop?id=${id}`);
     let data = (await response.json()) as Shop;
     return data;
   }
 
   async getShops(lat: number, long: number, radius: number): Promise<Shop[]> {
     let response = await fetch(
-      `http://localhost:5050/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`
+      `${environment.endpoint}/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`
     );
     /*.then((response) => {
       response.json().then((data) => {
