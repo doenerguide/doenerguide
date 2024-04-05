@@ -112,7 +112,7 @@ def getData(url):
             continue
         flags += i.text + ", "
 
-    return name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long
+    return name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, url
 
 if __name__ == "__main__":
     with open("backend/shops_url.txt", "r") as f:
@@ -133,9 +133,9 @@ if __name__ == "__main__":
         print("Remaining: " + str(len(urls) - i))
         print("Total: " + str(len(urls)))
         url = url.strip()
-        name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long = getData(url)
+        name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url = getData(url)
         if name is not None:
-            create_shop(name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long)
+            create_shop(name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url)
             # in green
             print("\033[92m" + "Shop created" + "\033[0m")
             successful_shops.append(url)
