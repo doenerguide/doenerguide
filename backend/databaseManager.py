@@ -9,6 +9,7 @@ def hash_password(password, salt):
 def create_connection():
     path = os.path.dirname(os.path.abspath(__file__))
     db_file = path + "/database.db"
+    print("Using database file: " + db_file)
     conn = None
     try:
         conn = sqlite3.connect(db_file)
