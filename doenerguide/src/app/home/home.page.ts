@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { Shop, ShopFunctions } from '../interfaces/shop';
@@ -9,6 +9,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -38,7 +39,9 @@ export class HomePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private toastCtrl: ToastController,
     private router: Router,
-    private databaseSrv: DatabaseService
+    private databaseSrv: DatabaseService,
+    public userSrv: UserService,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   shopFunctions = ShopFunctions;

@@ -27,9 +27,25 @@ export class UserService {
     localStorage.removeItem('user');
   }
 
+  getFavorites(): Shop[] {
+    return this.getUser().favoriten;
+  }
+
+  getFavoriteIds(): string[] {
+    return this.getFavorites().map((shop) => shop.id);
+  }
+
+  toggleFavorite(shop: Shop) {
+    if (this.getFavoriteIds().includes(shop.id)) {
+      this.removeFavorite(shop.id);
+    } else {
+      this.addFavorite(shop);
+    }
+  }
+
   addFavorite(shop: Shop) {
     let user = this.getUser();
-    user.favorites.push(shop);
+    user.favoriten.push(shop);
     this.setUser(user);
     fetch(this.endpoint + '/updateFavoriten', {
       method: 'POST',
@@ -38,14 +54,14 @@ export class UserService {
       },
       body: JSON.stringify({
         user_id: user.id,
-        favoriten: user.favorites.map((shop) => shop.id),
+        favoriten: user.favoriten.map((shop) => shop.id),
       }),
     });
   }
 
   removeFavorite(shopId: string) {
     let user = this.getUser();
-    user.favorites = user.favorites.filter((shop) => shop.id !== shopId);
+    user.favoriten = user.favoriten.filter((shop) => shop.id !== shopId);
     this.setUser(user);
     fetch(this.endpoint + '/updateFavoriten', {
       method: 'POST',
@@ -54,7 +70,7 @@ export class UserService {
       },
       body: JSON.stringify({
         user_id: user.id,
-        favoriten: user.favorites.map((shop) => shop.id),
+        favoriten: user.favoriten.map((shop) => shop.id),
       }),
     });
   }
