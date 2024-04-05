@@ -31,8 +31,14 @@ jobs:
     if: success()
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # - name: Checkout code
+      #   uses: actions/checkout@v3
+      - name: testing ipv6 for command
+        run: |
+          curl -m 9 --ipv6 --verbose https://google.com
+      - name: testing for server
+        run: |
+          ping -6 2a01:4f8:271:29ac:66:64:2:1
       - name: Clone repo and copy docker files
         uses: appleboy/ssh-action@master
         env:
@@ -47,12 +53,6 @@ jobs:
             git clone git@github.com:$REPO_URL ~/doenerguide_repo
             cp ~/doenerguide_repo/docker-compose.yml ~/doenerguide/docker-compose.yml
             rm -Rf ~/doenerguide_repo
-      - name: testing ipv6 for command
-        run: |
-          curl -m 9 --ipv6 --verbose https://google.com
-      - name: testing for server
-        run: |
-          ping -6 2a01:4f8:271:29ac:66:64:2:1
       - name: Run remote docker pull
         uses: appleboy/ssh-action@master
         env:
