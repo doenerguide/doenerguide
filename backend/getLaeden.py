@@ -8,7 +8,7 @@ import logging
 import threading
 
 options = Options()
-options.add_argument("--headless")  # Run Chrome in headless mode
+#options.add_argument("--headless")  # Run Chrome in headless mode
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
@@ -17,10 +17,6 @@ def writeToFile(file, data):
         f.write(data)
 
 def getStadt(url, driver):
-    driver.get(url)
-    while url == driver.current_url:
-        pass
-    url = ",".join(driver.current_url.split(",")[:2]) + ",21z"
     driver.get(url)
     while url == driver.current_url:
         pass
@@ -39,7 +35,7 @@ def getStadt(url, driver):
             driver.find_element(By.CLASS_NAME, "HlvSq")
             scrolled_at_bottom = True
         except:
-            pass
+            time.sleep(0.1)
     laeden = driver.find_elements(By.CLASS_NAME, "hfpxzc")
     laeden = [laed.get_attribute("href") for laed in laeden]
     with open("backend/shops_url.txt", "a") as f:
