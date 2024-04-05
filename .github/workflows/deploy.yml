@@ -64,6 +64,6 @@ jobs:
           script: |
             echo $APPTOKEN | docker login -u $USERNAME --password-stdin
             cd ~/doenerguide_back
-            echo $PASSWORD | sudo -S su -
+            sudo su -
             docker compose -f ~/doenerguide_back/docker-compose.yml pull
             docker compose -f ~/doenerguide_back/docker-compose.yml up backend -d
