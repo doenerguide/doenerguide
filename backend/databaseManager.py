@@ -40,7 +40,7 @@ def add_user(mail, password, vorname, nachname):
     conn.close()
     return True
 
-def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long):
+def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url):
     name = str(name)
     imageURL = str(imageURL)
     address = str(address)
@@ -51,9 +51,10 @@ def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHo
     tel = str(tel)
     lat = int(lat*10**6)
     long = int(long*10**6)
+    maps_url = str(maps_url)
     conn = create_connection()
     try:
-        conn.execute("INSERT INTO [SHOPS] (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long))
+        conn.execute("INSERT INTO [SHOPS] (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url))
     except sqlite3.Error as e:
         conn.close()
         return "Es gab einen Fehler beim Erstellen des Shops.\n\n" + str(e)
