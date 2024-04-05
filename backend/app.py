@@ -73,6 +73,4 @@ def get_shops():
     
 if __name__ == '__main__':
     print("Running backend server of DönerGuide...")
-    path = os.path.dirname(os.path.abspath(__file__))
-    print("Using database file: " + path + "/database.db")
     app.run(debug=True, host='0.0.0.0', port=8000)
