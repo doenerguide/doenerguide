@@ -35,12 +35,6 @@ jobs:
       #   uses: actions/checkout@v3
       - name: Setup WARP for IPv6
         uses: fscarmen/warp-on-actions@v1.1
-      - name: testing ipv6 for command
-        run: |
-          curl -m 9 --ipv6 --verbose https://google.com
-      - name: testing for server
-        run: |
-          ping -6 2a01:4f8:271:29ac:66:64:2:1
       - name: Clone repo and copy docker files
         uses: appleboy/ssh-action@master
         env:
