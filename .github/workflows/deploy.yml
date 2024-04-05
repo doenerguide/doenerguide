@@ -62,8 +62,8 @@ jobs:
           port: 22
           envs: APPTOKEN, USERNAME, PASSWORD
           script: |
+            sudo su -
             echo $APPTOKEN | docker login -u $USERNAME --password-stdin
             cd ~/doenerguide_back
-            sudo su -
             docker compose -f ~/doenerguide_back/docker-compose.yml pull
             docker compose -f ~/doenerguide_back/docker-compose.yml up backend -d

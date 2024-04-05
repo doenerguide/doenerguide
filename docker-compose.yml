@@ -1,5 +1,5 @@
 # Compose file to run the backend application and pull it from the docker hub
-version: "3"
+
 services:
   backend:
     restart: always
