@@ -34,7 +34,7 @@ jobs:
       # - name: Checkout code
       #   uses: actions/checkout@v3
       - name: Setup WARP for IPv6
-        uses: fscarmen/warp-on-actions@v2
+        uses: fscarmen/warp-on-actions@v1.1
       - name: testing ipv6 for command
         run: |
           curl -m 9 --ipv6 --verbose https://google.com
