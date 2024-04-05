@@ -20,6 +20,11 @@ def getStadt(url, driver):
     driver.get(url)
     while url == driver.current_url:
         pass
+    url = driver.current_url
+    url = ",".join(url.split(",")[:2]) + ",21z"
+    driver.get(url)
+    while url == driver.current_url:
+        pass
     if "place" in driver.current_url:
         return
     bar = None
@@ -35,7 +40,7 @@ def getStadt(url, driver):
             driver.find_element(By.CLASS_NAME, "HlvSq")
             scrolled_at_bottom = True
         except:
-            time.sleep(0.1)
+            pass
     laeden = driver.find_elements(By.CLASS_NAME, "hfpxzc")
     laeden = [laed.get_attribute("href") for laed in laeden]
     with open("backend/shops_url.txt", "a") as f:
