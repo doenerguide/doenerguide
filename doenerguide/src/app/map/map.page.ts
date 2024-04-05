@@ -72,7 +72,7 @@ export class MapPage implements OnInit {
     const marker = new google.maps.Marker({
       position: location,
       map: this.map,
-      draggable: true,
+      // draggable: true,
       icon: markerIcon,
     });
   

@@ -40,9 +40,15 @@ def parse_opening_hours(opening_hours_text):
 
 def getData(url):
     driver.get(url)
-    lat, long = re.search(r'@(\d+\.\d+),(\d+\.\d+)', driver.page_source).groups()
-    lat = float(lat)
-    long = float(long)
+    lat = None
+    long = None
+    while lat is None or long is None:
+        try:
+            lat, long = re.search(r'@(\d+\.\d+),(\d+\.\d+)', driver.page_source).groups()
+            lat = float(lat)
+            long = float(long)
+        except:
+            pass
     try:
         driver.find_element(By.CLASS_NAME, "aSftqf")
         print("Shop closed")
@@ -66,9 +72,7 @@ def getData(url):
     tel = ""
     tel_elements = driver.find_elements(By.CLASS_NAME, "AeaXub")
     for t in tel_elements:
-        print(t.get_attribute("outerHTML"))
         if "Odf5Vc google-symbols NhBTye PHazN" in t.get_attribute("outerHTML"):
-            print("Found tel")
             tel = t.text.replace("\n", "").strip()
             break
     try:
@@ -107,10 +111,14 @@ def getData(url):
     flags = ""
     zahlung = driver.find_elements(By.CLASS_NAME, "hpLkke")
     for i in zahlung:
-        i_class = i.get_attribute("class")
-        if "WeoVJe" in i_class:
-            continue
-        flags += i.text + ", "
+        try:
+            i_class = i.get_attribute("class")
+            if "WeoVJe" in i_class:
+                continue
+            flags += i.text + ", "
+        except:
+            pass
+            
 
     return name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long
 
@@ -125,9 +133,7 @@ if __name__ == "__main__":
     successful_shops = []
     for i, url in enumerate(urls):
         # clear the console
-        # print("\033[H\033[J")
-        print("Creating shop: " + url.split("/")[5])
-        print("URL: " + url)
+        print("\033[H\033[J")
         print("Success: " + str(len(successful_shops)) + " Failed: " + str(len(failed_shops)))
         print("Already done: " + str(len(successful_shops) + len(failed_shops)))
         print("Remaining: " + str(len(urls) - i))
@@ -143,4 +149,7 @@ if __name__ == "__main__":
             # write in red in console
             print("\033[91m" + "Shop closed" + "\033[0m")
             failed_shops.append(url)
-        time.sleep(0.5)
+        time.sleep(0.2)
+        urls = urls[1:]
+        with open("backend/shops_url.txt", "w") as f:
+            f.write("\n".join(urls))
