@@ -43,7 +43,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           protocol: tcp6
           script: |
-            git clone git@github.com:doenerguide/doenerguide.git &&
+            git clone git@github.com:doenerguide/doenerguide.git /home/dodo/doenerguide &&
             cp ~/doenerguide/docker-compose.yml ~/doenerguide_back/docker-compose.yml &&
             rm -Rf ~/doenerguide
       - name: Run remote docker pull
