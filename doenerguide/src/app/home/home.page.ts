@@ -55,37 +55,39 @@ export class HomePage implements OnInit {
 
   change_radius(event: any) {
     this.radius = event.detail.value;
-    this.set_shops();
+    this.setShops();
   }
 
-  set_shops() {
-    fetch(
-      `http://localhost:5050/getShops?lat=${this.lat}&long=${this.long}&radius=${this.radius}&price_category=0&flags=[]`
-    ).then((response) => {
-      response.json().then((data) => {
-        let shops = data.map((shop: any) =>
-          doenerladen_tuple_to_map(shop, this.lat, this.long)
-        );
-        this.shownShops = shops;
-      });
-    });
-  }
-
-  getUserLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.lat = position.coords.latitude;
-        this.long = position.coords.longitude;
-        this.set_shops();
-      },
-      (error) => {
-        console.error('Error getting user location:', error);
-        this.set_shops();
-      }
+  async setShops() {
+    this.shownShops = await this.databaseSrv.getShops(
+      this.lat,
+      this.long,
+      this.radius
     );
   }
 
   ionViewWillEnter() {
-    this.getUserLocation();
+    this.userSrv.getUserLocation().then((loc) => {
+      this.lat = loc.lat;
+      this.long = loc.long;
+      this.setShops();
+    });
+    if (this.activatedRoute.snapshot.paramMap.get('message')) {
+      this.toastCtrl
+        .create({
+          message: this.activatedRoute.snapshot.paramMap.get('message')!,
+          duration: 2000,
+          color: 'success',
+          icon: 'checkmark-circle-outline',
+          position: 'top',
+        })
+        .then((toast) => {
+          toast.present();
+          this.router.navigate(['.'], {
+            queryParams: { message: null },
+            queryParamsHandling: 'merge',
+          });
+        });
+    }
   }
 }

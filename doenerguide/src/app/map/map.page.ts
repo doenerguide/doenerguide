@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  OnInit,
   Renderer2,
   ViewChild,
   inject,
@@ -46,8 +47,8 @@ export class MapPage {
   constructor(private userSrv: UserService) {}
 
   async ionViewDidEnter() {
-    let location = await this.userSrv.getUserLocation();
-    this.center = { lat: location.lat, lng: location.long };
+    let loc = await this.userSrv.getUserLocation();
+    this.center = { lat: loc.lat, lng: loc.long };
     this.loadMap();
   }
 
@@ -158,12 +159,48 @@ export class MapPage {
     console.log('shops: ', environment.shops);
     this.set_circle(this.map, location, environment.radius * 1000);
     this.renderer.addClass(mapEl, 'visible');
-    this.addMarker(location, '<h1>Store A</h1><p>Store Description</p>');
-    this.addMarker(
-      new google.maps.LatLng(48.793333, 9.193333),
-      '<h1>Store B</h1><p>Store Description</p>'
-    );
+    for (const shop of environment.shops as any[]) {
+      this.addMarker(
+        new google.maps.LatLng(shop.lat, shop.lng),
+        "<img src='" +
+          shop.imageUrl +
+          "' style='width: 20em; height: auto;'><h2>" +
+          shop.name +
+          '</h2><p>' +
+          shop.address +
+          '</p><p>Rating: ' +
+          shop.rating +
+          '</p><p>Price category: ' +
+          shop.priceCategory +
+          '</p><p>Opening hours: ' +
+          shop.openingHours.opens +
+          ' - ' +
+          shop.openingHours.closes +
+          '</p><p>Accepts card: ' +
+          shop.flags.acceptCard +
+          '</p><p>Has stamp card: ' +
+          shop.flags.stampCard +
+          "</p><a href='" +
+          shop.mapsUrl +
+          "'>Open in Google Maps</a><p>Tel: " +
+          shop.tel +
+          '</p>'
+      );
+    }
   }
+
+  set_circle = (map: any, center: any, radius: number) => {
+    return new google.maps.Circle({
+      strokeColor: '#1E7FF3',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#1AADEB',
+      fillOpacity: 0.1,
+      map,
+      center,
+      radius,
+    });
+  };
 
   addMarker(location: any, info: string) {
     const markerIcon = {
