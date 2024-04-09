@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
 import { environment } from 'src/environments/environment';
 import { Shop } from '../interfaces/shop';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Injectable({
   providedIn: 'root',
@@ -73,5 +74,10 @@ export class UserService {
         favoriten: user.favoriten.map((shop) => shop.id),
       }),
     });
+  }
+
+  async getUserLocation(): Promise<{ lat: number; long: number }> {
+    let loc = await Geolocation.getCurrentPosition();
+    return { lat: loc.coords.latitude, long: loc.coords.longitude };
   }
 }

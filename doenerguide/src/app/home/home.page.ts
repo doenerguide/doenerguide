@@ -40,8 +40,7 @@ export class HomePage implements OnInit {
     private toastCtrl: ToastController,
     private router: Router,
     private databaseSrv: DatabaseService,
-    public userSrv: UserService,
-    private changeDetector: ChangeDetectorRef
+    public userSrv: UserService
   ) {}
 
   shopFunctions = ShopFunctions;
@@ -56,7 +55,7 @@ export class HomePage implements OnInit {
 
   change_radius(event: any) {
     this.radius = event.detail.value;
-    this.set_shops();
+    this.setShops();
   }
 
   async setShops() {
@@ -67,21 +66,28 @@ export class HomePage implements OnInit {
     );
   }
 
-  getUserLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.lat = position.coords.latitude;
-        this.long = position.coords.longitude;
-        this.set_shops();
-      },
-      (error) => {
-        console.error('Error getting user location:', error);
-        this.set_shops();
-      }
-    );
-  }
-
   ionViewWillEnter() {
-    this.getUserLocation();
+    this.userSrv.getUserLocation().then((loc) => {
+      this.lat = loc.lat;
+      this.long = loc.long;
+      this.setShops();
+    });
+    if (this.activatedRoute.snapshot.paramMap.get('message')) {
+      this.toastCtrl
+        .create({
+          message: this.activatedRoute.snapshot.paramMap.get('message')!,
+          duration: 2000,
+          color: 'success',
+          icon: 'checkmark-circle-outline',
+          position: 'top',
+        })
+        .then((toast) => {
+          toast.present();
+          this.router.navigate(['.'], {
+            queryParams: { message: null },
+            queryParamsHandling: 'merge',
+          });
+        });
+    }
   }
 }
