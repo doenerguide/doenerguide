@@ -2,14 +2,14 @@ import sqlite3
 import os
 import hashlib
 import ast
+import logging
 
 def hash_password(password, salt):
     password_hash = hashlib.sha256((password + salt).encode('utf-8')).hexdigest()
     return password_hash
 
 def create_connection():
-    path = os.path.dirname(os.path.abspath(__file__))
-    db_file = path + "/database.db"
+    db_file = "/backend/database.db"
     conn = None
     try:
         conn = sqlite3.connect(db_file)

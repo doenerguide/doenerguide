@@ -2,6 +2,7 @@ import flask
 from flask import request, jsonify
 from flask_cors import CORS
 import databaseManager as dbm
+import os
 
 app = flask.Flask(__name__)
 CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}, r'/getShop': {"origins": "*"}, r'/updateFavoriten': {"origins": "*"}})
@@ -104,4 +105,5 @@ def update_favoriten():
         return jsonify({'success': False})
     
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5050)
+    print("Running backend server of DönerGuide...")
+    app.run(debug=True, host='0.0.0.0', port=8000)
