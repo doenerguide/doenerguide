@@ -88,14 +88,24 @@ export class DatabaseService {
    * @param long - The longitude.
    * @returns The map object representing the doenerladen.
    */
-  doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number) {
-    var d_lat = doenerladen[9] / 1000000;
-    var d_long = doenerladen[10] / 1000000;
+  doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number): Shop {
+    var d_lat = doenerladen[9];
+    var d_long = doenerladen[10];
     var address =
       doenerladen[3] +
       ' (' +
       this.lat_long_to_distance(lat, long, d_lat, d_long, 1) +
       'km)';
+    var weekday = new Date().toLocaleString('de-DE', { weekday: 'long' });
+    doenerladen[7] = JSON.parse(doenerladen[7].replace(/'/g, '"'));
+    var hoursToday = doenerladen[7][weekday];
+    var openingHours: { open: any; close: any }[] = Object.keys(hoursToday).map(
+      (day: string) => ({
+        open: hoursToday[day].open,
+        close: hoursToday[day].close,
+      })
+    );
+    console.log('TEESZ');
     return {
       id: doenerladen[0],
       name: doenerladen[1],
@@ -104,13 +114,11 @@ export class DatabaseService {
       rating: doenerladen[4],
       priceCategory: doenerladen[5],
       flags: {
-        acceptCard: doenerladen[6].includes('Kartenzahlung'),
+        acceptCreditCard: doenerladen[6].includes('Kreditkarte'),
+        acceptDebitCard: doenerladen[6].includes('Debitkarte'),
         stampCard: doenerladen[6].includes('Stempelkarte'),
       },
-      openingHours: {
-        opens: doenerladen[7].split('-')[0],
-        closes: doenerladen[7].split('-')[1],
-      },
+      openingHours: openingHours,
       tel: doenerladen[8],
       lat: doenerladen[9],
       lng: doenerladen[10],

@@ -7,12 +7,10 @@ export interface Shop {
   address: string;
   rating: number;
   priceCategory: number;
-  openingHours: [
-    {
-      open: string;
-      close: string;
-    }
-  ]
+  openingHours: {
+    open: string;
+    close: string;
+  }[];
   tel: string;
   flags: Flags;
   lat: number;
@@ -59,17 +57,14 @@ export class ShopFunctions {
     let status = 'danger';
     for (let i = 0; i < shop.openingHours.length; i++) {
       const openingHour = shop.openingHours[i];
-      if (
-      nowTime > openingHour.open &&
-      nowTime < openingHour.close
-      ) {
-      nowTime = hours + 1 + ':' + minutes;
-      if (nowTime >= openingHour.close) {
-        status = 'warning';
-      } else {
-        status = 'open';
-      }
-      break;
+      if (nowTime > openingHour.open && nowTime < openingHour.close) {
+        nowTime = hours + 1 + ':' + minutes;
+        if (nowTime >= openingHour.close) {
+          status = 'warning';
+        } else {
+          status = 'open';
+        }
+        break;
       }
     }
     return status;
