@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  OnInit,
   Renderer2,
   ViewChild,
   inject,
@@ -46,8 +47,8 @@ export class MapPage {
   constructor(private userSrv: UserService) {}
 
   async ionViewDidEnter() {
-    let location = await this.userSrv.getUserLocation();
-    this.center = { lat: location.lat, lng: location.long };
+    let loc = await this.userSrv.getUserLocation();
+    this.center = { lat: loc.lat, lng: loc.long };
     this.loadMap();
   }
 
