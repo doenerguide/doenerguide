@@ -25,18 +25,10 @@ export class DatabaseService {
     let response = await fetch(
       `${environment.endpoint}/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`
     );
-    /*.then((response) => {
-      response.json().then((data) => {
-        let shops = data.map((shop: any) =>
-          doenerladen_tuple_to_map(shop, this.lat, this.long)
-        );
-        this.shownShops = shops;
-      });
-    });*/
-    let data = (await response.json()) as Shop[];
+    let data = await response.json();
     let shops = data.map((shop: any) =>
       this.doenerladen_tuple_to_map(shop, lat, long)
-    );
+    ) as Shop[];
     this.shopCache.concat(shops);
     let set = new Set(this.shopCache);
     this.shopCache = Array.from(set);
@@ -77,7 +69,7 @@ export class DatabaseService {
       Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    var distance = R * c;
+    let distance = R * c;
     return distance.toFixed(digits);
   }
 
@@ -89,23 +81,35 @@ export class DatabaseService {
    * @returns The map object representing the doenerladen.
    */
   doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number): Shop {
-    var d_lat = doenerladen[9];
-    var d_long = doenerladen[10];
-    var address =
+    let d_lat = doenerladen[9];
+    let d_long = doenerladen[10];
+    let address =
       doenerladen[3] +
       ' (' +
       this.lat_long_to_distance(lat, long, d_lat, d_long, 1) +
       'km)';
-    var weekday = new Date().toLocaleString('de-DE', { weekday: 'long' });
-    doenerladen[7] = JSON.parse(doenerladen[7].replace(/'/g, '"'));
-    var hoursToday = doenerladen[7][weekday];
-    var openingHours: { open: any; close: any }[] = Object.keys(hoursToday).map(
-      (day: string) => ({
-        open: hoursToday[day].open,
-        close: hoursToday[day].close,
+    let weekday = new Date().toLocaleString('de-DE', { weekday: 'long' });
+    let hours = JSON.parse(doenerladen[7].replace(/'/g, '"')) as {
+      [weekday: string]: { open: string; close: string }[];
+    };
+    let orderedHours = Object.keys(hours)
+      .sort((a, b) => {
+        let days = [
+          'Montag',
+          'Dienstag',
+          'Mittwoch',
+          'Donnerstag',
+          'Freitag',
+          'Samstag',
+          'Sonntag',
+        ];
+        return days.indexOf(a) - days.indexOf(b);
       })
-    );
-    console.log('TEESZ');
+      .reduce((obj: any, key) => {
+        obj[key] = hours[key];
+        return obj;
+      }, {});
+    let hoursToday = hours[weekday];
     return {
       id: doenerladen[0],
       name: doenerladen[1],
@@ -118,7 +122,8 @@ export class DatabaseService {
         acceptDebitCard: doenerladen[6].includes('Debitkarte'),
         stampCard: doenerladen[6].includes('Stempelkarte'),
       },
-      openingHours: openingHours,
+      openToday: hoursToday,
+      openingHours: orderedHours,
       tel: doenerladen[8],
       lat: doenerladen[9],
       lng: doenerladen[10],

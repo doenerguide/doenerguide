@@ -29,7 +29,20 @@
           name="time-outline"
           [color]="shopFunctions.checkOpeningColor(shop ?? undefined)"
         ></ion-icon>
-        <!-- {{shop?.openingHours?.opens}} - {{shop?.openingHours?.closes}} -->
+        <div class="openingHours">
+          <ng-container *ngFor="let day of Object.keys(shop!.openingHours)">
+            <ng-container *ngIf="shop!.openingHours[day].length > 0">
+              <div class="item-time">
+                <ion-label>{{day}}</ion-label>
+                <div class="times">
+                  <ng-container *ngFor="let time of shop!.openingHours[day]">
+                    <ion-label>{{time.open}} - {{time.close}}</ion-label>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
       </ion-item>
       <ion-item
         lines="none"

@@ -25,6 +25,8 @@ export class ShopPage implements OnInit {
   refferer: string = '/';
   shopFunctions = ShopFunctions;
 
+  public Object = Object;
+
   constructor(
     private databaseSrv: DatabaseService,
     private route: ActivatedRoute,
