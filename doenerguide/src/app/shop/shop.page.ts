@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Shop, ShopFunctions } from '../interfaces/shop';
-import { environment } from 'src/environments/environment';
 import { IonicModule } from '@ionic/angular';
 import { PriceComponent } from '../price/price.component';
 import { DatabaseService } from '../services/database.service';
@@ -17,25 +16,13 @@ import { UserService } from '../services/user.service';
   imports: [IonicModule, CommonModule, FormsModule, PriceComponent],
 })
 export class ShopPage implements OnInit {
-  //@Input() shop!: Shop;
-
-  //shop: Shop | undefined;
-
   shop: Shop | null = null;
   refferer: string = '/';
   shopFunctions = ShopFunctions;
 
   public Object = Object;
 
-  constructor(
-    private databaseSrv: DatabaseService,
-    private route: ActivatedRoute,
-    public userSrv: UserService
-  ) {}
-
-  /*ngOnInit() {
-    this.databaseSrv.getShop(this.id).then((shop) => (this.shop = shop));
-  }*/
+  constructor(private route: ActivatedRoute, public userSrv: UserService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
