@@ -13,5 +13,6 @@ export let environment = {
   long: 13.404954,
   radius: 5,
   production: false,
-  shops: []
+  shops: [],
+  endpoint: 'https://backend.doenerguide.envyz.de',
 };

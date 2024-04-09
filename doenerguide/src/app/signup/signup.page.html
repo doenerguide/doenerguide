@@ -1,47 +1,76 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> DönerGuide </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">signup</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-card>
     <img id="icon" alt="User Icon" src="/assets/icon/logo.png" />
     <ion-card-header>
-      <ion-card-title>signup</ion-card-title>
+      <ion-card-title>Registierung</ion-card-title>
       <ion-card-subtitle>Welcome to DönerGuide!</ion-card-subtitle>
     </ion-card-header>
-  
+
     <ion-card-content>
-      Please fill out all information below to register your new account.
-      <div id="input">
-        <ion-input id="vorname" labelPlacement="floating" placeholder="name">
-          <div slot="label">Vorname</div>
+      Bitte fülle alle Felder aus, um sich zu registrieren.
+      <form id="input" [formGroup]="form">
+        <ion-input
+          formControlName="vorname"
+          label="Vorname"
+          labelPlacement="floating"
+          placeholder="Dein Vorname"
+          required="true"
+        >
         </ion-input>
-        <ion-input id="nachname" labelPlacement="floating" placeholder="prename">
-          <div slot="label">Nachname</div>
+        <ion-input
+          formControlName="nachname"
+          labelPlacement="floating"
+          label="Nachname"
+          placeholder="Dein Nachname"
+          required="true"
+        >
         </ion-input>
-        <ion-input id="email" labelPlacement="floating" placeholder="your email here" helperText="Geben Sie eine gültige E-Mail-Adressse an">
-          <div slot="label">E-Mail</div>
+        <ion-input
+          formControlName="email"
+          label="E-Mail"
+          labelPlacement="floating"
+          placeholder="Deine E-Mail Adresse"
+          required="true"
+        >
         </ion-input>
-        <ion-input id="password" labelPlacement="floating" placeholder="your password here" type="password" helperText="Mindestlänge 8 Zeichen">
-          <div slot="label">Passwort</div>
+        <ion-input
+          formControlName="password"
+          label="Passwort"
+          labelPlacement="floating"
+          placeholder="Dein Passwort"
+          type="password"
+          helperText="Mindestlänge 8 Zeichen"
+          minlength="8"
+          required="true"
+        >
         </ion-input>
-        <ion-input id="password_confirm" labelPlacement="floating" placeholder="confirm your password here" type="password">
-          <div slot="label">Passwort wiederholen</div>
+        <ion-input
+          formControlName="passwordConfirm"
+          label="Passwort wiederholen"
+          labelPlacement="floating"
+          placeholder="Password bestätigen"
+          type="password"
+          minlength="8"
+          required="true"
+        >
         </ion-input>
         <ion-item id="nutzungsbedingungen">
-          <ion-checkbox id="terms" slot="" (ionChange)="signupButton()">Nutzungsbedingungen</ion-checkbox>
+          <ion-checkbox formControlName="terms" slot="" required="true">
+            Nutzungsbedingungen
+          </ion-checkbox>
         </ion-item>
-      </div>
-      <div slot="label" id="error_message"></div>
-      <ion-button id="signup" [disabled]="true" size="medium">signup</ion-button>
+      </form>
+      <div slot="label" #errorMessage></div>
+      <ion-button
+        id="signup"
+        [disabled]="checkRegisterButton()"
+        (click)="register()"
+        size="medium"
+        form="input"
+        type="submit"
+      >
+        Registrieren
+      </ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

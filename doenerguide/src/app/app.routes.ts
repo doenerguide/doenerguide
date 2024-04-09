@@ -16,20 +16,27 @@ export const routes: Routes = [
         loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
       },
       {
-        path: 'shop/:id',
+        path: 'shop',
         loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
       },
       {
         path: 'login',
-        loadComponent: () => import('./login/login.page').then(m => m.LoginPage)
+        loadComponent: () =>
+          import('./login/login.page').then((m) => m.LoginPage),
       },
       {
         path: 'signup',
-        loadComponent: () => import('./signup/signup.page').then(m => m.SignupPage)
+        loadComponent: () =>
+          import('./signup/signup.page').then((m) => m.SignupPage),
+      },
+      {
+        path: 'favorites',
+        loadComponent: () =>
+          import('./favorites/favorites.page').then((m) => m.FavoritesPage),
       },
       {
         path: 'map',
-        loadComponent: () => import('./map/map.page').then(m => m.MapPage)
+        loadComponent: () => import('./map/map.page').then((m) => m.MapPage),
       },
     ],
   },

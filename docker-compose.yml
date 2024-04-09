@@ -1,0 +1,14 @@
+# Compose file to run the backend application and pull it from the docker hub
+
+services:
+  backend:
+    restart: always
+    image: dmncrs/doenerguide:latest
+    container_name: doenerguide-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend:/backend
+
+volumes:
+  backend:

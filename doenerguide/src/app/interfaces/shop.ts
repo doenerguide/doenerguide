@@ -7,12 +7,16 @@ export interface Shop {
   address: string;
   rating: number;
   priceCategory: number;
-  openingHours: [
-    {
+  openToday: {
+    open: string;
+    close: string;
+  }[];
+  openingHours: {
+    [weekday: string]: {
       open: string;
       close: string;
-    }
-  ]
+    }[];
+  };
   tel: string;
   flags: Flags;
   lat: number;
@@ -20,7 +24,10 @@ export interface Shop {
 }
 
 export class ShopFunctions {
-  static enabledFlags(flags: Flags) {
+  static enabledFlags(flags?: Flags) {
+    if (!flags) {
+      return [];
+    }
     let iFlags = flags as unknown as IFlags;
     let enabledFlags: string[] = [];
     for (let flag in flags) {
@@ -31,7 +38,10 @@ export class ShopFunctions {
     return enabledFlags;
   }
 
-  static disabledFlags(flags: Flags) {
+  static disabledFlags(flags?: Flags) {
+    if (!flags) {
+      return [];
+    }
     let iFlags = flags as unknown as IFlags;
     let disabledFlags: string[] = [];
     for (let flag in flags) {
@@ -42,25 +52,24 @@ export class ShopFunctions {
     return disabledFlags;
   }
 
-  static checkOpeningColor(shop: Shop) {
+  static checkOpeningColor(shop?: Shop) {
+    if (!shop) {
+      return 'danger';
+    }
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();
     let nowTime = hours + ':' + minutes;
     let status = 'danger';
-    for (let i = 0; i < shop.openingHours.length; i++) {
-      const openingHour = shop.openingHours[i];
-      if (
-      nowTime > openingHour.open &&
-      nowTime < openingHour.close
-      ) {
-      nowTime = hours + 1 + ':' + minutes;
-      if (nowTime >= openingHour.close) {
-        status = 'warning';
-      } else {
-        status = 'open';
-      }
-      break;
+    for (let openingHour of shop.openToday) {
+      if (nowTime > openingHour.open && nowTime < openingHour.close) {
+        nowTime = hours + 1 + ':' + minutes;
+        if (nowTime >= openingHour.close) {
+          status = 'warning';
+        } else {
+          status = 'open';
+        }
+        break;
       }
     }
     return status;

@@ -1,9 +1,20 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Renderer2,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { environment } from 'src/environments/environment';
-import { getUserLocation } from '../home/home.page';
+import { UserService } from '../services/user.service';
 
 declare let google: any;
 
@@ -12,10 +23,16 @@ declare let google: any;
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    CommonModule,
+    FormsModule,
+  ],
 })
-export class MapPage implements OnInit {
-
+export class MapPage {
   @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
   center = { lat: environment.lat, lng: environment.long };
   map: any;
@@ -26,18 +43,16 @@ export class MapPage implements OnInit {
   intersectionObserver: any;
   private renderer = inject(Renderer2);
 
-  constructor() { }
-
-  ngOnInit() { }
+  constructor(private userSrv: UserService) {}
 
   async ionViewDidEnter() {
-    await getUserLocation();
-    this.center = { lat: environment.lat, lng: environment.long };
+    let location = await this.userSrv.getUserLocation();
+    this.center = { lat: location.lat, lng: location.long };
     this.loadMap();
   }
 
   async loadMap() {
-    const { Map } = await google.maps.importLibrary("maps");
+    const { Map } = await google.maps.importLibrary('maps');
 
     const mapEl = this.mapElementRef.nativeElement;
 
@@ -53,88 +68,88 @@ export class MapPage implements OnInit {
       mapTypeControl: false,
       fullscreenControl: false,
       styles: [
-        { elementType: "geometry", stylers: [{ color: "#1F1F1F" }] },
-        { elementType: "labels.text.stroke", stylers: [{ color: "#1F1F1F" }] },
-        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+        { elementType: 'geometry', stylers: [{ color: '#1F1F1F' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#1F1F1F' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
         {
-          featureType: "administrative.locality",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#E1E6EC" }],
+          featureType: 'administrative.locality',
+          elementType: 'labels.text.fill',
+          stylers: [{ color: '#E1E6EC' }],
         },
         {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [{ visibility: "off" }],
+          featureType: 'poi',
+          elementType: 'labels.text.fill',
+          stylers: [{ visibility: 'off' }],
         },
         {
-          featureType: "poi",
-          elementType: "labels",
-          stylers: [{ visibility: "off" }],
+          featureType: 'poi',
+          elementType: 'labels',
+          stylers: [{ visibility: 'off' }],
         },
         {
-          featureType: "poi.park",
-          elementType: "geometry",
-          stylers: [{ visibility: "off" }],
+          featureType: 'poi.park',
+          elementType: 'geometry',
+          stylers: [{ visibility: 'off' }],
         },
         {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [{ visibility: "off" }],
+          featureType: 'poi.park',
+          elementType: 'labels.text.fill',
+          stylers: [{ visibility: 'off' }],
         },
         {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [{ color: "#38414e" }],
+          featureType: 'road',
+          elementType: 'geometry',
+          stylers: [{ color: '#38414e' }],
         },
         {
-          featureType: "road",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#212a37" }],
+          featureType: 'road',
+          elementType: 'geometry.stroke',
+          stylers: [{ color: '#212a37' }],
         },
         {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#9ca5b3" }],
+          featureType: 'road',
+          elementType: 'labels.text.fill',
+          stylers: [{ color: '#9ca5b3' }],
         },
         {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [{ color: "#746855" }],
+          featureType: 'road.highway',
+          elementType: 'geometry',
+          stylers: [{ color: '#746855' }],
         },
         {
-          featureType: "road.highway",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#1f2835" }],
+          featureType: 'road.highway',
+          elementType: 'geometry.stroke',
+          stylers: [{ color: '#1f2835' }],
         },
         {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#f3d19c" }],
+          featureType: 'road.highway',
+          elementType: 'labels.text.fill',
+          stylers: [{ color: '#f3d19c' }],
         },
         {
-          featureType: "transit",
-          elementType: "geometry",
-          stylers: [{ color: "#2f3948" }],
+          featureType: 'transit',
+          elementType: 'geometry',
+          stylers: [{ color: '#2f3948' }],
         },
         {
-          featureType: "transit.station",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }],
+          featureType: 'transit.station',
+          elementType: 'labels.text.fill',
+          stylers: [{ color: '#d59563' }],
         },
         {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [{ color: "#17263c" }],
+          featureType: 'water',
+          elementType: 'geometry',
+          stylers: [{ color: '#17263c' }],
         },
         {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#515c6d" }],
+          featureType: 'water',
+          elementType: 'labels.text.fill',
+          stylers: [{ color: '#515c6d' }],
         },
         {
-          featureType: "water",
-          elementType: "labels.text.stroke",
-          stylers: [{ color: "#17263c" }],
+          featureType: 'water',
+          elementType: 'labels.text.stroke',
+          stylers: [{ color: '#17263c' }],
         },
       ],
       disableDefaultUI: true,
@@ -143,40 +158,28 @@ export class MapPage implements OnInit {
     console.log('shops: ', environment.shops);
     this.set_circle(this.map, location, environment.radius * 1000);
     this.renderer.addClass(mapEl, 'visible');
-    for (const shop of environment.shops as any[]) {
-      this.addMarker(new google.maps.LatLng(shop.lat, shop.lng), "<img src='" + shop.imageUrl + "' style='width: 20em; height: auto;'><h2>" + shop.name + "</h2><p>" + shop.address + "</p><p>Rating: " + shop.rating + "</p><p>Price category: " + shop.priceCategory + "</p><p>Opening hours: " + shop.openingHours.opens + " - " + shop.openingHours.closes + "</p><p>Accepts card: " + shop.flags.acceptCard + "</p><p>Has stamp card: " + shop.flags.stampCard + "</p><a href='" + shop.mapsUrl + "'>Open in Google Maps</a><p>Tel: " + shop.tel + "</p>");
-    }
+    this.addMarker(location, '<h1>Store A</h1><p>Store Description</p>');
+    this.addMarker(
+      new google.maps.LatLng(48.793333, 9.193333),
+      '<h1>Store B</h1><p>Store Description</p>'
+    );
   }
-
-  set_circle = (map: any, center: any, radius: number) => {
-    return new google.maps.Circle({
-      strokeColor: "#1E7FF3",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#1AADEB",
-      fillOpacity: 0.1,
-      map,
-      center,
-      radius,
-    });
-  }
-
 
   addMarker(location: any, info: string) {
     const markerIcon = {
       url: 'assets/logo.png',
       scaledSize: new google.maps.Size(50, 50),
     };
-  
+
     const marker = new google.maps.Marker({
       position: location,
       map: this.map,
       // draggable: true,
       icon: markerIcon,
     });
-  
+
     const infoWindow = new google.maps.InfoWindow({
-      content: `<div style="color: black !important;">${info}</div>`
+      content: `<div style="color: black !important;">${info}</div>`,
     });
 
     marker.addListener('click', () => {
@@ -192,14 +195,13 @@ export class MapPage implements OnInit {
         this.infoWindow = infoWindow;
       }
     });
-  
-    marker.addListener("dragend", (event: any) => {
+
+    marker.addListener('dragend', (event: any) => {
       console.log(event.latLng.lat());
       marker.setPosition(event.latLng);
       this.map.panTo(event.latLng);
     });
   }
-
 
   ngOnDestroy(): void {
     if (this.mapListener) {
@@ -214,5 +216,4 @@ export class MapPage implements OnInit {
     console.log('marker listener: ', this.markerListener);
     console.log('map listener: ', this.mapListener);
   }
-
 }

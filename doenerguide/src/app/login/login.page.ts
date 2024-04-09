@@ -1,86 +1,81 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
-import * as $ from 'jquery';
+import { Router, RouterModule } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { environment } from 'src/environments/environment';
+import { User } from '../interfaces/user';
 
-// let endpoint = "https://doenerguide.onrender.com";
-let endpoint = "http://127.0.0.1:5050";
+let endpoint = environment.endpoint;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    ReactiveFormsModule,
+  ],
 })
-export class LoginPage implements OnInit {
-  constructor() { }
+export class LoginPage {
+  @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
 
-  //function called when login button is clicked
-  login() {
-    //get email & password from input fields
-    let email_elem = document.getElementById('email') as HTMLInputElement;
-    let password_elem = document.getElementById('password') as HTMLInputElement;
-    let email_value = email_elem.value;
-    let password_value = password_elem.value;
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private userSrv: UserService
+  ) {}
 
-    // ajax request to endpoint /login with body {email: email_value, password: password_value}
-    $.ajax({
-      url: endpoint + '/login',
-      type: 'POST',
-      data: JSON.stringify({ "email": email_value, "password": password_value }),
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
+  form = this.formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+  });
+
+  handleLogin() {
+    if (!this.form.valid) {
+      return;
+    }
+
+    fetch(endpoint + '/login', {
+      method: 'POST',
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Content-Type': 'application/json; charset=utf-8',
       },
-      success: function (data: any) {
-        if (data["success"]) {
-          window.location.href = '/home';
+      body: JSON.stringify(this.form.value),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data['success']) {
+          let user = data['user'] as User;
+          this.userSrv.setUser(user);
+          this.router.navigate(['/home', { message: 'Login erfolgreich' }]);
         } else {
-          //if login is not successful show error message
-          let error_message = document.getElementById('error_message');
-          if (error_message) {
-            error_message.innerHTML = 'Falsche E-Mail oder falsches Passwort';
-          }
+          this.errorMessage.nativeElement.innerHTML =
+            'Falsche E-Mail oder falsches Passwort';
         }
-      },
-      error: function (xhr: any, status: string, error: any) {
-        console.log(xhr.responseText);
-        console.log(status);
-        console.log(error);
-      },
-    });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 
-
-  loginButton() {
-    let email = document.getElementById('email') as HTMLInputElement;
-    let password = document.getElementById('password') as HTMLInputElement;
-    let loginbutton = document.getElementById('login') as HTMLButtonElement;
-    if (email.value == '' || password.value == '') {
-      loginbutton.disabled = true;
-      return false;
-    } else {
-      loginbutton.disabled = false;
-      return true;
-    }
+  checkLoginButton(): boolean {
+    return !this.form.valid;
   }
 
   //function calles when continue as guest button is clicked
   guest() {
     console.log('guest');
   }
-
-
-  ngOnInit() { }
 }
-
-document.addEventListener('keyup', (event) => {
-  let isEnabled = LoginPage.prototype.loginButton();
-  if (event.key === 'Enter' && isEnabled) {
-    LoginPage.prototype.login();
-  }
-});
