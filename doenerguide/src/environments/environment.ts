@@ -5,7 +5,8 @@
 /**
  * Represents the environment configuration for the application.
  */
-export let environment = {
+export const environment = {
   production: false,
-  shops: []
+  shops: [],
+  endpoint: 'https://backend.doenerguide.envyz.de',
 };

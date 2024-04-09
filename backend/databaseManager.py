@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import hashlib
+import ast
 import logging
 
 def hash_password(password, salt):
@@ -23,15 +24,39 @@ def check_login(mail, password):
     data = cursor.fetchall()
     conn.close()
     if len(data) == 0:
-        return False
+        return None
     else:
-        return True
+        favoriten_ids = ast.literal_eval(data[0][5])
+        favoriten_ids = [int(n.strip()) for n in favoriten_ids]
+        favoriten = []
+        for id in favoriten_ids:
+            favoriten.append(get_shop(id))
+        user_object = {
+            'id': data[0][0],
+            'mail': data[0][1],
+            'vorname': data[0][3],
+            'nachname': data[0][4],
+            'favoriten': favoriten
+        }
+        return user_object
     
 def add_user(mail, password, vorname, nachname):
     password = hash_password(password, "doenerguide")
     conn = create_connection()
     try:
-        conn.execute("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname) VALUES (?, ?, ?, ?)", (mail, password, vorname, nachname))
+        conn.execute("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten) VALUES (?, ?, ?, ?, ?)", (mail, password, vorname, nachname, str([])))
+    except sqlite3.Error as e:
+        print(e)
+        conn.close()
+        return False
+    conn.commit()
+    conn.close()
+    return True
+
+def update_user_favoriten(user_id, favoriten):
+    conn = create_connection()
+    try:
+        conn.execute("UPDATE [USERS] SET Favoriten = ? WHERE ID = ?", (str(favoriten), user_id))
     except sqlite3.Error as e:
         print(e)
         conn.close()
@@ -71,3 +96,25 @@ def get_shops(lat, long, radius, price_category, flags):
     print(data)
     conn.close()
     return data
+
+def get_shop(id):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [ID] = ?", (id,))
+    data = cursor.fetchall()
+    conn.close()
+    shop = {
+        'id': data[0][0],
+        'name': data[0][1],
+        'imageURL': data[0][2],
+        'address': data[0][3],
+        'rating': data[0][4],
+        'priceCategory': data[0][5],
+        'flags': {
+            'acceptCard': 'Kartenzahlung' in data[0][6],
+            'stampCard': 'Stempelkarte' in data[0][6],
+        },
+        'openingHours': data[0][7],
+        'lat': data[0][8],
+        'long': data[0][9]
+    }
+    return shop

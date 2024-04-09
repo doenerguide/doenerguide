@@ -16,7 +16,7 @@ export const routes: Routes = [
         loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
       },
       {
-        path: 'shop/:id',
+        path: 'shop',
         loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
       },
       {
@@ -36,7 +36,7 @@ export const routes: Routes = [
       },
       {
         path: 'map',
-        loadComponent: () => import('./map/map.page').then(m => m.MapPage)
+        loadComponent: () => import('./map/map.page').then((m) => m.MapPage),
       },
     ],
   },

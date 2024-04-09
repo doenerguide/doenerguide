@@ -1,22 +1,23 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button [defaultHref]="refferer"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <div class="title">
-        <p>{{shop?.name}}</p>
-        <ion-icon name="heart-outline" class="size"></ion-icon>
-      </div>
-    </ion-toolbar>
-    <img [src]="shop?.imageUrl" alt="Shop" />
-  </ion-header>
   <div class="informationGrid">
+    <div class="title">
+      <p>{{shop?.name}}</p>
+      <ion-icon
+        [name]="userSrv.getFavoriteIds().includes(shop!.id) ? 'heart' : 'heart-outline'"
+        class="size"
+        [color]="userSrv.getFavoriteIds().includes(shop!.id) ? 'danger' : 'medium'"
+        (click)="userSrv.toggleFavorite(shop!)"
+      ></ion-icon>
+    </div>
+    <img [src]="shop?.imageUrl" alt="Shop" />
     <ion-list>
       <ion-item lines="none">
         <ion-icon slot="start" name="pricetag-outline"></ion-icon>
@@ -26,23 +27,23 @@
         <ion-icon
           slot="start"
           name="time-outline"
-          [color]="shopFunctions.checkOpeningColor(shop!)"
+          [color]="shopFunctions.checkOpeningColor(shop ?? undefined)"
         ></ion-icon>
         {{shop?.openingHours?.opens}} - {{shop?.openingHours?.closes}}
       </ion-item>
       <ion-item
         lines="none"
-        *ngIf="shopFunctions.enabledFlags(shop!.flags).length > 0"
+        *ngIf="shopFunctions.enabledFlags(shop?.flags).length > 0"
       >
         <ion-icon slot="start" name="checkmark-outline" color="open"></ion-icon>
-        {{shopFunctions.enabledFlags(shop!.flags).join(", ")}}
+        {{shopFunctions.enabledFlags(shop?.flags).join(", ")}}
       </ion-item>
       <ion-item
         lines="none"
-        *ngIf="shopFunctions.disabledFlags(shop!.flags).length > 0"
+        *ngIf="shopFunctions.disabledFlags(shop?.flags).length > 0"
       >
         <ion-icon slot="start" name="close-outline" color="danger"></ion-icon>
-        {{shopFunctions.disabledFlags(shop!.flags).join(", ")}}
+        {{shopFunctions.disabledFlags(shop?.flags).join(", ")}}
       </ion-item>
     </ion-list>
     <hr />
@@ -50,7 +51,7 @@
       <ion-icon slot="start" name="map-outline"></ion-icon>
       Google Maps
     </ion-button> -->
-    <ion-button expand="block" [href]="'tel:' + shop!.tel">
+    <ion-button expand="block" [href]="'tel:' + shop?.tel">
       <ion-icon slot="start" name="call-outline"></ion-icon>
       Anrufen
     </ion-button>

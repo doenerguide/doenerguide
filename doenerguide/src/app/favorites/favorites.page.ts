@@ -1,20 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { UserService } from '../services/user.service';
+import { RatingComponent } from '../rating/rating.component';
+import { IonicModule } from '@ionic/angular';
+import { ShopFunctions } from '../interfaces/shop';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    RatingComponent,
+    RouterModule,
+  ],
 })
-export class FavoritesPage implements OnInit {
+export class FavoritesPage {
+  shopFunctions = ShopFunctions;
+  constructor(public userSrv: UserService) {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ionViewWillEnter() {}
 }

@@ -18,7 +18,10 @@ export interface Shop {
 }
 
 export class ShopFunctions {
-  static enabledFlags(flags: Flags) {
+  static enabledFlags(flags?: Flags) {
+    if (!flags) {
+      return [];
+    }
     let iFlags = flags as unknown as IFlags;
     let enabledFlags: string[] = [];
     for (let flag in flags) {
@@ -29,7 +32,10 @@ export class ShopFunctions {
     return enabledFlags;
   }
 
-  static disabledFlags(flags: Flags) {
+  static disabledFlags(flags?: Flags) {
+    if (!flags) {
+      return [];
+    }
     let iFlags = flags as unknown as IFlags;
     let disabledFlags: string[] = [];
     for (let flag in flags) {
@@ -40,7 +46,10 @@ export class ShopFunctions {
     return disabledFlags;
   }
 
-  static checkOpeningColor(shop: Shop) {
+  static checkOpeningColor(shop?: Shop) {
+    if (!shop) {
+      return 'danger';
+    }
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();

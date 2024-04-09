@@ -5,7 +5,7 @@ import databaseManager as dbm
 import os
 
 app = flask.Flask(__name__)
-CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}})
+CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}, r'/getShop': {"origins": "*"}, r'/updateFavoriten': {"origins": "*"}})
 
 
 @app.route('/login', methods=['POST'])
@@ -23,8 +23,8 @@ def login():
     body = request.get_json()
     email = body['email'].lower()
     password = body['password']
-    if dbm.check_login(email, password):
-        return jsonify({'success': True})
+    if user := dbm.check_login(email, password):
+        return jsonify({'success': True, 'user': user})
     else:
         return jsonify({'success': False})
     
@@ -70,6 +70,39 @@ def get_shops():
     price_category = int(request.args.get('price_category'.replace('"', '')))
     flags = request.args.get('flags')
     return jsonify(dbm.get_shops(lat, long, radius, price_category, flags))
+
+@app.route('/getShop', methods=['GET'])
+def get_shop():
+    """
+    Retrieves a shop based on the provided shop ID.
+
+    Parameters:
+    - shop_id (int): The ID of the shop.
+
+    Returns:
+    - dict: The shop matching the provided ID.
+    """
+    shop_id = int(request.args.get('id'))
+    return jsonify(dbm.get_shop(shop_id))
+
+
+@app.route('/updateFavoriten', methods=['POST'])
+def update_favoriten():
+    """
+    Updates the favoriten list of a user.
+
+    Retrieves the user ID and the updated favoriten list from the request body and updates the user's favoriten list in the database.
+
+    Returns:
+        A JSON response indicating the success of the operation.
+    """
+    body = request.get_json()
+    user_id = body['user_id']
+    favoriten = body['favoriten']
+    if dbm.update_user_favoriten(user_id, favoriten):
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False})
     
 if __name__ == '__main__':
     print("Running backend server of DönerGuide...")

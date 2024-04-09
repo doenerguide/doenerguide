@@ -11,7 +11,7 @@
         snaps="true"
         color="primary"
         pin="true"
-        [value]="5"
+        [value]="radius"
         [pinFormatter]="pinFormatter"
         (ionChange)="change_radius($event)"
       >
@@ -34,7 +34,7 @@
         size="12"
         size-sm="6"
         size-md="4"
-        size-lg="2"
+        size-lg="3"
         *ngFor="let shop of shownShops"
       >
         <ion-card>
@@ -47,7 +47,12 @@
                 <app-rating [rating]="shop.rating"> </app-rating>
               </ion-card-title>
             </div>
-            <ion-icon name="heart-outline" class="size"></ion-icon>
+            <ion-icon
+              [name]="userSrv.getFavoriteIds().includes(shop.id) ? 'heart' : 'heart-outline'"
+              class="size"
+              [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
+              (click)="userSrv.toggleFavorite(shop)"
+            ></ion-icon>
           </ion-card-header>
           <ion-card-content>
             <ion-list>
@@ -91,7 +96,7 @@
           <div class="buttons">
             <ion-button
               fill="clear"
-              [routerLink]="['/shop', shop.id]"
+              [routerLink]="['/shop', {shop: shop | json, refferer: '/'}]"
               routerDirection="forward"
             >
               Mehr Infos >

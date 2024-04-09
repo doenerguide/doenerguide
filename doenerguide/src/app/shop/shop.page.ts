@@ -5,6 +5,9 @@ import { Shop, ShopFunctions } from '../interfaces/shop';
 import { environment } from 'src/environments/environment';
 import { IonicModule } from '@ionic/angular';
 import { PriceComponent } from '../price/price.component';
+import { DatabaseService } from '../services/database.service';
+import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-shop',
@@ -14,14 +17,30 @@ import { PriceComponent } from '../price/price.component';
   imports: [IonicModule, CommonModule, FormsModule, PriceComponent],
 })
 export class ShopPage implements OnInit {
-  @Input() id: string = '';
+  //@Input() shop!: Shop;
 
-  shop: Shop | undefined;
+  //shop: Shop | undefined;
+
+  shop: Shop | null = null;
+  refferer: string = '/';
   shopFunctions = ShopFunctions;
 
-  constructor() { }
+  constructor(
+    private databaseSrv: DatabaseService,
+    private route: ActivatedRoute,
+    public userSrv: UserService
+  ) {}
 
-  ngOnInit() {
-    this.shop = environment.shops.find((shop: Shop) => shop.id === this.id);
+  /*ngOnInit() {
+    this.databaseSrv.getShop(this.id).then((shop) => (this.shop = shop));
+  }*/
+
+  ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      console.log(params);
+      this.shop = JSON.parse(params['shop']) as Shop;
+      this.refferer = params['refferer'];
+      console.log(this.refferer);
+    });
   }
 }

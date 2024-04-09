@@ -8,10 +8,11 @@ import {
 } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
-import * as $ from 'jquery';
+import { UserService } from '../services/user.service';
+import { environment } from 'src/environments/environment';
+import { User } from '../interfaces/user';
 
-// let endpoint = "https://doenerguide.onrender.com";
-let endpoint = 'http://127.0.0.1:5050';
+let endpoint = environment.endpoint;
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,11 @@ let endpoint = 'http://127.0.0.1:5050';
 export class LoginPage {
   @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private userSrv: UserService
+  ) {}
 
   form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -52,6 +57,8 @@ export class LoginPage {
       .then((data) => {
         console.log(data);
         if (data['success']) {
+          let user = data['user'] as User;
+          this.userSrv.setUser(user);
           this.router.navigate(['/home', { message: 'Login erfolgreich' }]);
         } else {
           this.errorMessage.nativeElement.innerHTML =
