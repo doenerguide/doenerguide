@@ -65,7 +65,16 @@ export class ShopFunctions {
     const minutes = now.getMinutes();
     let status = 'danger';
     for (let openingHour of shop.openToday) {
-      if (openingHour.close < '23:59') {
+      console.log(
+        'Checking ' +
+          shop.name +
+          ' for ' +
+          openingHour.open +
+          ' to ' +
+          openingHour.close
+      );
+
+      if (openingHour.close < '00:00') {
         if (nowTime > openingHour.open && nowTime < openingHour.close) {
           nowTime = hours + 1 + ':' + minutes;
           if (nowTime >= openingHour.close) {
@@ -77,9 +86,12 @@ export class ShopFunctions {
         }
       } else {
         console.log(shop.name + ' closes after midnight');
-        if (nowTime > openingHour.open) {
-          status = 'open';
-          break;
+        if (nowTime < '00:00') {
+          if (nowTime > openingHour.open) {
+            status = 'open';
+            break;
+          }
+        } else {
         }
       }
     }
