@@ -50,6 +50,10 @@ def add_user(mail, password, vorname, nachname):
         print(e)
         conn.close()
         return False
+    except Exception as e:
+        print(e)
+        conn.close()
+        return False
     conn.commit()
     conn.close()
     return True
