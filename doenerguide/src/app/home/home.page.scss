@@ -50,3 +50,11 @@ ion-toolbar > img {
   z-index: 9999;
   background-color: var(--ion-background-color) !important;
 }
+
+.flags {
+  margin-top: 10px;
+}
+
+ion-content ion-grid {
+  padding: 0;
+}

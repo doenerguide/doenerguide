@@ -71,8 +71,8 @@
       <ion-icon slot="end" name="pin-outline"></ion-icon>
     </ion-range>
   </ion-item>
-  <ion-item lines="none">
-    <ion-chip *ngFor="let flags of flagList"> </ion-chip>
+  <ion-item lines="none" class="flags">
+    <ion-chip *ngFor="let flags of flagList"> {{flags.value}} </ion-chip>
   </ion-item>
   <ion-grid>
     <ion-row>
