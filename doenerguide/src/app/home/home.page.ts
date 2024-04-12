@@ -6,10 +6,10 @@ import { RatingComponent } from '../rating/rating.component';
 import { CommonModule } from '@angular/common';
 import { PriceComponent } from '../price/price.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database.service';
 import { UserService } from '../services/user.service';
+import { flagList } from '../interfaces/flags';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +29,7 @@ import { UserService } from '../services/user.service';
 /**
  * Represents the home page of the application.
  */
-export class HomePage implements OnInit {
+export class HomePage {
   shownShops: Shop[] = [];
   lat: number = 52.520008;
   long: number = 13.404954;
@@ -44,10 +44,7 @@ export class HomePage implements OnInit {
   ) {}
 
   shopFunctions = ShopFunctions;
-
-  ngOnInit() {
-    this.shownShops = environment.shops;
-  }
+  flagList = flagList;
 
   pinFormatter(value: number) {
     return `${value}km`;

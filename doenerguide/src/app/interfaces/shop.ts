@@ -57,19 +57,30 @@ export class ShopFunctions {
       return 'danger';
     }
     const now = new Date();
+    let nowTime = now.toLocaleTimeString('de-DE', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
     const hours = now.getHours();
     const minutes = now.getMinutes();
-    let nowTime = hours + ':' + minutes;
     let status = 'danger';
     for (let openingHour of shop.openToday) {
-      if (nowTime > openingHour.open && nowTime < openingHour.close) {
-        nowTime = hours + 1 + ':' + minutes;
-        if (nowTime >= openingHour.close) {
-          status = 'warning';
-        } else {
-          status = 'open';
+      if (openingHour.close < '23:59') {
+        if (nowTime > openingHour.open && nowTime < openingHour.close) {
+          nowTime = hours + 1 + ':' + minutes;
+          if (nowTime >= openingHour.close) {
+            status = 'warning';
+          } else {
+            status = 'open';
+          }
+          break;
         }
-        break;
+      } else {
+        console.log(shop.name + ' closes after midnight');
+        if (nowTime > openingHour.open) {
+          status = 'open';
+          break;
+        }
       }
     }
     return status;
