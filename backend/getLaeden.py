@@ -45,7 +45,8 @@ def getStadt(url, driver):
     laeden = [laed.get_attribute("href") for laed in laeden]
     with open("backend/shops_url.txt", "a") as f:
         for laed in laeden:
-            f.write(laed + "\n")
+            if laed not in f.read():
+                f.write(laed + "\n")
 
 
 

@@ -146,4 +146,7 @@ if __name__ == "__main__":
             # write in red in console
             print("\033[91m" + "Shop closed" + "\033[0m")
             failed_shops.append(url)
+        with open("backend/shops_url.txt", "w") as f:
+            urls = urls[1:]
+            f.writelines(urls)
         time.sleep(0.5)
