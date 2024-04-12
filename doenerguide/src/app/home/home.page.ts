@@ -10,6 +10,7 @@ import { ToastController } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database.service';
 import { UserService } from '../services/user.service';
 import { flagList } from '../interfaces/flags';
+import { LocationService } from '../services/location.service';
 
 @Component({
   selector: 'app-home',
@@ -40,7 +41,8 @@ export class HomePage {
     private toastCtrl: ToastController,
     private router: Router,
     private databaseSrv: DatabaseService,
-    public userSrv: UserService
+    public userSrv: UserService,
+    private locationSrv: LocationService
   ) {}
 
   shopFunctions = ShopFunctions;
@@ -52,6 +54,7 @@ export class HomePage {
 
   change_radius(event: any) {
     this.radius = event.detail.value;
+    this.locationSrv.setRadius(this.radius);
     this.setShops();
   }
 
@@ -67,6 +70,7 @@ export class HomePage {
     this.userSrv.getUserLocation().then((loc) => {
       this.lat = loc.lat;
       this.long = loc.long;
+      this.locationSrv.setLocation(this.lat, this.long);
       this.setShops();
     });
     if (this.activatedRoute.snapshot.paramMap.get('message')) {
