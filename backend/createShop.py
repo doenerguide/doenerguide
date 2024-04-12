@@ -46,7 +46,7 @@ def getData(url):
     try:
         driver.find_element(By.CLASS_NAME, "aSftqf")
         print("Shop closed")
-        return None, None, None, None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None, None, None, None
     except:
         pass
     try:
@@ -58,7 +58,7 @@ def getData(url):
         rating = round(rating)
     except:
         print("Shop has not enough information")
-        return None, None, None, None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None, None, None, None
     try:
         priceCategory = driver.find_element(By.CLASS_NAME, "mgr77e").text.count("€")
     except:
@@ -84,7 +84,7 @@ def getData(url):
             driver.execute_script("arguments[0].click();", openingButton)
         except:
             print("Shop has no opening hours")
-            return None, None, None, None, None, None, None, None, None, None
+            return None, None, None, None, None, None, None, None, None, None, None
         opening = ""
         while opening == "":
             try:
@@ -96,14 +96,14 @@ def getData(url):
     openingHours = parse_opening_hours(opening)
     if openingHours == {}:
         print("Parsing opening hours failed")
-        return None, None, None, None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None, None, None, None
     time.sleep(0.2)
     try:
         button = driver.find_elements(By.CLASS_NAME, "hh2c6")[2]
         driver.execute_script("arguments[0].click();", button)
     except:
         print("Button not found")
-        return None, None, None, None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None, None, None, None
     time.sleep(0.2)
     flags = ""
     zahlung = driver.find_elements(By.CLASS_NAME, "hpLkke")
@@ -146,4 +146,7 @@ if __name__ == "__main__":
             # write in red in console
             print("\033[91m" + "Shop closed" + "\033[0m")
             failed_shops.append(url)
+        with open("backend/shops_url.txt", "w") as f:
+            urls = urls[1:]
+            f.writelines(urls)
         time.sleep(0.5)
