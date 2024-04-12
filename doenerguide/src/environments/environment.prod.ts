@@ -4,4 +4,5 @@ export let environment = {
   radius: 5,
   endpoint: 'https://backend.doenerguide.envyz.de',
   production: true,
+  shops: []
 };
