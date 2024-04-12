@@ -87,13 +87,28 @@ export class MapPage {
       mapTypeControl: false,
       fullscreenControl: false,
       styles: [
-        { elementType: 'geometry', stylers: [{ color: '#1F1F1F' }] },
+        { elementType: 'geometry', stylers: [{ color: '#316857' }] },
         { elementType: 'labels.text.stroke', stylers: [{ color: '#1F1F1F' }] },
         { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
         {
           featureType: 'administrative.locality',
           elementType: 'labels.text.fill',
           stylers: [{ color: '#E1E6EC' }],
+        },
+        {
+          featureType: 'landscape.man_made',
+          elementType: 'geometry',
+          stylers: [{ color: '#36495D' }],
+        },
+        {
+          featureType: 'landscape.natural.landcover',
+          elementType: 'geometry',
+          stylers: [{ color: '#005E5B' }],
+        },
+        {
+          featureType: 'landscape.natural',
+          elementType: 'geometry',
+          stylers: [{ color: '#447965' }],
         },
         {
           featureType: 'poi',
@@ -118,32 +133,32 @@ export class MapPage {
         {
           featureType: 'road',
           elementType: 'geometry',
-          stylers: [{ color: '#38414e' }],
+          stylers: [{ color: '#64768D' }],
         },
         {
           featureType: 'road',
           elementType: 'geometry.stroke',
-          stylers: [{ color: '#212a37' }],
+          stylers: [{ color: '#324155' }],
         },
         {
           featureType: 'road',
           elementType: 'labels.text.fill',
-          stylers: [{ color: '#9ca5b3' }],
+          stylers: [{ color: '#BCCEEA' }],
         },
         {
           featureType: 'road.highway',
           elementType: 'geometry',
-          stylers: [{ color: '#746855' }],
+          stylers: [{ color: '#8196B7' }],
         },
         {
           featureType: 'road.highway',
           elementType: 'geometry.stroke',
-          stylers: [{ color: '#1f2835' }],
+          stylers: [{ color: '#8196B7' }],
         },
         {
           featureType: 'road.highway',
           elementType: 'labels.text.fill',
-          stylers: [{ color: '#f3d19c' }],
+          stylers: [{ color: '#BCCEEA' }],
         },
         {
           featureType: 'transit',
@@ -163,12 +178,12 @@ export class MapPage {
         {
           featureType: 'water',
           elementType: 'labels.text.fill',
-          stylers: [{ color: '#515c6d' }],
+          stylers: [{ color: '#476CE7' }],
         },
         {
           featureType: 'water',
           elementType: 'labels.text.stroke',
-          stylers: [{ color: '#17263c' }],
+          stylers: [{ color: '#1A306F' }],
         },
       ],
       disableDefaultUI: true,
@@ -181,28 +196,28 @@ export class MapPage {
       this.addMarker(
         new google.maps.LatLng(shop.lat, shop.lng),
         "<img src='" +
-          shop.imageUrl +
-          "' style='width: 20em; height: auto;'><h2>" +
-          shop.name +
-          '</h2><p>' +
-          shop.address +
-          '</p><p>Rating: ' +
-          shop.rating +
-          '</p><p>Price category: ' +
-          shop.priceCategory +
-          '</p><p>Opening hours: ' +
-          shop.openingHours.opens +
-          ' - ' +
-          shop.openingHours.closes +
-          '</p><p>Accepts card: ' +
-          shop.flags.acceptCard +
-          '</p><p>Has stamp card: ' +
-          shop.flags.stampCard +
-          "</p><a href='" +
-          shop.mapsUrl +
-          "'>Open in Google Maps</a><p>Tel: " +
-          shop.tel +
-          '</p>'
+        shop.imageUrl +
+        "' style='width: 20em; height: auto;'><h2>" +
+        shop.name +
+        '</h2><p>' +
+        shop.address +
+        '</p><p>Rating: ' +
+        shop.rating +
+        '</p><p>Price category: ' +
+        shop.priceCategory +
+        '</p><p>Opening hours: ' +
+        shop.openingHours.opens +
+        ' - ' +
+        shop.openingHours.closes +
+        '</p><p>Accepts card: ' +
+        shop.flags.acceptCard +
+        '</p><p>Has stamp card: ' +
+        shop.flags.stampCard +
+        "</p><a href='" +
+        shop.mapsUrl +
+        "'>Open in Google Maps</a><p>Tel: " +
+        shop.tel +
+        '</p>'
       );
     }
   }
