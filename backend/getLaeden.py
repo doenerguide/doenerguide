@@ -43,10 +43,11 @@ def getStadt(url, driver):
             pass
     laeden = driver.find_elements(By.CLASS_NAME, "hfpxzc")
     laeden = [laed.get_attribute("href") for laed in laeden]
-    with open("backend/shops_url.txt", "a") as f:
-        for laed in laeden:
-            if laed not in f.read():
-                f.write(laed + "\n")
+    with open("backend/shops_url.txt", "w") as fw:
+        with open("backend/shops_url.txt", "r") as fr:
+            for laed in laeden:
+                if laed not in fr.read():
+                    fw.write(laed + "\n")
 
 
 
