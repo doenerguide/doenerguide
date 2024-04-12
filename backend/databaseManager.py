@@ -10,7 +10,7 @@ def hash_password(password, salt):
     return password_hash
 
 def create_connection():
-    db_file = "/backened/database.db"
+    db_file = "/backend/database.db"
     conn = None
     try:
         conn = sqlite3.connect(db_file)
