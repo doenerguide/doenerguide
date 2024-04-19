@@ -3,9 +3,32 @@ from flask import request, jsonify
 from flask_cors import CORS
 import databaseManager as dbm
 import os
+import hashlib
 
 app = flask.Flask(__name__)
 CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}, r'/getShop': {"origins": "*"}, r'/updateFavoriten': {"origins": "*"}})
+
+def hash_string(s):
+    """
+    Hashes a string using the SHA-256 algorithm.
+
+    Parameters:
+    - s (str): The string to be hashed.
+
+    Returns:
+    - str: The hashed string.
+    """
+    return hashlib.sha256(s.encode()).hexdigest()
+
+def create_identification_code():
+    """
+    Creates a random identification code.
+
+    Returns:
+        str: A random identification code.
+    """
+    return os.urandom(16).hex()
+
 
 
 @app.route('/login', methods=['POST'])
@@ -43,7 +66,9 @@ def signup():
     password = body['password']
     vorname = body['vorname']
     nachname = body['nachname']
-    if dbm.add_user(email, password, vorname, nachname):
+    identification_code = create_identification_code()
+    hashed_identification_code = hash_string(identification_code)
+    if dbm.add_user(email, password, vorname, nachname, hashed_identification_code):
         return jsonify({'success': True})
     else:
         return jsonify({'success': False})

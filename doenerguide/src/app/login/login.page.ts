@@ -73,9 +73,4 @@ export class LoginPage {
   checkLoginButton(): boolean {
     return !this.form.valid;
   }
-
-  //function calles when continue as guest button is clicked
-  guest() {
-    console.log('guest');
-  }
 }

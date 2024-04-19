@@ -41,11 +41,11 @@ def check_login(mail, password):
         }
         return user_object
     
-def add_user(mail, password, vorname, nachname):
+def add_user(mail, password, vorname, nachname, identification_code):
     password = hash_password(password, "doenerguide")
     conn = create_connection()
     try:
-        conn.execute("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten) VALUES (?, ?, ?, ?, ?)", (mail, password, vorname, nachname, str([])))
+        conn.execute("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten, identification_code) VALUES (?, ?, ?, ?, ?, ?)", (mail, password, vorname, nachname, str([]), identification_code))
     except sqlite3.Error as e:
         print(e)
         conn.close()
