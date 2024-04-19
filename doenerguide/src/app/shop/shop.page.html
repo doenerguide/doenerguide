@@ -27,7 +27,7 @@
         <ion-icon
           slot="start"
           name="time-outline"
-          [color]="shopFunctions.checkOpeningColor(shop ?? undefined)"
+          [color]="shopFunctions.checkOpeningColor(shop?.openToday).status"
         ></ion-icon>
         <div class="openingHours">
           <ng-container *ngFor="let day of Object.keys(shop!.openingHours)">

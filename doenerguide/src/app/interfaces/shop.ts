@@ -52,9 +52,12 @@ export class ShopFunctions {
     return disabledFlags;
   }
 
-  static checkOpeningColor(shop?: Shop) {
-    if (!shop) {
-      return 'danger';
+  static checkOpeningColor(openingHours?: { open: string; close: string }[]): {
+    status: string;
+    open: boolean;
+  } {
+    if (!openingHours) {
+      return { status: 'danger', open: false };
     }
     const now = new Date();
     let nowTime = now.toLocaleTimeString('de-DE', {
@@ -64,7 +67,8 @@ export class ShopFunctions {
     const hours = now.getHours();
     const minutes = now.getMinutes();
     let status = 'danger';
-    for (let openingHour of shop.openToday) {
+    let open = false;
+    for (let openingHour of openingHours) {
       if (openingHour.close < '00:00') {
         if (nowTime > openingHour.open && nowTime < openingHour.close) {
           nowTime = hours + 1 + ':' + minutes;
@@ -73,26 +77,25 @@ export class ShopFunctions {
           } else {
             status = 'open';
           }
+          open = true;
           break;
         }
-      } else {
-        if (nowTime >= '10:00' && nowTime < '23:59') {
-          if (nowTime > openingHour.open) {
-            status = 'open';
-            break;
-          }
-        } else {
-          if (nowTime < openingHour.close) {
-            nowTime = hours + 1 + ':' + minutes;
-            if (nowTime >= openingHour.close) {
-              status = 'warning';
-            } else {
-              status = 'open';
-            }
-          }
+      } else if (nowTime >= '10:00' && nowTime < '23:59') {
+        if (nowTime > openingHour.open) {
+          status = 'open';
+          open = true;
+          break;
         }
+      } else if (nowTime < openingHour.close) {
+        nowTime = hours + 1 + ':' + minutes;
+        if (nowTime >= openingHour.close) {
+          status = 'warning';
+        } else {
+          status = 'open';
+        }
+        open = true;
       }
     }
-    return status;
+    return { status: status, open: open };
   }
 }

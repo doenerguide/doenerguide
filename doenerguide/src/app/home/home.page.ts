@@ -11,6 +11,7 @@ import { DatabaseService } from '../services/database.service';
 import { UserService } from '../services/user.service';
 import { Flags, IFlags, flagList } from '../interfaces/flags';
 import { LocationService } from '../services/location.service';
+import { FilterPipe } from '../pipes/filter.pipe';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,7 @@ import { LocationService } from '../services/location.service';
     CommonModule,
     PriceComponent,
     RouterModule,
+    FilterPipe,
   ],
 })
 
@@ -33,7 +35,7 @@ import { LocationService } from '../services/location.service';
 export class HomePage {
   shownShops: Shop[] = [];
   radiusShops: Shop[] = [];
-  flags: string[] = [];
+  flags: { key: string; value: string }[] = [];
   lat: number = 52.520008;
   long: number = 13.404954;
   radius: number = 5;
@@ -69,7 +71,7 @@ export class HomePage {
     this.shownShops = this.radiusShops;
   }
 
-  handleFlag(flag: string) {
+  handleFlag(flag: { key: string; value: string }) {
     if (this.flags.includes(flag)) {
       this.flags = this.flags.filter((f) => f !== flag);
     } else {
@@ -77,9 +79,16 @@ export class HomePage {
     }
     this.shownShops = this.radiusShops.filter((shop) =>
       this.flags.every(
-        (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag]
+        (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key]
       )
     );
+  }
+
+  fitlerFlags(
+    flag: { key: string; value: string },
+    flags: { key: string; value: string }[]
+  ) {
+    return flags.includes(flag);
   }
 
   ionViewWillEnter() {

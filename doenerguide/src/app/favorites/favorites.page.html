@@ -40,7 +40,7 @@
               <ion-icon
                 slot="start"
                 name="time-outline"
-                [color]="shopFunctions.checkOpeningColor(shop)"
+                [color]="shopFunctions.checkOpeningColor(shop.openToday).status"
               ></ion-icon>
               <ng-container *ngFor="let openingHour of shop.openToday">
                 {{ openingHour.open === '00:00' && openingHour.close === '00:00'
