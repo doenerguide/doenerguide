@@ -1,40 +1,86 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> DönerGuide </ion-title>
-    <!-- input slider -->
-    <ion-item>
-      <ion-label>Entfernung</ion-label>
-      <ion-range
-        min="0"
-        max="100"
-        step="0.5"
-        snaps="true"
-        color="primary"
-        pin="true"
-        [value]="5"
-        [pinFormatter]="pinFormatter"
-        (ionChange)="change_radius($event)"
-      >
-        <ion-icon size="small" slot="start" name="pricetag-outline"></ion-icon>
-        <ion-icon slot="end" name="pricetag-outline"></ion-icon>
-      </ion-range>
-    </ion-item>
+    <img
+      src="assets/logo_header.png"
+      alt="DönerGuide Logo"
+      class="ion-hide-md-up"
+    />
+    <ion-grid class="ion-hide-md-down">
+      <ion-row>
+        <ion-col size="3">
+          <img src="assets/logo_header.png" alt="DönerGuide Logo" />
+        </ion-col>
+        <ion-col size="4">
+          <ion-searchbar placeholder="Suche nach Dönerläden"></ion-searchbar>
+        </ion-col>
+        <ion-col size="1">
+          <ion-button fill="clear">
+            <ion-icon name="compass-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-range
+            min="0"
+            max="50"
+            step="1"
+            snaps="true"
+            color="primary"
+            pin="true"
+            [value]="radius"
+            [pinFormatter]="pinFormatter"
+            (ionChange)="change_radius($event)"
+          >
+            <ion-icon size="small" slot="start" name="pin-outline"></ion-icon>
+            <ion-icon slot="end" name="pin-outline"></ion-icon>
+          </ion-range>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
+  <div class="ion-hide-md-up searchBar">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="10">
+          <ion-searchbar placeholder="Suche nach Dönerläden"></ion-searchbar>
+        </ion-col>
+        <ion-col size="2">
+          <ion-button fill="clear">
+            <ion-icon name="compass-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <img src="assets/logo_header.png" alt="DönerGuide Logo" />
-    </ion-toolbar>
-  </ion-header>
+  <ion-item lines="none" class="ion-hide-md-up">
+    <ion-range
+      min="0"
+      max="50"
+      step="1"
+      snaps="true"
+      color="primary"
+      pin="true"
+      [value]="radius"
+      [pinFormatter]="pinFormatter"
+      (ionChange)="change_radius($event)"
+      class="range"
+    >
+      <ion-icon size="small" slot="start" name="pin-outline"></ion-icon>
+      <ion-icon slot="end" name="pin-outline"></ion-icon>
+    </ion-range>
+  </ion-item>
+  <ion-item lines="none" class="flags">
+    <ion-chip *ngFor="let flags of flagList"> {{flags.value}} </ion-chip>
+  </ion-item>
   <ion-grid>
     <ion-row>
       <ion-col
         size="12"
         size-sm="6"
         size-md="4"
-        size-lg="2"
+        size-lg="3"
         *ngFor="let shop of shownShops"
       >
         <ion-card>
@@ -47,13 +93,18 @@
                 <app-rating [rating]="shop.rating"> </app-rating>
               </ion-card-title>
             </div>
-            <ion-icon name="heart-outline" class="size"></ion-icon>
+            <ion-icon
+              [name]="userSrv.getFavoriteIds().includes(shop.id) ? 'heart' : 'heart-outline'"
+              class="size"
+              [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
+              (click)="userSrv.toggleFavorite(shop)"
+            ></ion-icon>
           </ion-card-header>
           <ion-card-content>
             <ion-list>
               <ion-item lines="none">
                 <ion-icon slot="start" name="pricetag-outline"></ion-icon>
-                <app-price [priceCategory]="shop.priceCategory"> </app-price>
+                <app-price [priceCategory]="shop.priceCategory"></app-price>
               </ion-item>
               <ion-item lines="none">
                 <ion-icon
@@ -61,7 +112,11 @@
                   name="time-outline"
                   [color]="shopFunctions.checkOpeningColor(shop)"
                 ></ion-icon>
-                {{shop.openingHours.opens}} - {{shop.openingHours.closes}}
+                <ng-container *ngFor="let openingHour of shop.openToday">
+                  {{ openingHour.open === '00:00' && openingHour.close ===
+                  '00:00' ? 'Heute geschlossen' : openingHour.open + ' - ' +
+                  openingHour.close }}<br />
+                </ng-container>
               </ion-item>
               <ion-item
                 lines="none"
@@ -91,7 +146,7 @@
           <div class="buttons">
             <ion-button
               fill="clear"
-              [routerLink]="['/shop', shop.id]"
+              [routerLink]="['/shop', {shop: shop | json, refferer: '/'}]"
               routerDirection="forward"
             >
               Mehr Infos >

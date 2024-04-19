@@ -1,0 +1,22 @@
+name: Frontend CI/CD workflow
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        working-directory: ./doenerguide
+        run: npm install
+
+      - name: Lint code
+        working-directory: ./doenerguide
+        run: npm run lint

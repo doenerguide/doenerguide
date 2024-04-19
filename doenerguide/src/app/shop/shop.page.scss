@@ -1,7 +1,34 @@
 img {
   border-radius: 7%;
+  max-width: 400px;
+  max-height: 400px;
+  width: 100%;
+  height: 100%;
 }
 
 .title p {
   font-size: 1.8em;
+}
+
+.openingHours {
+  display: flex;
+  flex-direction: column;
+}
+
+.openingHours > .item-time + .item-time {
+  border-top: 1px solid #e0e0e0;
+}
+
+.item-time {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.times {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
 }

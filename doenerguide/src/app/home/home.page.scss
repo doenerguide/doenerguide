@@ -18,3 +18,43 @@ ion-card-content {
   justify-content: end;
   margin-top: 10px;
 }
+
+ion-toolbar {
+  display: flex;
+  align-items: center;
+}
+
+ion-col {
+  display: flex;
+  align-items: center;
+}
+
+ion-range {
+  padding: 0 0;
+}
+
+ion-toolbar > img {
+  padding: 10px 0;
+}
+
+.md .range {
+  margin-top: 24px;
+}
+
+.ios .range {
+  margin-top: 15px;
+}
+
+.searchBar {
+  position: sticky;
+  z-index: 9999;
+  background-color: var(--ion-background-color) !important;
+}
+
+.flags {
+  margin-top: 10px;
+}
+
+ion-content ion-grid {
+  padding: 0;
+}

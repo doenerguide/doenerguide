@@ -1,13 +1,65 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>favorites</ion-title>
+    <ion-title>Favoriten</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">favorites</ion-title>
+      <ion-title size="large">Favoriten</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col
+        size="12"
+        size-sm="6"
+        size-md="4"
+        size-lg="3"
+        *ngFor="let shop of userSrv.getFavorites()"
+      >
+        <ion-card>
+          <ion-card-header class="title">
+            <div>
+              <ion-card-subtitle>{{shop.address}}</ion-card-subtitle>
+              <ion-card-title>
+                {{shop.name}}
+                <app-rating [rating]="shop.rating"> </app-rating>
+              </ion-card-title>
+            </div>
+            <ion-icon
+              [name]="userSrv.getFavoriteIds().includes(shop.id) ? 'heart' : 'heart-outline'"
+              class="size"
+              [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
+              (click)="userSrv.toggleFavorite(shop)"
+            ></ion-icon>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item lines="none">
+              <ion-icon
+                slot="start"
+                name="time-outline"
+                [color]="shopFunctions.checkOpeningColor(shop)"
+              ></ion-icon>
+              <ng-container *ngFor="let openingHour of shop.openToday">
+                {{ openingHour.open === '00:00' && openingHour.close === '00:00'
+                ? 'Heute geschlossen' : openingHour.open + ' - ' +
+                openingHour.close }}<br />
+              </ng-container>
+            </ion-item>
+          </ion-card-content>
+          <div class="buttons">
+            <ion-button
+              fill="clear"
+              [routerLink]="['/shop', {shop: shop | json, refferer: '/favorites'}]"
+              routerDirection="forward"
+            >
+              Mehr Infos >
+            </ion-button>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
