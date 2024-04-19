@@ -38,10 +38,11 @@ export const routes: Routes = [
         path: 'map',
         loadComponent: () => import('./map/map.page').then((m) => m.MapPage),
       },
+      {
+        path: 'account',
+        loadComponent: () =>
+          import('./account/account.page').then((m) => m.AccountPage),
+      },
     ],
-  },
-  {
-    path: 'account',
-    loadComponent: () => import('./account/account.page').then( m => m.AccountPage)
   },
 ];

@@ -130,3 +130,50 @@ def get_shop(id):
         'long': data[0][9]
     }
     return shop
+
+
+def create_session(hashed_session_id, email):
+    conn = create_connection()
+    try:
+        conn.execute("INSERT INTO [SESSIONS] (SessionID, Mail) VALUES (?, ?)", (hashed_session_id, email))
+    except sqlite3.Error as e:
+        print(e)
+        conn.close()
+        return False
+    conn.commit()
+    conn.close()
+    return True
+
+def get_user_by_session_id(session_id):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [SESSIONS] WHERE [SessionID] = ?", (session_id,))
+    data = cursor.fetchall()
+    conn.close()
+    if len(data) == 0:
+        return None
+    else:
+        user = get_user_data(data[0][1])
+        return user
+    
+def get_user_data(mail):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [Mail] = ?", (mail,))
+    data = cursor.fetchall()
+    conn.close()
+    if len(data) == 0:
+        return None
+    else:
+        favoriten_ids = ast.literal_eval(data[0][5])
+        favoriten_ids = [int(n.strip()) for n in favoriten_ids]
+        favoriten = []
+        for id in favoriten_ids:
+            favoriten.append(get_shop(id))
+        user_object = {
+            'id': data[0][0],
+            'mail': data[0][1],
+            'vorname': data[0][3],
+            'nachname': data[0][4],
+            'favoriten': favoriten,
+            'identification_code': data[0][6]
+        }
+        return user_object

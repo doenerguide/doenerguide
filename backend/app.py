@@ -6,7 +6,7 @@ import os
 import hashlib
 
 app = flask.Flask(__name__)
-CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}, r'/getShop': {"origins": "*"}, r'/updateFavoriten': {"origins": "*"}})
+CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}, r'/getShop': {"origins": "*"}, r'/updateFavoriten': {"origins": "*"}, r'/getUserBySession': {"origins": "*"}})
 
 def hash_string(s):
     """
@@ -47,7 +47,8 @@ def login():
     email = body['email'].lower()
     password = body['password']
     if user := dbm.check_login(email, password):
-        return jsonify({'success': True, 'user': user})
+        session_id = create_session(email)
+        return jsonify({'success': True, 'user': user, 'session_id': session_id})
     else:
         return jsonify({'success': False})
     
@@ -128,6 +129,36 @@ def update_favoriten():
         return jsonify({'success': True})
     else:
         return jsonify({'success': False})
+    
+@app.route('/getUserBySession', methods=['GET'])
+def get_user_by_session():
+    """
+    Retrieves the user information based on the provided session ID.
+
+    Parameters:
+    - session_id (str): The session ID of the user.
+
+    Returns:
+    - dict: The user information.
+    """
+    session_id = request.args.get('session_id')
+    user = dbm.get_user_by_session_id(session_id)
+    if user:
+        return {'success': True, 'user': user}
+    else:
+        return {'success': False}
+    
+def create_session(email):
+    """
+    Creates a new session in the database.
+
+    Returns:
+        str: The session ID.
+    """
+    session_id = create_identification_code()
+    hashed_session_id = hash_string(session_id)
+    dbm.create_session(hashed_session_id, email)
+    return hashed_session_id
     
 if __name__ == '__main__':
     print("Running backend server of DönerGuide...")

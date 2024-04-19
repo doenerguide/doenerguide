@@ -6,4 +6,5 @@ export interface User {
   vorname: string;
   nachname: string;
   favoriten: Shop[];
+  identification_code: string;
 }

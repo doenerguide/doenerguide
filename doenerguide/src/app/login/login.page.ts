@@ -58,6 +58,7 @@ export class LoginPage {
         console.log(data);
         if (data['success']) {
           let user = data['user'] as User;
+          this.setCookie('session_id', data['session_id'], 365);
           this.userSrv.setUser(user);
           this.router.navigate(['/home', { message: 'Login erfolgreich' }]);
         } else {
@@ -68,6 +69,17 @@ export class LoginPage {
       .catch((error) => {
         console.error('Error:', error);
       });
+  }
+
+  // set cookie function
+  setCookie(name: string, value: string, days: number) {
+    let expires = '';
+    if (days) {
+      let date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = '; expires=' + date.toUTCString();
+    }
+    document.cookie = name + '=' + (value || '') + expires + '; path=/';
   }
 
   checkLoginButton(): boolean {
