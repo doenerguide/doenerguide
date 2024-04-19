@@ -72,7 +72,13 @@
     </ion-range>
   </ion-item>
   <ion-item lines="none" class="flags">
-    <ion-chip *ngFor="let flags of flagList"> {{flags.value}} </ion-chip>
+    <ion-chip
+      *ngFor="let flag of flagList"
+      (click)="handleFlag(flag.key)"
+      [color]="flags.includes(flag.key) ? 'primary' : ''"
+    >
+      {{flag.value}}
+    </ion-chip>
   </ion-item>
   <ion-grid>
     <ion-row>

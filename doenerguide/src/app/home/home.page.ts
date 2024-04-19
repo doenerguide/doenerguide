@@ -9,7 +9,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastController } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database.service';
 import { UserService } from '../services/user.service';
-import { flagList } from '../interfaces/flags';
+import { Flags, IFlags, flagList } from '../interfaces/flags';
 import { LocationService } from '../services/location.service';
 
 @Component({
@@ -32,6 +32,8 @@ import { LocationService } from '../services/location.service';
  */
 export class HomePage {
   shownShops: Shop[] = [];
+  radiusShops: Shop[] = [];
+  flags: string[] = [];
   lat: number = 52.520008;
   long: number = 13.404954;
   radius: number = 5;
@@ -59,10 +61,24 @@ export class HomePage {
   }
 
   async setShops() {
-    this.shownShops = await this.databaseSrv.getShops(
+    this.radiusShops = await this.databaseSrv.getShops(
       this.lat,
       this.long,
       this.radius
+    );
+    this.shownShops = this.radiusShops;
+  }
+
+  handleFlag(flag: string) {
+    if (this.flags.includes(flag)) {
+      this.flags = this.flags.filter((f) => f !== flag);
+    } else {
+      this.flags.push(flag);
+    }
+    this.shownShops = this.radiusShops.filter((shop) =>
+      this.flags.every(
+        (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag]
+      )
     );
   }
 
