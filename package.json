@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@angular/google-maps": "^17.3.4",
-    "@capacitor/core": "^5.7.4",
-    "@capacitor/geolocation": "^5.0.7"
-  }
-}

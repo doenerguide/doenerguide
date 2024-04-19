@@ -25,7 +25,8 @@ class TestDatabaseManager(unittest.TestCase):
                 Mail TEXT,
                 Password TEXT,
                 Vorname TEXT,
-                Nachname TEXT
+                Nachname TEXT,
+                Favoriten TEXT
             )
         ''')
 
@@ -72,7 +73,7 @@ class TestDatabaseManager(unittest.TestCase):
 
         result = add_user('test@example.com', 'password', 'Vorname', 'Nachname')
 
-        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname) VALUES (?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname'))
+        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten) VALUES (?, ?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname', str([])))
         mock_conn.commit.assert_called_once()
         mock_conn.close.assert_called_once()
         self.assertTrue(result)
@@ -88,7 +89,7 @@ class TestDatabaseManager(unittest.TestCase):
 
         result = add_user('test@example.com', 'password', 'Vorname', 'Nachname')
 
-        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname) VALUES (?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname'))
+        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten) VALUES (?, ?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname', str([])))
         mock_conn.close.assert_called_once()
         self.assertFalse(result)
 
