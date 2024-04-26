@@ -69,8 +69,8 @@ export class ShopFunctions {
     let status = 'danger';
     let open = false;
     for (let openingHour of openingHours) {
-      if (openingHour.close < '23:59') {
-        if (nowTime > openingHour.open && nowTime < openingHour.close) {
+      if (openingHour.close > openingHour.open) {
+        if (nowTime >= openingHour.open && nowTime <= openingHour.close) {
           nowTime = hours + 1 + ':' + minutes;
           if (nowTime >= openingHour.close) {
             status = 'warning';
@@ -80,7 +80,7 @@ export class ShopFunctions {
           open = true;
           break;
         }
-      } else if (nowTime >= '10:00' && nowTime < '23:59') {
+      } else if (nowTime >= '06:00' && nowTime < '23:59') {
         if (nowTime > openingHour.open) {
           status = 'open';
           open = true;
