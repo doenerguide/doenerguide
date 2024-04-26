@@ -1,5 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  IonButton,
   IonicModule,
   RefresherCustomEvent,
   RefresherEventDetail,
@@ -43,6 +50,9 @@ export class HomePage {
   lat: number = 52.520008;
   long: number = 13.404954;
   radius: number = 5;
+
+  @ViewChild('refreshButton', { read: ElementRef })
+  refButton!: ElementRef<HTMLIonButtonElement>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -121,13 +131,28 @@ export class HomePage {
     }
   }
 
-  doRefresh(event: RefresherCustomEvent) {
+  doRefresh(event?: RefresherCustomEvent, button?: ElementRef) {
+    if (button) button.nativeElement.classList.add('refreshing');
     this.userSrv.getUserLocation().then((loc) => {
       this.lat = loc.lat;
       this.long = loc.long;
       this.locationSrv.setLocation(this.lat, this.long);
       this.setShops();
-      event.detail.complete();
+      if (event) event.detail.complete();
+      if (button) {
+        setTimeout(() => {
+          button.nativeElement.classList.remove('refreshing');
+          this.toastCtrl
+            .create({
+              message: 'Du siehst jetzt die neuen Dönerläden in deiner Nähe!',
+              duration: 2000,
+              color: 'success',
+              icon: 'checkmark-circle-outline',
+              position: 'top',
+            })
+            .then((toast) => toast.present());
+        }, 1000);
+      }
     });
   }
 }

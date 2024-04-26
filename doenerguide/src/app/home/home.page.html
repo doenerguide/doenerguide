@@ -13,7 +13,11 @@
         <ion-col size="4">
           <ion-searchbar placeholder="Suche nach Dönerläden"></ion-searchbar>
         </ion-col>
-        <ion-col size="1"></ion-col>
+        <ion-col size="1">
+          <ion-button (click)="doRefresh(undefined, refButton)" #refreshButton>
+            <ion-icon name="refresh"></ion-icon>
+          </ion-button>
+        </ion-col>
         <ion-col size="4">
           <ion-range
             min="0"
@@ -60,8 +64,12 @@
     [pullMax]="200"
     [pullFactor]="0.5"
     (ionRefresh)="doRefresh($event)"
+    class="ion-hide-md-up"
   >
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content
+      pullingText="Zum Aktualisieren ziehen"
+      refreshingText="Lade neue Dönerläden in deiner Nähe..."
+    ></ion-refresher-content>
   </ion-refresher>
   <div class="ion-hide-md-up">
     <ion-range
