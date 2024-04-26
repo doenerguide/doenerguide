@@ -69,7 +69,7 @@ export class ShopFunctions {
     let status = 'danger';
     let open = false;
     for (let openingHour of openingHours) {
-      if (openingHour.close < '00:00') {
+      if (openingHour.close < '23:59') {
         if (nowTime > openingHour.open && nowTime < openingHour.close) {
           nowTime = hours + 1 + ':' + minutes;
           if (nowTime >= openingHour.close) {
