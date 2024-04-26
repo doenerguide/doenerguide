@@ -36,6 +36,16 @@ export class LoginPage {
     private userSrv: UserService
   ) {}
 
+  ngOnInit() {
+    if (this.userSrv.isLoggedIn()) {
+      if (this.userSrv.getDoenerladenID() == null) {
+        this.router.navigate(['/account']);
+      } else {
+        this.router.navigate(['/doeneraccount']);
+      }
+    }
+  }
+
   form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -58,6 +68,7 @@ export class LoginPage {
         console.log(data);
         if (data['success']) {
           let user = data['user'] as User;
+          console.log('User:', data);
           this.setCookie('session_id', data['session_id'], 365);
           this.userSrv.setUser(user);
           this.router.navigate(['/home', { message: 'Login erfolgreich' }]);

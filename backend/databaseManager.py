@@ -37,7 +37,9 @@ def check_login(mail, password):
             'mail': data[0][1],
             'vorname': data[0][3],
             'nachname': data[0][4],
-            'favoriten': favoriten
+            'favoriten': favoriten,
+            'identification_code': data[0][6],
+            'doenerladen': data[0][7]
         }
         return user_object
     
@@ -174,6 +176,7 @@ def get_user_data(mail):
             'vorname': data[0][3],
             'nachname': data[0][4],
             'favoriten': favoriten,
-            'identification_code': data[0][6]
+            'identification_code': data[0][6],
+            'doenerladen': data[0][7]
         }
         return user_object

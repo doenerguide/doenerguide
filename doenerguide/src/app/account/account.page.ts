@@ -19,6 +19,13 @@ export class AccountPage implements OnInit {
 
 
   ngOnInit() {
+    if (!this.userSrv.isLoggedIn()) {
+      this.router.navigate(['/login']);
+    }
+    if (this.userSrv.getDoenerladenID() != null) {
+      this.router.navigate(['/doeneraccount']);
+      return;
+    }
     this.generateQRCode();
   }
 

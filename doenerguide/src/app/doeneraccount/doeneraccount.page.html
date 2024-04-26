@@ -1,0 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>doeneraccount</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">doeneraccount</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-button expand="full" color="danger" (click)="openQRScan()">Stempelpunkt geben</ion-button>
+  <ion-button expand="full" color="danger" (click)="navigateToAccountSettings()">Account bearbeiten</ion-button>
+  <ion-button expand="full" color="danger" (click)="logout()">Logout</ion-button>
+</ion-content>

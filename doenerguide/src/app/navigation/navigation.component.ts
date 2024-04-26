@@ -19,7 +19,11 @@ export class NavigationComponent{
 
   reloadTab() {
     if (this.userSrv.isLoggedIn()) {
-      this.tab = 'account';
+      if (this.userSrv.getDoenerladenID() == null) {
+        this.tab = 'account';
+      } else {
+        this.tab = 'doeneraccount';
+      }
     } else {
       this.tab = 'login';
     }

@@ -7,9 +7,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { ToastController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { UserService } from '../services/user.service';
+import { User } from '../interfaces/user';
 
 let endpoint = environment.endpoint;
 
@@ -25,9 +26,19 @@ export class SignupPage {
 
   constructor(
     private formBuilder: FormBuilder,
-    private toastCtrl: ToastController,
-    private router: Router
+    private router: Router,
+    private userSrv: UserService,
   ) {}
+
+  ngOnInit() {
+    if (this.userSrv.isLoggedIn()) {
+      if (this.userSrv.getDoenerladenID() == null) {
+        this.router.navigate(['/account']);
+      } else {
+        this.router.navigate(['/doeneraccount']);
+      }
+    }
+  }
 
   form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -89,16 +100,10 @@ export class SignupPage {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          this.toastCtrl
-            .create({
-              message: 'Erfolgreich registriert',
-              duration: 2000,
-              position: 'top',
-              color: 'success',
-              icon: 'checkmark-circle-outline',
-            })
-            .then((toast) => toast.present());
-          setTimeout(() => this.router.navigate(['/login']), 2000);
+          let user = data['user'] as User;
+          this.setCookie('session_id', data['session_id'], 365);
+          this.userSrv.setUser(user);
+          this.router.navigate(['/home', { message: 'Erfolgreich registriert' }]);
         } else {
           this.errorMessage.nativeElement.innerHTML =
             'Diese E-Mail Adresse ist bereits registriert';
@@ -107,5 +112,15 @@ export class SignupPage {
       .catch((error) => {
         console.error('Error:', error);
       });
+  }
+
+  setCookie(name: string, value: string, days: number) {
+    let expires = '';
+    if (days) {
+      let date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = '; expires=' + date.toUTCString();
+    }
+    document.cookie = name + '=' + (value || '') + expires + '; path=/';
   }
 }
