@@ -1,3 +1,8 @@
 <div>
-  <ion-icon name="logo-euro" *ngFor="let euro of priceList"></ion-icon>
+  <ng-template [ngIf]="priceList.length > 0" [ngIfElse]="noPrice">
+    <ion-icon name="logo-euro" *ngFor="let euro of priceList"></ion-icon>
+  </ng-template>
+  <ng-template #noPrice>
+    <ion-label>Keine Preisinformation</ion-label>
+  </ng-template>
 </div>

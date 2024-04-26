@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Shop } from '../interfaces/shop';
+import { Shop, ShopFunctions } from '../interfaces/shop';
 import { environment } from 'src/environments/environment';
+import { Flags } from '../interfaces/flags';
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +111,7 @@ export class DatabaseService {
         return obj;
       }, {});
     let hoursToday = hours[weekday];
-    return {
+    let shop = {
       id: doenerladen[0],
       name: doenerladen[1],
       imageUrl: doenerladen[2],
@@ -121,12 +122,25 @@ export class DatabaseService {
         acceptCreditCard: doenerladen[6].includes('Kreditkarte'),
         acceptDebitCard: doenerladen[6].includes('Debitkarte'),
         stampCard: doenerladen[6].includes('Stempelkarte'),
+        open: ShopFunctions.checkOpeningColor(hoursToday).open,
+        halal: doenerladen[6].includes('Halal'),
+        vegetarian: doenerladen[6].includes('Vegetarisch'),
+        vegan: doenerladen[6].includes('Vegan'),
+        barrierFree:
+          doenerladen[6].includes('Barrierefrei') ||
+          doenerladen[6].includes('Rollstuhl'),
+        delivery: doenerladen[6].includes('Lieferung'),
+        pickup:
+          doenerladen[6].includes('Abholung') ||
+          doenerladen[6].includes('Mitnehmen') ||
+          doenerladen[6].includes('vor Ort'),
       },
       openToday: hoursToday,
       openingHours: orderedHours,
       tel: doenerladen[8],
       lat: doenerladen[9],
       lng: doenerladen[10],
-    };
+    } as Shop;
+    return shop;
   }
 }
