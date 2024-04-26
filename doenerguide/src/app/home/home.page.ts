@@ -1,5 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonicModule,
+  RefresherCustomEvent,
+  RefresherEventDetail,
+} from '@ionic/angular';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { Shop, ShopFunctions } from '../interfaces/shop';
 import { RatingComponent } from '../rating/rating.component';
@@ -115,5 +119,15 @@ export class HomePage {
           });
         });
     }
+  }
+
+  doRefresh(event: RefresherCustomEvent) {
+    this.userSrv.getUserLocation().then((loc) => {
+      this.lat = loc.lat;
+      this.long = loc.long;
+      this.locationSrv.setLocation(this.lat, this.long);
+      this.setShops();
+      event.detail.complete();
+    });
   }
 }
