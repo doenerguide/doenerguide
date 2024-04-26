@@ -11,11 +11,16 @@
           <img src="assets/logo_header.png" alt="DönerGuide Logo" />
         </ion-col>
         <ion-col size="4">
-          <ion-searchbar placeholder="Suche nach Dönerläden"></ion-searchbar>
+          <ion-searchbar
+            placeholder="Suche nach Dönerläden"
+            show-clear-button="focus"
+            [debounce]="500"
+            (ionInput)="filterShops($event)"
+          ></ion-searchbar>
         </ion-col>
         <ion-col size="1">
-          <ion-button fill="clear">
-            <ion-icon name="compass-outline" slot="icon-only"></ion-icon>
+          <ion-button (click)="doRefresh(undefined, refButton)" #refreshButton>
+            <ion-icon name="refresh"></ion-icon>
           </ion-button>
         </ion-col>
         <ion-col size="4">
@@ -38,23 +43,46 @@
     </ion-grid>
   </ion-toolbar>
   <div class="ion-hide-md-up searchBar">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="10">
-          <ion-searchbar placeholder="Suche nach Dönerläden"></ion-searchbar>
-        </ion-col>
-        <ion-col size="2">
-          <ion-button fill="clear">
-            <ion-icon name="compass-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-searchbar
+      placeholder="Suche nach Dönerläden"
+      show-clear-button="focus"
+      [debounce]="500"
+      animated="true"
+      (ionInput)="filterShops($event)"
+    ></ion-searchbar>
+    <div class="flags">
+      <ion-chip
+        *ngFor="let flag of flags"
+        (click)="handleFlag(flag)"
+        color="primary"
+      >
+        {{flag.value}}
+      </ion-chip>
+      <ion-chip
+        *ngFor="let flag of flagList | filter : fitlerFlags : flags"
+        (click)="handleFlag(flag)"
+      >
+        {{flag.value}}
+      </ion-chip>
+    </div>
   </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-item lines="none" class="ion-hide-md-up">
+<ion-content class="ion-padding">
+  <ion-refresher
+    slot="fixed"
+    [pullMin]="80"
+    [pullMax]="200"
+    [pullFactor]="0.5"
+    (ionRefresh)="doRefresh($event)"
+    class="ion-hide-md-up"
+  >
+    <ion-refresher-content
+      pullingText="Zum Aktualisieren ziehen"
+      refreshingText="Lade neue Dönerläden in deiner Nähe..."
+    ></ion-refresher-content>
+  </ion-refresher>
+  <div class="ion-hide-md-up">
     <ion-range
       min="0"
       max="50"
@@ -70,10 +98,22 @@
       <ion-icon size="small" slot="start" name="pin-outline"></ion-icon>
       <ion-icon slot="end" name="pin-outline"></ion-icon>
     </ion-range>
-  </ion-item>
-  <ion-item lines="none" class="flags">
-    <ion-chip *ngFor="let flags of flagList"> {{flags.value}} </ion-chip>
-  </ion-item>
+  </div>
+  <div class="flags md ion-hide-md-down">
+    <ion-chip
+      *ngFor="let flag of flags"
+      (click)="handleFlag(flag)"
+      color="primary"
+    >
+      {{flag.value}}
+    </ion-chip>
+    <ion-chip
+      *ngFor="let flag of flagList | filter : fitlerFlags : flags"
+      (click)="handleFlag(flag)"
+    >
+      {{flag.value}}
+    </ion-chip>
+  </div>
   <ion-grid>
     <ion-row>
       <ion-col
@@ -98,7 +138,6 @@
               class="size"
               [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
               (click)="userSrv.toggleFavorite(shop)"
-              *ngIf="userSrv.isLoggedIn()"
             ></ion-icon>
           </ion-card-header>
           <ion-card-content>
@@ -111,7 +150,7 @@
                 <ion-icon
                   slot="start"
                   name="time-outline"
-                  [color]="shopFunctions.checkOpeningColor(shop)"
+                  [color]="shopFunctions.checkOpeningColor(shop.openToday).status"
                 ></ion-icon>
                 <ng-container *ngFor="let openingHour of shop.openToday">
                   {{ openingHour.open === '00:00' && openingHour.close ===
@@ -128,7 +167,9 @@
                   name="checkmark-outline"
                   color="open"
                 ></ion-icon>
-                {{shopFunctions.enabledFlags(shop.flags).join(", ")}}
+                {{ shopFunctions.enabledFlags(shop.flags).slice(0, 3).join(", ")
+                }}{{ shopFunctions.enabledFlags(shop.flags).length > 3 ? ', ...'
+                : '' }}
               </ion-item>
               <ion-item
                 lines="none"
@@ -139,7 +180,9 @@
                   name="close-outline"
                   color="danger"
                 ></ion-icon>
-                {{shopFunctions.disabledFlags(shop.flags).join(", ")}}
+                {{ shopFunctions.disabledFlags(shop.flags).slice(0, 3).join(",
+                ") }}{{ shopFunctions.disabledFlags(shop.flags).length > 3 ? ',
+                ...' : '' }}
               </ion-item>
             </ion-list>
           </ion-card-content>

@@ -24,6 +24,11 @@ export class UserService {
     return localStorage.getItem('user') !== null;
   }
 
+  getDoenerladenID(): string {
+    let user = this.getUser();
+    return user.doenerladen;
+  }
+
   logout() {
     localStorage.removeItem('user');
   }

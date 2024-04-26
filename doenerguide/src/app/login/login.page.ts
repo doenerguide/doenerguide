@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -28,7 +28,7 @@ let endpoint = environment.endpoint;
     ReactiveFormsModule,
   ],
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
 
   constructor(

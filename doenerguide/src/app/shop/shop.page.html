@@ -28,7 +28,7 @@
         <ion-icon
           slot="start"
           name="time-outline"
-          [color]="shopFunctions.checkOpeningColor(shop ?? undefined)"
+          [color]="shopFunctions.checkOpeningColor(shop?.openToday).status"
         ></ion-icon>
         <div class="openingHours">
           <ng-container *ngFor="let day of Object.keys(shop!.openingHours)">
@@ -45,11 +45,17 @@
           </ng-container>
         </div>
       </ion-item>
-      <ion-item lines="none" *ngIf="shopFunctions.enabledFlags(shop?.flags).length > 0">
+      <ion-item
+        lines="none"
+        *ngIf="shopFunctions.enabledFlags(shop?.flags).length > 0"
+      >
         <ion-icon slot="start" name="checkmark-outline" color="open"></ion-icon>
         {{shopFunctions.enabledFlags(shop?.flags).join(", ")}}
       </ion-item>
-      <ion-item lines="none" *ngIf="shopFunctions.disabledFlags(shop?.flags).length > 0">
+      <ion-item
+        lines="none"
+        *ngIf="shopFunctions.disabledFlags(shop?.flags).length > 0"
+      >
         <ion-icon slot="start" name="close-outline" color="danger"></ion-icon>
         {{shopFunctions.disabledFlags(shop?.flags).join(", ")}}
       </ion-item>
