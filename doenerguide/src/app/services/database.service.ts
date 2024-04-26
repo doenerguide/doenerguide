@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Shop } from '../interfaces/shop';
 import { environment } from 'src/environments/environment';
+import { ShopFunctions } from '../interfaces/shop';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,9 @@ export class DatabaseService {
       return this.shopCache.find((shop) => shop.id === id) as Shop;
     }
     let response = await fetch(`${environment.endpoint}/getShop?id=${id}`);
-    let data = (await response.json()) as Shop;
-    return data;
+    let shop = this.doenerladen_tuple_to_map(await response.json());
+    this.shopCache.push(shop);
+    return shop;
   }
 
   async getShops(lat: number, long: number, radius: number): Promise<Shop[]> {
@@ -80,14 +82,20 @@ export class DatabaseService {
    * @param long - The longitude.
    * @returns The map object representing the doenerladen.
    */
-  doenerladen_tuple_to_map(doenerladen: any, lat: number, long: number): Shop {
+  doenerladen_tuple_to_map(
+    doenerladen: any,
+    lat?: number,
+    long?: number
+  ): Shop {
     let d_lat = doenerladen[9];
     let d_long = doenerladen[10];
-    let address =
-      doenerladen[3] +
-      ' (' +
-      this.lat_long_to_distance(lat, long, d_lat, d_long, 1) +
-      'km)';
+    let address = doenerladen[3];
+    if (lat && long)
+      address =
+        address +
+        ' (' +
+        this.lat_long_to_distance(lat, long, d_lat, d_long, 1) +
+        'km)';
     let weekday = new Date().toLocaleString('de-DE', { weekday: 'long' });
     let hours = JSON.parse(doenerladen[7].replace(/'/g, '"')) as {
       [weekday: string]: { open: string; close: string }[];
@@ -121,6 +129,18 @@ export class DatabaseService {
         acceptCreditCard: doenerladen[6].includes('Kreditkarte'),
         acceptDebitCard: doenerladen[6].includes('Debitkarte'),
         stampCard: doenerladen[6].includes('Stempelkarte'),
+        open: ShopFunctions.checkOpeningColor(hoursToday).open,
+        halal: doenerladen[6].includes('Halal'),
+        vegetarian: doenerladen[6].includes('Vegetarisch'),
+        vegan: doenerladen[6].includes('Vegan'),
+        barrierFree:
+          doenerladen[6].includes('Barrierefrei') ||
+          doenerladen[6].includes('Rollstuhl'),
+        delivery: doenerladen[6].includes('Lieferung'),
+        pickup:
+          doenerladen[6].includes('Abholung') ||
+          doenerladen[6].includes('Mitnehmen') ||
+          doenerladen[6].includes('vor Ort'),
       },
       openToday: hoursToday,
       openingHours: orderedHours,
