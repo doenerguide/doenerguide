@@ -27,17 +27,17 @@ def check_login(mail, password):
     if len(data) == 0:
         return None
     else:
+        print(data[0])
         favoriten_ids = ast.literal_eval(data[0][5])
-        favoriten_ids = [int(n.strip()) for n in favoriten_ids]
-        favoriten = []
-        for id in favoriten_ids:
-            favoriten.append(get_shop(id))
+        favoriten_ids = [str(n).strip() for n in favoriten_ids]
         user_object = {
             'id': data[0][0],
             'mail': data[0][1],
             'vorname': data[0][3],
             'nachname': data[0][4],
-            'favoriten': favoriten
+            'favoriten': favoriten_ids,
+            'identification_code': data[0][6],
+            'doenerladen': data[0][7]
         }
         return user_object
     
@@ -114,22 +114,7 @@ def get_shop(id):
     cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [ID] = ?", (id,))
     data = cursor.fetchall()
     conn.close()
-    shop = {
-        'id': data[0][0],
-        'name': data[0][1],
-        'imageURL': data[0][2],
-        'address': data[0][3],
-        'rating': data[0][4],
-        'priceCategory': data[0][5],
-        'flags': {
-            'acceptCard': 'Kartenzahlung' in data[0][6],
-            'stampCard': 'Stempelkarte' in data[0][6],
-        },
-        'openingHours': data[0][7],
-        'lat': data[0][8],
-        'long': data[0][9]
-    }
-    return shop
+    return data[0]
 
 
 def create_session(hashed_session_id, email):
@@ -164,16 +149,14 @@ def get_user_data(mail):
         return None
     else:
         favoriten_ids = ast.literal_eval(data[0][5])
-        favoriten_ids = [int(n.strip()) for n in favoriten_ids]
-        favoriten = []
-        for id in favoriten_ids:
-            favoriten.append(get_shop(id))
+        favoriten_ids = [str(n).strip() for n in favoriten_ids]
         user_object = {
             'id': data[0][0],
             'mail': data[0][1],
             'vorname': data[0][3],
             'nachname': data[0][4],
-            'favoriten': favoriten,
-            'identification_code': data[0][6]
+            'favoriten': favoriten_ids,
+            'identification_code': data[0][6],
+            'doenerladen': data[0][7]
         }
         return user_object

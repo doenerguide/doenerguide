@@ -69,8 +69,12 @@ def signup():
     nachname = body['nachname']
     identification_code = create_identification_code()
     hashed_identification_code = hash_string(identification_code)
+    if dbm.get_user_data(email) is not None:
+        return jsonify({'success': False})
     if dbm.add_user(email, password, vorname, nachname, hashed_identification_code):
-        return jsonify({'success': True})
+        session_id = create_session(email)
+        user = dbm.get_user_data(email)
+        return jsonify({'success': True, 'user': user, 'session_id': session_id})
     else:
         return jsonify({'success': False})
     
