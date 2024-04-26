@@ -15,6 +15,7 @@
         class="size"
         [color]="userSrv.getFavoriteIds().includes(shop!.id) ? 'danger' : 'medium'"
         (click)="userSrv.toggleFavorite(shop!)"
+        *ngIf="userSrv.isLoggedIn()"
       ></ion-icon>
     </div>
     <img [src]="shop?.imageUrl" alt="Shop" />
@@ -44,17 +45,11 @@
           </ng-container>
         </div>
       </ion-item>
-      <ion-item
-        lines="none"
-        *ngIf="shopFunctions.enabledFlags(shop?.flags).length > 0"
-      >
+      <ion-item lines="none" *ngIf="shopFunctions.enabledFlags(shop?.flags).length > 0">
         <ion-icon slot="start" name="checkmark-outline" color="open"></ion-icon>
         {{shopFunctions.enabledFlags(shop?.flags).join(", ")}}
       </ion-item>
-      <ion-item
-        lines="none"
-        *ngIf="shopFunctions.disabledFlags(shop?.flags).length > 0"
-      >
+      <ion-item lines="none" *ngIf="shopFunctions.disabledFlags(shop?.flags).length > 0">
         <ion-icon slot="start" name="close-outline" color="danger"></ion-icon>
         {{shopFunctions.disabledFlags(shop?.flags).join(", ")}}
       </ion-item>

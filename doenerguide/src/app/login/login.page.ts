@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { environment } from 'src/environments/environment';
 import { User } from '../interfaces/user';
+import { DatabaseService } from '../services/database.service';
 
 let endpoint = environment.endpoint;
 
@@ -33,8 +34,19 @@ export class LoginPage {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private userSrv: UserService
+    private userSrv: UserService,
+    private databaseSrv: DatabaseService
   ) {}
+
+  ngOnInit() {
+    if (this.userSrv.isLoggedIn()) {
+      if (this.userSrv.getDoenerladenID() == null) {
+        this.router.navigate(['/account']);
+      } else {
+        this.router.navigate(['/doeneraccount']);
+      }
+    }
+  }
 
   form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -54,12 +66,18 @@ export class LoginPage {
       body: JSON.stringify(this.form.value),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         console.log(data);
         if (data['success']) {
-          let user = data['user'] as User;
+          let userData = data['user'];
+          userData['favoriten'] = await Promise.all(
+            userData['favoriten'].map(
+              async (shop: any) => await this.databaseSrv.getShop(shop)
+            )
+          );
+          console.log('User:', userData);
           this.setCookie('session_id', data['session_id'], 365);
-          this.userSrv.setUser(user);
+          this.userSrv.setUser(userData);
           this.router.navigate(['/home', { message: 'Login erfolgreich' }]);
         } else {
           this.errorMessage.nativeElement.innerHTML =

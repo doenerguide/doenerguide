@@ -4,10 +4,12 @@
       <img src="assets/icon/kebab.svg" alt="Kebap Icon" />
       Home
     </ion-tab-button>
-    <ion-tab-button tab="favorites" (click)="reloadTab()">
-      <ion-icon name="heart"></ion-icon>
-      Favoriten
-    </ion-tab-button>
+    <ng-template [ngIf]="userSrv.isLoggedIn()">
+      <ion-tab-button tab="favorites" (click)="reloadTab()">
+        <ion-icon name="heart"></ion-icon>
+        Favoriten
+      </ion-tab-button>
+    </ng-template>
     <ion-tab-button [tab]="tab" (click)="reloadTab()">
       <img src="assets/icon/account.svg" alt="Account Icon" />
       Account

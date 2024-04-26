@@ -98,6 +98,7 @@
               class="size"
               [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
               (click)="userSrv.toggleFavorite(shop)"
+              *ngIf="userSrv.isLoggedIn()"
             ></ion-icon>
           </ion-card-header>
           <ion-card-content>
