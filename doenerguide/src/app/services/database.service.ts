@@ -123,6 +123,17 @@ export class DatabaseService {
         acceptDebitCard: doenerladen[6].includes('Debitkarte'),
         stampCard: doenerladen[6].includes('Stempelkarte'),
         open: ShopFunctions.checkOpeningColor(hoursToday).open,
+        halal: doenerladen[6].includes('Halal'),
+        vegetarian: doenerladen[6].includes('Vegetarisch'),
+        vegan: doenerladen[6].includes('Vegan'),
+        barrierFree:
+          doenerladen[6].includes('Barrierefrei') ||
+          doenerladen[6].includes('Rollstuhl'),
+        delivery: doenerladen[6].includes('Lieferung'),
+        pickup:
+          doenerladen[6].includes('Abholung') ||
+          doenerladen[6].includes('Mitnehmen') ||
+          doenerladen[6].includes('vor Ort'),
       },
       openToday: hoursToday,
       openingHours: orderedHours,
