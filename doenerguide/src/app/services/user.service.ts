@@ -31,6 +31,8 @@ export class UserService {
 
   logout() {
     localStorage.removeItem('user');
+    document.cookie =
+      'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }
 
   getFavorites(): Shop[] {
