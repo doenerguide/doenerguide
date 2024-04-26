@@ -11,7 +11,12 @@
           <img src="assets/logo_header.png" alt="DönerGuide Logo" />
         </ion-col>
         <ion-col size="4">
-          <ion-searchbar placeholder="Suche nach Dönerläden"></ion-searchbar>
+          <ion-searchbar
+            placeholder="Suche nach Dönerläden"
+            show-clear-button="focus"
+            [debounce]="500"
+            (ionInput)="filterShops($event)"
+          ></ion-searchbar>
         </ion-col>
         <ion-col size="1">
           <ion-button (click)="doRefresh(undefined, refButton)" #refreshButton>
@@ -38,7 +43,13 @@
     </ion-grid>
   </ion-toolbar>
   <div class="ion-hide-md-up searchBar">
-    <ion-searchbar placeholder="Suche nach Dönerläden"></ion-searchbar>
+    <ion-searchbar
+      placeholder="Suche nach Dönerläden"
+      show-clear-button="focus"
+      [debounce]="500"
+      animated="true"
+      (ionInput)="filterShops($event)"
+    ></ion-searchbar>
     <div class="flags">
       <ion-chip
         *ngFor="let flag of flags"
@@ -87,6 +98,21 @@
       <ion-icon size="small" slot="start" name="pin-outline"></ion-icon>
       <ion-icon slot="end" name="pin-outline"></ion-icon>
     </ion-range>
+  </div>
+  <div class="flags md ion-hide-md-down">
+    <ion-chip
+      *ngFor="let flag of flags"
+      (click)="handleFlag(flag)"
+      color="primary"
+    >
+      {{flag.value}}
+    </ion-chip>
+    <ion-chip
+      *ngFor="let flag of flagList | filter : fitlerFlags : flags"
+      (click)="handleFlag(flag)"
+    >
+      {{flag.value}}
+    </ion-chip>
   </div>
   <ion-grid>
     <ion-row>

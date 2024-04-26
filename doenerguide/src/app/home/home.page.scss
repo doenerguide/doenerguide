@@ -72,6 +72,9 @@ ion-toolbar > img {
   flex-direction: row;
   align-items: center;
   overflow: auto;
+  &.md {
+    margin-top: 15px;
+  }
 }
 
 ion-chip {

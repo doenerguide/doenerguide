@@ -1,15 +1,10 @@
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
-  IonButton,
+  InputChangeEventDetail,
   IonicModule,
   RefresherCustomEvent,
-  RefresherEventDetail,
+  SearchbarCustomEvent,
+  SearchbarInputEventDetail,
 } from '@ionic/angular';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { Shop, ShopFunctions } from '../interfaces/shop';
@@ -20,7 +15,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastController } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database.service';
 import { UserService } from '../services/user.service';
-import { Flags, IFlags, flagList } from '../interfaces/flags';
+import { IFlags, flagList } from '../interfaces/flags';
 import { LocationService } from '../services/location.service';
 import { FilterPipe } from '../pipes/filter.pipe';
 
@@ -47,6 +42,7 @@ export class HomePage {
   shownShops: Shop[] = [];
   radiusShops: Shop[] = [];
   flags: { key: string; value: string }[] = [];
+  nameFilter: string = '';
   lat: number = 52.520008;
   long: number = 13.404954;
   radius: number = 5;
@@ -82,7 +78,26 @@ export class HomePage {
       this.long,
       this.radius
     );
-    this.shownShops = this.radiusShops;
+    this.shownShops = this.radiusShops.filter((shop) =>
+      this.filterShopsMethod(shop)
+    );
+  }
+
+  filterShopsMethod(shop: Shop): boolean {
+    if (this.flags.length === 0 && this.nameFilter === '') return true;
+    else if (this.nameFilter === '')
+      return this.flags.every(
+        (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key]
+      );
+    else if (this.flagList.length === 0)
+      return shop.name.toLowerCase().includes(this.nameFilter.toLowerCase());
+    else
+      return (
+        shop.name.toLowerCase().includes(this.nameFilter.toLowerCase()) &&
+        this.flags.every(
+          (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key]
+        )
+      );
   }
 
   handleFlag(flag: { key: string; value: string }) {
@@ -92,9 +107,7 @@ export class HomePage {
       this.flags.push(flag);
     }
     this.shownShops = this.radiusShops.filter((shop) =>
-      this.flags.every(
-        (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key]
-      )
+      this.filterShopsMethod(shop)
     );
   }
 
@@ -154,5 +167,12 @@ export class HomePage {
         }, 1000);
       }
     });
+  }
+
+  filterShops(event: SearchbarCustomEvent) {
+    this.nameFilter = event.detail.value!;
+    this.shownShops = this.radiusShops.filter((shop) =>
+      this.filterShopsMethod(shop)
+    );
   }
 }
