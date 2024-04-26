@@ -1,43 +1,49 @@
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Login</ion-card-title>
-      <ion-card-subtitle>Welcome to DönerGuide!</ion-card-subtitle>
-      <img id="icon" alt="User Icon" src="/assets/icon/logo.png" />
-    </ion-card-header>
-
-    <ion-card-content>
-      Bitte gib deine Daten ein, registriere dich oder fahre als Gast fort.
-      <form id="input" [formGroup]="form">
-        <ion-input
-          formControlName="email"
-          label="E-Mail"
-          labelPlacement="floating"
-          placeholder="Deine E-Mail Adresse"
-        >
-        </ion-input>
-        <ion-input
-          formControlName="password"
-          label="Passwort"
-          labelPlacement="floating"
-          placeholder="Dein Passwort"
-          type="password"
-        >
-        </ion-input>
-      </form>
-      <div slot="label" #errorMessage></div>
-      <div id="buttons">
-        <ion-button
-          id="login"
-          type="submit"
-          form="input"
-          [disabled]="checkLoginButton()"
-          (click)="handleLogin()"
-        >
-          Login
-        </ion-button>
-        <ion-button [routerLink]="['/signup']"> Registrieren </ion-button>
-      </div>
-    </ion-card-content>
-  </ion-card>
+  <div class="title">
+    <img id="icon" alt="User Icon" src="/assets/icon/logo.png" />
+    <div class="titles">
+      <h1>Willkommen zu DönerGuide!</h1>
+      <h4>Login</h4>
+    </div>
+  </div>
+  <div class="login">
+    <ion-label
+      >Bitte gib deine Daten ein oder registriere dich.<br
+    /></ion-label>
+    <ion-label>Mit einem Nutzerkonto hast du folgende Vorteile:</ion-label>
+    <ul>
+      <li>Speichern von Favoriten</li>
+      <li>Stempelkarte</li>
+    </ul>
+    <form id="input" [formGroup]="form">
+      <ion-input
+        formControlName="email"
+        label="E-Mail"
+        labelPlacement="floating"
+        placeholder="Deine E-Mail Adresse"
+      >
+      </ion-input>
+      <ion-input
+        formControlName="password"
+        label="Passwort"
+        labelPlacement="floating"
+        placeholder="Dein Passwort"
+        type="password"
+      >
+      </ion-input>
+    </form>
+    <div slot="label" #errorMessage></div>
+    <div id="buttons">
+      <ion-button
+        id="login"
+        type="submit"
+        form="input"
+        [disabled]="checkLoginButton()"
+        (click)="handleLogin()"
+      >
+        Login
+      </ion-button>
+      <ion-button [routerLink]="['/signup']"> Registrieren </ion-button>
+    </div>
+  </div>
 </ion-content>

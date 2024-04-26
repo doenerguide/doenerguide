@@ -4,6 +4,7 @@ import { UserService } from './services/user.service';
 import { environment } from 'src/environments/environment';
 import { DatabaseService } from './services/database.service';
 import { Shop } from './interfaces/shop';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +16,24 @@ import { Shop } from './interfaces/shop';
 export class AppComponent implements OnInit {
   session_id: string = '';
 
-  constructor(private userSrv: UserService, private databaseSrv: DatabaseService) {}
+  constructor(
+    private userSrv: UserService,
+    private databaseSrv: DatabaseService,
+    private storageSrv: StorageService
+  ) {}
 
   ngOnInit() {
     this.fetchUserData();
+    new Promise((resolve) => {
+      this.storageSrv.waitTillReady().then(() => {
+        this.storageSrv.darkMode().then((value) => {
+          if (value) {
+            document.body.classList.add('dark');
+            resolve(null);
+          }
+        });
+      });
+    });
   }
 
   getCookie(name: string) {
@@ -41,18 +56,23 @@ export class AppComponent implements OnInit {
   // Call the initializeSessionId method before making the fetch request
   fetchUserData() {
     this.initializeSessionId();
-    fetch(environment.endpoint + '/getUserBySession?session_id=' + this.session_id, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-    })
+    fetch(
+      environment.endpoint + '/getUserBySession?session_id=' + this.session_id,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+      }
+    )
       .then((response) => response.json())
       .then(async (data) => {
         if (data['success']) {
           let userData = data['user'];
           userData['favoriten'] = await Promise.all(
-            userData['favoriten'].map(async (shop: any) => await this.databaseSrv.getShop(shop))
+            userData['favoriten'].map(
+              async (shop: any) => await this.databaseSrv.getShop(shop)
+            )
           );
           console.log(userData);
           this.userSrv.setUser(data['user']);

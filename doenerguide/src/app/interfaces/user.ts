@@ -2,7 +2,7 @@ import { Shop } from './shop';
 
 export interface User {
   id: number;
-  email: string;
+  mail: string;
   vorname: string;
   nachname: string;
   favoriten: Shop[];
