@@ -1,0 +1,57 @@
+ion-toolbar ion-card-subtitle {
+  padding: 0 12px;
+  font-size: 1em;
+}
+
+ion-card-content {
+  padding: 0 12px;
+}
+
+ion-card ion-button:not(.anim) {
+  margin-left: auto;
+}
+
+.stampCard ion-card-content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding-bottom: 16px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.anim {
+  max-width: 100%;
+  width: 97%;
+  float: right;
+  transition: width 0.6s ease;
+}
+
+.appSettings ion-button.side {
+  transition-timing-function: ease-in-out;
+  width: 50px;
+  max-height: 50px;
+  margin-left: auto;
+  right: 0;
+  font-size: 0;
+  ion-icon {
+    font-size: 24px;
+    margin: 0;
+  }
+}
+
+.sureQuestions {
+  position: absolute;
+  .abmelden {
+    margin-left: 10px;
+    margin-right: auto;
+  }
+  .abbrechen {
+    margin-left: 24px;
+    margin-right: 0;
+  }
+}

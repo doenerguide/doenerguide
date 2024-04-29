@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Shop } from '../interfaces/shop';
 import { environment } from 'src/environments/environment';
 import { ShopFunctions } from '../interfaces/shop';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,28 @@ import { ShopFunctions } from '../interfaces/shop';
 export class DatabaseService {
   shopCache: Shop[] = [];
   constructor() {}
+
+  async updateUser(user: User): Promise<boolean> {
+    let response = await fetch(`${environment.endpoint}/updateUser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+    return response.ok;
+  }
+
+  async updateUserPassword(userId: number, password: string): Promise<boolean> {
+    let response = await fetch(`${environment.endpoint}/updateUserPassword`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: userId, password }),
+    });
+    return response.ok;
+  }
 
   async getShop(id: string): Promise<Shop> {
     if (

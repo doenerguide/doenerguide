@@ -1,76 +1,81 @@
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-card>
+  <div class="title">
     <img id="icon" alt="User Icon" src="/assets/icon/logo.png" />
-    <ion-card-header>
-      <ion-card-title>Registierung</ion-card-title>
-      <ion-card-subtitle>Welcome to DönerGuide!</ion-card-subtitle>
-    </ion-card-header>
+    <div class="titles">
+      <h1>Willkommen zu DönerGuide!</h1>
+      <h4>Registieren</h4>
+    </div>
+  </div>
 
-    <ion-card-content>
-      Bitte fülle alle Felder aus, um sich zu registrieren.
-      <form id="input" [formGroup]="form">
-        <ion-input
-          formControlName="vorname"
-          label="Vorname"
-          labelPlacement="floating"
-          placeholder="Dein Vorname"
-          required="true"
-        >
-        </ion-input>
-        <ion-input
-          formControlName="nachname"
-          labelPlacement="floating"
-          label="Nachname"
-          placeholder="Dein Nachname"
-          required="true"
-        >
-        </ion-input>
-        <ion-input
-          formControlName="email"
-          label="E-Mail"
-          labelPlacement="floating"
-          placeholder="Deine E-Mail Adresse"
-          required="true"
-        >
-        </ion-input>
-        <ion-input
-          formControlName="password"
-          label="Passwort"
-          labelPlacement="floating"
-          placeholder="Dein Passwort"
-          type="password"
-          helperText="Mindestlänge 8 Zeichen"
-          minlength="8"
-          required="true"
-        >
-        </ion-input>
-        <ion-input
-          formControlName="passwordConfirm"
-          label="Passwort wiederholen"
-          labelPlacement="floating"
-          placeholder="Password bestätigen"
-          type="password"
-          minlength="8"
-          required="true"
-        >
-        </ion-input>
-        <ion-item id="nutzungsbedingungen">
-          <ion-checkbox formControlName="terms" slot="" required="true">
-            Nutzungsbedingungen
-          </ion-checkbox>
-        </ion-item>
-      </form>
-      <div slot="label" #errorMessage></div>
-      <ion-button
-        id="signup"
-        [disabled]="checkRegisterButton()"
-        (click)="register()"
-        size="medium"
-        form="input"
-        type="submit"
+  <div class="login">
+    <ion-label>Bitte fülle alle Felder aus, um sich zu registrieren.</ion-label>
+
+    <form id="input" [formGroup]="form">
+      <ion-input
+        formControlName="vorname"
+        label="Vorname"
+        labelPlacement="floating"
+        placeholder="Dein Vorname"
+        required="true"
       >
-        Registrieren
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+      </ion-input>
+      <ion-input
+        formControlName="nachname"
+        labelPlacement="floating"
+        label="Nachname"
+        placeholder="Dein Nachname"
+        required="true"
+      >
+      </ion-input>
+      <ion-input
+        formControlName="email"
+        label="E-Mail"
+        labelPlacement="floating"
+        placeholder="Deine E-Mail Adresse"
+        required="true"
+      >
+      </ion-input>
+      <ion-input
+        formControlName="password"
+        label="Passwort"
+        labelPlacement="floating"
+        placeholder="Dein Passwort"
+        type="password"
+        helperText="Mindestlänge 8 Zeichen"
+        minlength="8"
+        required="true"
+      >
+      </ion-input>
+      <ion-input
+        formControlName="passwordConfirm"
+        label="Passwort wiederholen"
+        labelPlacement="floating"
+        placeholder="Password bestätigen"
+        helperText="Mindestlänge 8 Zeichen"
+        type="password"
+        minlength="8"
+        required="true"
+      >
+      </ion-input>
+      <ion-checkbox
+        id="nutzungsbedingungen"
+        formControlName="terms"
+        slot=""
+        required="true"
+      >
+        Nutzungsbedingungen
+      </ion-checkbox>
+    </form>
+    <div slot="label" #errorMessage></div>
+    <ion-button
+      id="signup"
+      [disabled]="checkRegisterButton()"
+      (click)="register()"
+      size="medium"
+      form="input"
+      type="submit"
+    >
+      Registrieren
+    </ion-button>
+  </div>
 </ion-content>

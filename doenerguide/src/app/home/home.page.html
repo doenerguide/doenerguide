@@ -1,14 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <img
-      src="assets/logo_header.png"
-      alt="DönerGuide Logo"
-      class="ion-hide-md-up"
-    />
+    <img [src]="logoSrc" alt="DönerGuide Logo" class="ion-hide-md-up" />
     <ion-grid class="ion-hide-md-down">
       <ion-row>
         <ion-col size="3">
-          <img src="assets/logo_header.png" alt="DönerGuide Logo" />
+          <img [src]="logoSrc" alt="DönerGuide Logo" />
         </ion-col>
         <ion-col size="4">
           <ion-searchbar
@@ -138,6 +134,7 @@
               class="size"
               [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
               (click)="userSrv.toggleFavorite(shop)"
+              *ngIf="userSrv.isLoggedIn()"
             ></ion-icon>
           </ion-card-header>
           <ion-card-content>

@@ -3,10 +3,15 @@ from unittest.mock import patch, MagicMock
 import sqlite3
 import os
 import sys
+import hashlib
 
 abs_path = os.path.abspath(__file__)
 sys.path.append(os.path.dirname(os.path.dirname(abs_path)))
 from databaseManager import hash_password, create_connection, check_login, add_user
+
+
+def create_identification_code():
+    return "ddd8f41be4b46cbaf6102ddc6bf9e89da885aac480884480c7d504c73c8ef6e6"
 
 class TestDatabaseManager(unittest.TestCase):
     """
@@ -59,7 +64,8 @@ class TestDatabaseManager(unittest.TestCase):
         """
         mail = "test@example.com"
         password = "password"
-        add_user(mail, password, "John", "Doe")
+        identification_code = create_identification_code()
+        add_user(mail, password, "John", "Doe", identification_code)
         result = check_login(mail, password)
         self.assertTrue(result)
 
@@ -70,10 +76,11 @@ class TestDatabaseManager(unittest.TestCase):
         """
         mock_conn = MagicMock()
         mock_create_connection.return_value = mock_conn
+        identification_code = create_identification_code()
 
-        result = add_user('test@example.com', 'password', 'Vorname', 'Nachname')
+        result = add_user('test@example.com', 'password', 'Vorname', 'Nachname', identification_code)
 
-        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten) VALUES (?, ?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname', str([])))
+        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten, identification_code) VALUES (?, ?, ?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname', str([]), create_identification_code()))
         mock_conn.commit.assert_called_once()
         mock_conn.close.assert_called_once()
         self.assertTrue(result)
@@ -86,10 +93,11 @@ class TestDatabaseManager(unittest.TestCase):
         mock_conn = MagicMock()
         mock_conn.execute.side_effect = sqlite3.Error('Database error')
         mock_create_connection.return_value = mock_conn
+        identification_code = create_identification_code()
 
-        result = add_user('test@example.com', 'password', 'Vorname', 'Nachname')
+        result = add_user('test@example.com', 'password', 'Vorname', 'Nachname', identification_code)
 
-        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten) VALUES (?, ?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname', str([])))
+        mock_conn.execute.assert_called_once_with("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten, identification_code) VALUES (?, ?, ?, ?, ?, ?)", ('test@example.com', hash_password('password', "doenerguide"), 'Vorname', 'Nachname', str([]), create_identification_code()))
         mock_conn.close.assert_called_once()
         self.assertFalse(result)
 

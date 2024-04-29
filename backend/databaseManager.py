@@ -70,6 +70,31 @@ def update_user_favoriten(user_id, favoriten):
     conn.close()
     return True
 
+def update_user(user_id, vorname, nachname, mail):
+    conn = create_connection()
+    try:
+        conn.execute("UPDATE [USERS] SET Vorname = ?, Nachname = ?, Mail = ? WHERE ID = ?", (vorname, nachname, mail, user_id))
+    except sqlite3.Error as e:
+        print(e)
+        conn.close()
+        return False
+    conn.commit()
+    conn.close()
+    return True
+
+def update_user_password(user_id, password):
+    password = hash_password(password, "doenerguide")
+    conn = create_connection()
+    try:
+        conn.execute("UPDATE [USERS] SET Password = ? WHERE ID = ?", (password, user_id))
+    except sqlite3.Error as e:
+        print(e)
+        conn.close()
+        return False
+    conn.commit()
+    conn.close()
+    return True
+
 def create_shop(name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url):
     name = str(name)
     imageURL = str(imageURL)

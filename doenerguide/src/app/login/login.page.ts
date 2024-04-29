@@ -12,6 +12,7 @@ import { UserService } from '../services/user.service';
 import { environment } from 'src/environments/environment';
 import { User } from '../interfaces/user';
 import { DatabaseService } from '../services/database.service';
+import { IonicStorageModule } from '@ionic/storage-angular';
 
 let endpoint = environment.endpoint;
 

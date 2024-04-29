@@ -60,3 +60,8 @@ hr {
 .openingHours .item-native {
   padding: 0 0 !important;
 }
+
+body.dark ion-card ion-item,
+body.dark ion-card ion-list {
+  --ion-item-background: var(--ion-card-background);
+}

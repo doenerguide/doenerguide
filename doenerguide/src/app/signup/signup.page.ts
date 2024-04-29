@@ -17,7 +17,7 @@ let endpoint = environment.endpoint;
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
-  styleUrls: ['./signup.page.scss'],
+  styleUrls: ['../login/login.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule],
 })

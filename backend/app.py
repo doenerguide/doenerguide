@@ -152,6 +152,44 @@ def get_user_by_session():
     else:
         return {'success': False}
     
+@app.route('/updateUser', methods=['POST'])
+def update_user():
+    """
+    Updates the user information.
+
+    Retrieves the user ID and the updated user information from the request body and updates the user information in the database.
+
+    Returns:
+        A JSON response indicating the success of the operation.
+    """
+    body = request.get_json()
+    user_id = body['id']
+    vorname = body['vorname']
+    nachname = body['nachname']
+    email = body['mail']
+    if dbm.update_user(user_id, vorname, nachname, email):
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False})
+
+@app.route('/updateUserPassword', methods=['POST'])
+def update_password():
+    """
+    Updates the user password.
+
+    Retrieves the user ID and the updated password from the request body and updates the user password in the database.
+
+    Returns:
+        A JSON response indicating the success of the operation.
+    """
+    body = request.get_json()
+    user_id = body['id']
+    password = body['password']
+    if dbm.update_user_password(user_id, password):
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False})
+
 def create_session(email):
     """
     Creates a new session in the database.

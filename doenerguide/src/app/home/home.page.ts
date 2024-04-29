@@ -18,6 +18,7 @@ import { UserService } from '../services/user.service';
 import { IFlags, flagList } from '../interfaces/flags';
 import { LocationService } from '../services/location.service';
 import { FilterPipe } from '../pipes/filter.pipe';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -47,6 +48,8 @@ export class HomePage {
   long: number = 13.404954;
   radius: number = 5;
 
+  logoSrc = 'assets/logo_header.png';
+
   @ViewChild('refreshButton', { read: ElementRef })
   refButton!: ElementRef<HTMLIonButtonElement>;
 
@@ -56,7 +59,8 @@ export class HomePage {
     private router: Router,
     private databaseSrv: DatabaseService,
     public userSrv: UserService,
-    private locationSrv: LocationService
+    private locationSrv: LocationService,
+    private storageSrv: StorageService
   ) {}
 
   shopFunctions = ShopFunctions;
@@ -119,6 +123,10 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
+    this.storageSrv.darkMode().then((darkMode) => {
+      if (darkMode) this.logoSrc = 'assets/logo_header_white.png';
+      else this.logoSrc = 'assets/logo_header.png';
+    });
     this.userSrv.getUserLocation().then((loc) => {
       this.lat = loc.lat;
       this.long = loc.long;

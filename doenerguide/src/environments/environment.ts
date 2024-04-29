@@ -14,6 +14,6 @@ export let environment = {
   radius: 5,
   production: false,
   shops: [],
-  // endpoint: 'https://backend.doenerguide.envyz.de',
-  endpoint: 'http://127.0.0.1:8000',
+  endpoint: 'https://backend.doenerguide.envyz.de',
+  // endpoint: 'http://127.0.0.1:8000',
 };
