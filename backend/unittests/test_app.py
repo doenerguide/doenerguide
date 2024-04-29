@@ -33,8 +33,11 @@ class TestLogin(unittest.TestCase):
 
         result = self.app.post('/login', data=json.dumps({
             'email': 'test@example.com', 'password': 'password'}), content_type='application/json')
+        
+        result_json = result.json
+        result_json['session_id'] = ''
 
-        self.assertEqual(result.get_json(), {'success': True, 'user': True})
+        self.assertEqual(result_json, {'success': True, 'user': True, 'session_id': ''})
 
     @patch('app.dbm')
     def test_login_failure(self, mock_dbm):
