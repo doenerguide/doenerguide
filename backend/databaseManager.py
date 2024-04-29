@@ -10,7 +10,7 @@ def hash_password(password, salt):
     return password_hash
 
 def create_connection():
-    db_file = os.path.dirname(__file__) + "/database.db"
+    db_file = "/backend/database.db"
     conn = None
     try:
         conn = sqlite3.connect(db_file)
@@ -47,6 +47,10 @@ def add_user(mail, password, vorname, nachname, identification_code):
     try:
         conn.execute("INSERT INTO [USERS] (Mail, Password, Vorname, Nachname, Favoriten, identification_code) VALUES (?, ?, ?, ?, ?, ?)", (mail, password, vorname, nachname, str([]), identification_code))
     except sqlite3.Error as e:
+        print(e)
+        conn.close()
+        return False
+    except Exception as e:
         print(e)
         conn.close()
         return False
