@@ -7,7 +7,7 @@ ion-card-content {
   padding: 0 12px;
 }
 
-ion-card ion-button {
+ion-card ion-button:not(.anim) {
   margin-left: auto;
 }
 
@@ -19,14 +19,14 @@ ion-card ion-button {
   padding-bottom: 16px;
 }
 
-.appSettings ion-button {
-  margin: 12px 24px;
+.buttonContainer {
+  display: flex;
+  justify-content: center;
 }
 
 .anim {
   max-width: 100%;
-  width: 90%;
-  margin: auto;
+  width: 97%;
   float: right;
   transition: width 0.6s ease;
 }

@@ -82,16 +82,17 @@
           Abmelden
         </ion-button>
       </div>
-      <ion-button
-        expand="block"
-        color="danger"
-        class="anim"
-        (click)="sideButton.nativeElement.classList.add('side')"
-        #sidebutton
-      >
-        <ion-icon slot="start" name="log-out-outline"></ion-icon>
-        Abmelden
-      </ion-button>
+      <div class="buttonContainer">
+        <ion-button
+          color="danger"
+          class="anim"
+          (click)="sideButton.nativeElement.classList.add('side')"
+          #sidebutton
+        >
+          <ion-icon slot="start" name="log-out-outline"></ion-icon>
+          Abmelden
+        </ion-button>
+      </div>
     </ion-card>
   </div>
 </ion-content>
