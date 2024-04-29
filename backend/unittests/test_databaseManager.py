@@ -23,7 +23,7 @@ class TestDatabaseManager(unittest.TestCase):
         Set up the test case by creating an in-memory SQLite database and a cursor.
         Create the USERS table in the database.
         """
-        self.conn = sqlite3.connect(':memory:')
+        self.conn = sqlite3.connect('file::memory:?cache=shared', uri=True)
         self.cursor = self.conn.cursor()
         self.cursor.execute('''
             CREATE TABLE USERS (
