@@ -22,13 +22,13 @@ export class DatabaseService {
     return response.ok;
   }
 
-  async updateUserPassword(userId: number, password: string): Promise<boolean> {
+  async updateUserPassword(userId: number, passwordOld: string, passwordNew: string): Promise<boolean> {
     let response = await fetch(`${environment.endpoint}/updateUserPassword`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: userId, password }),
+      body: JSON.stringify({ id: userId, passwordOld: passwordOld, passwordNew: passwordNew }),
     });
     return response.ok;
   }

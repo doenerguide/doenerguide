@@ -40,15 +40,23 @@
         <ion-item lines="none">
           <ion-input
             type="password"
-            label="Passwort"
-            placeholder="Neues Passwort"
-            [(ngModel)]="password"
+            label="Altes Passwort"
+            placeholder="Altes Passwort"
+            [(ngModel)]="passwordOld"
           ></ion-input>
         </ion-item>
         <ion-item lines="none">
           <ion-input
             type="password"
-            label="Passwort"
+            label="Neues Passwort"
+            placeholder="Neues Passwort"
+            [(ngModel)]="passwordNew"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input
+            type="password"
+            label="Passwort wiederholen"
             placeholder="Passwort wiederholen"
             [(ngModel)]="passwordConfirm"
           ></ion-input>

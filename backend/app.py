@@ -184,8 +184,9 @@ def update_password():
     """
     body = request.get_json()
     user_id = body['id']
-    password = body['password']
-    if dbm.update_user_password(user_id, password):
+    old_password = body['old_password']
+    new_password = body['new_password']
+    if dbm.update_user_password(user_id, old_password, new_password):
         return jsonify({'success': True})
     else:
         return jsonify({'success': False})

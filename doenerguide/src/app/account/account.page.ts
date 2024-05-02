@@ -20,7 +20,8 @@ import { StorageService } from '../services/storage.service';
 export class AccountPage implements OnInit {
   myAngularxQrCode: string = '';
   user!: User;
-  password: string = '';
+  passwordOld: string = '';
+  passwordNew: string = '';
   passwordConfirm: string = '';
   darkMode = false;
 
@@ -36,7 +37,6 @@ export class AccountPage implements OnInit {
 
   ngOnInit() {
     this.user = this.userSrv.getUser();
-    console.log(this.user);
   }
 
   ionViewWillEnter() {
@@ -65,11 +65,12 @@ export class AccountPage implements OnInit {
   updateUser() {
     this.databaseSrv.updateUser(this.user).then((success) => {
       if (success) {
-        if (this.password !== '' && this.password === this.passwordConfirm) {
-          this.databaseSrv.updateUserPassword(this.user.id, this.password);
+        if (this.passwordNew !== '' &&this.passwordOld !== '' && this.passwordOld === this.passwordConfirm) {
+          this.databaseSrv.updateUserPassword(this.user.id, this.passwordOld, this.passwordNew);
         } else if (
-          this.password !== '' &&
-          this.password !== this.passwordConfirm
+          this.passwordNew !== '' &&
+          this.passwordOld !== '' &&
+          this.passwordOld !== this.passwordConfirm
         ) {
           this.toastCtrl
             .create({

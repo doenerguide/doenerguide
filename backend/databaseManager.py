@@ -82,11 +82,11 @@ def update_user(user_id, vorname, nachname, mail):
     conn.close()
     return True
 
-def update_user_password(user_id, password):
+def update_user_password(user_id, old_password, new_password):
     password = hash_password(password, "doenerguide")
     conn = create_connection()
     try:
-        conn.execute("UPDATE [USERS] SET Password = ? WHERE ID = ?", (password, user_id))
+        conn.execute("UPDATE [USERS] SET Password = ? WHERE ID = ? AND Password = ?", (new_password, user_id, old_password))
     except sqlite3.Error as e:
         print(e)
         conn.close()
