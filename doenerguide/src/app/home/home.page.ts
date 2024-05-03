@@ -85,7 +85,12 @@ export class HomePage implements OnInit {
 
   async setShops() {
     this.radiusShops = await this.databaseSrv.getShops(this.lat, this.long, this.radius);
-    this.shops = this.radiusShops.filter((shop) => this.filterShopsMethod(shop));
+    this.shops = this.radiusShops
+      .filter((shop) => this.filterShopsMethod(shop))
+      .sort((a, b) => {
+        if (a.distance && b.distance) return a.distance - b.distance;
+        return 0;
+      });
     this.setResultsShown();
     this.loading = false;
   }
