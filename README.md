@@ -17,6 +17,9 @@ Dönerguide hilft somit sowohl Kunden als auch Dönerläden und schafft eine Win
 #### GitHub Repository
 https://github.com/doenerguide/doenerguide
 
+#### ionic-Dokumentation
+https://ionicframework.com/docs/v3/
+
 #### DHBW Stuttgart
 https://www.dhbw-stuttgart.de
 
@@ -89,3 +92,9 @@ Verbesserungspotential besteht in der Kommunikation. Diese war zu Beginn des Pro
 So wird unteranderem nicht direkt bei den Ansprechpartnern zur passenden Technologie nachgefragt, sondern zuerst auf eigene Faust recherchiert. Dies führt zu Zeitverlust und unnötigen Problemen.
 
 Um das zu beheben, soll in Zukunft auch verstärkt im Team an Features gearbeitet werden um bestehendes Wissen strategisch gut zu nutzen und Zeit einzusparen.
+
+
+
+Architektur
+Wie aufzusetzen
+Komplexe Stellen im Code
