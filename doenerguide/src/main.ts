@@ -20,9 +20,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     importProvidersFrom(
-      IonicModule.forRoot({
-        swipeBackEnabled: false,
-      }),
+      IonicModule.forRoot({}),
       IonicStorageModule.forRoot({
         name: '_doenerguide',
       })
