@@ -33,8 +33,8 @@ import { StorageService } from '../services/storage.service';
  * Represents the home page of the application.
  */
 export class HomePage implements OnInit {
-  shops: Shop[] = [];
   shownShops: Shop[] = [];
+  shops: Shop[] = [];
   radiusShops: Shop[] = [];
   flags: { key: string; value: string }[] = [];
   nameFilter: string = '';
@@ -85,8 +85,9 @@ export class HomePage implements OnInit {
 
   async setShops() {
     this.radiusShops = await this.databaseSrv.getShops(this.lat, this.long, this.radius);
-    this.shownShops = this.radiusShops.filter((shop) => this.filterShopsMethod(shop));
+    this.shops = this.radiusShops.filter((shop) => this.filterShopsMethod(shop));
     this.setResultsShown();
+    this.loading = false;
   }
 
   setResultsShown() {
