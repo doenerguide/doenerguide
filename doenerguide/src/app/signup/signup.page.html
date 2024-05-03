@@ -57,25 +57,23 @@
         required="true"
       >
       </ion-input>
-      <ion-checkbox
-        id="nutzungsbedingungen"
-        formControlName="terms"
-        slot=""
-        required="true"
-      >
+      <ion-checkbox id="nutzungsbedingungen" formControlName="terms" slot="" required="true">
         Nutzungsbedingungen
       </ion-checkbox>
     </form>
     <div slot="label" #errorMessage></div>
-    <ion-button
-      id="signup"
-      [disabled]="checkRegisterButton()"
-      (click)="register()"
-      size="medium"
-      form="input"
-      type="submit"
-    >
-      Registrieren
-    </ion-button>
+    <div id="buttons">
+      <ion-button [routerLink]="['/login']"> Login </ion-button>
+      <ion-button
+        id="signup"
+        [disabled]="checkRegisterButton()"
+        (click)="register()"
+        size="medium"
+        form="input"
+        type="submit"
+      >
+        Registrieren
+      </ion-button>
+    </div>
   </div>
 </ion-content>
