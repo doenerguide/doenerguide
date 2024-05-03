@@ -105,7 +105,7 @@
     <ion-grid>
       <ion-row>
         <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let shop of shownShops">
-          <ion-card [routerLink]="['/shop', {shop: shop | json, refferer: '/'}]" [routerDirection]="'forward'">
+          <ion-card (click)="navigateToShop(shop, $event)">
             <ion-img [src]="shop.imageUrl" alt="{{ shop.name }}" />
             <ion-card-header class="title">
               <div>
@@ -115,13 +115,17 @@
                   <app-rating [rating]="shop.rating"> </app-rating>
                 </ion-card-title>
               </div>
-              <ion-icon
-                [name]="userSrv.getFavoriteIds().includes(shop.id) ? 'heart' : 'heart-outline'"
-                class="size"
-                [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
-                (click)="userSrv.toggleFavorite(shop)"
+              <div
+                (click)="userSrv.toggleFavorite(shop);$event.stopPropagation()"
                 *ngIf="userSrv.isLoggedIn()"
-              ></ion-icon>
+                class="favoriteButton"
+              >
+                <ion-icon
+                  [name]="userSrv.getFavoriteIds().includes(shop.id) ? 'heart' : 'heart-outline'"
+                  class="size"
+                  [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
+                ></ion-icon>
+              </div>
             </ion-card-header>
             <ion-card-content>
               <ion-list>

@@ -3,6 +3,7 @@ import {
   InputChangeEventDetail,
   IonContent,
   IonicModule,
+  NavController,
   RefresherCustomEvent,
   SearchbarCustomEvent,
   SearchbarInputEventDetail,
@@ -58,7 +59,8 @@ export class HomePage implements OnInit {
     private databaseSrv: DatabaseService,
     public userSrv: UserService,
     private locationSrv: LocationService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
+    private navCtrl: NavController
   ) {}
 
   ngOnInit(): void {
@@ -203,5 +205,11 @@ export class HomePage implements OnInit {
 
   scrollToTop() {
     this.content.scrollToTop(500);
+  }
+
+  navigateToShop(shop: Shop, event: Event) {
+    if ((event.target as Element).classList.contains('favoriteButton')) return;
+
+    this.navCtrl.navigateForward(['/shop', { shop: JSON.stringify(shop), refferer: '/' }]);
   }
 }

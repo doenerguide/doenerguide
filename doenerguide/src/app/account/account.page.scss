@@ -22,12 +22,16 @@ ion-card ion-button:not(.anim) {
 .buttonContainer {
   display: flex;
   justify-content: center;
+  height: 100%;
+  padding-bottom: 5px;
 }
 
 .anim {
   max-width: 100%;
   width: 97%;
+  height: 50px;
   float: right;
+  margin-bottom: 0;
   transition: width 0.6s ease;
 }
 
@@ -36,6 +40,7 @@ ion-card ion-button:not(.anim) {
   width: 50px;
   max-height: 50px;
   margin-left: auto;
+  margin-bottom: 0;
   right: 0;
   font-size: 0;
   ion-icon {
@@ -48,10 +53,12 @@ ion-card ion-button:not(.anim) {
   position: absolute;
   .abmelden {
     margin-left: 10px;
+    height: 50px;
     margin-right: auto;
   }
   .abbrechen {
     margin-left: 24px;
+    height: 50px;
     margin-right: 0;
   }
 }
