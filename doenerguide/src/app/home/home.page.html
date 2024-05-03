@@ -47,17 +47,8 @@
       (ionInput)="filterShops($event)"
     ></ion-searchbar>
     <div class="flags">
-      <ion-chip
-        *ngFor="let flag of flags"
-        (click)="handleFlag(flag)"
-        color="primary"
-      >
-        {{flag.value}}
-      </ion-chip>
-      <ion-chip
-        *ngFor="let flag of flagList | filter : fitlerFlags : flags"
-        (click)="handleFlag(flag)"
-      >
+      <ion-chip *ngFor="let flag of flags" (click)="handleFlag(flag)" color="primary"> {{flag.value}} </ion-chip>
+      <ion-chip *ngFor="let flag of flagList | filter : fitlerFlags : flags" (click)="handleFlag(flag)">
         {{flag.value}}
       </ion-chip>
     </div>
@@ -96,105 +87,78 @@
     </ion-range>
   </div>
   <div class="flags md ion-hide-md-down">
-    <ion-chip
-      *ngFor="let flag of flags"
-      (click)="handleFlag(flag)"
-      color="primary"
-    >
-      {{flag.value}}
-    </ion-chip>
-    <ion-chip
-      *ngFor="let flag of flagList | filter : fitlerFlags : flags"
-      (click)="handleFlag(flag)"
-    >
+    <ion-chip *ngFor="let flag of flags" (click)="handleFlag(flag)" color="primary"> {{flag.value}} </ion-chip>
+    <ion-chip *ngFor="let flag of flagList | filter : fitlerFlags : flags" (click)="handleFlag(flag)">
       {{flag.value}}
     </ion-chip>
   </div>
-  <ion-grid>
-    <ion-row>
-      <ion-col
-        size="12"
-        size-sm="6"
-        size-md="4"
-        size-lg="3"
-        *ngFor="let shop of shownShops"
-      >
-        <ion-card>
-          <img src="{{ shop.imageUrl }}" alt="{{ shop.name }}" />
-          <ion-card-header class="title">
-            <div>
-              <ion-card-subtitle>{{shop.address}}</ion-card-subtitle>
-              <ion-card-title>
-                {{shop.name}}
-                <app-rating [rating]="shop.rating"> </app-rating>
-              </ion-card-title>
-            </div>
-            <ion-icon
-              [name]="userSrv.getFavoriteIds().includes(shop.id) ? 'heart' : 'heart-outline'"
-              class="size"
-              [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
-              (click)="userSrv.toggleFavorite(shop)"
-              *ngIf="userSrv.isLoggedIn()"
-            ></ion-icon>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-list>
-              <ion-item lines="none">
-                <ion-icon slot="start" name="pricetag-outline"></ion-icon>
-                <app-price [priceCategory]="shop.priceCategory"></app-price>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-icon
-                  slot="start"
-                  name="time-outline"
-                  [color]="shopFunctions.checkOpeningColor(shop.openToday).status"
-                ></ion-icon>
-                <ng-container *ngFor="let openingHour of shop.openToday">
-                  {{ openingHour.open === '00:00' && openingHour.close ===
-                  '00:00' ? 'Heute geschlossen' : openingHour.open + ' - ' +
-                  openingHour.close }}<br />
-                </ng-container>
-              </ion-item>
-              <ion-item
-                lines="none"
-                *ngIf="shopFunctions.enabledFlags(shop.flags).length > 0"
-              >
-                <ion-icon
-                  slot="start"
-                  name="checkmark-outline"
-                  color="open"
-                ></ion-icon>
-                {{ shopFunctions.enabledFlags(shop.flags).slice(0, 3).join(", ")
-                }}{{ shopFunctions.enabledFlags(shop.flags).length > 3 ? ', ...'
-                : '' }}
-              </ion-item>
-              <ion-item
-                lines="none"
-                *ngIf="shopFunctions.disabledFlags(shop.flags).length > 0"
-              >
-                <ion-icon
-                  slot="start"
-                  name="close-outline"
-                  color="danger"
-                ></ion-icon>
-                {{ shopFunctions.disabledFlags(shop.flags).slice(0, 3).join(",
-                ") }}{{ shopFunctions.disabledFlags(shop.flags).length > 3 ? ',
-                ...' : '' }}
-              </ion-item>
-            </ion-list>
-          </ion-card-content>
+  <ng-template [ngIf]="loading">
+    <ion-item lines="none" class="loadingShops">
+      <ion-spinner> </ion-spinner>
+      <ion-label>Dönerläden in deiner Umgebung werden geladen...</ion-label>
+    </ion-item>
+  </ng-template>
+  <ng-template [ngIf]="!loading && shownShops.length === 0" [ngIfElse]="shops">
+    <ion-label class="loadingShops"> Keine Dönerläden in deiner Umgebung gefunden. </ion-label>
+  </ng-template>
+  <ng-template #shops>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let shop of shownShops">
+          <ion-card [routerLink]="['/shop', {shop: shop | json, refferer: '/'}]" [routerDirection]="'forward'">
+            <ion-img [src]="shop.imageUrl" alt="{{ shop.name }}" />
+            <ion-card-header class="title">
+              <div>
+                <ion-card-subtitle>{{shop.address}}</ion-card-subtitle>
+                <ion-card-title>
+                  {{shop.name}}
+                  <app-rating [rating]="shop.rating"> </app-rating>
+                </ion-card-title>
+              </div>
+              <ion-icon
+                [name]="userSrv.getFavoriteIds().includes(shop.id) ? 'heart' : 'heart-outline'"
+                class="size"
+                [color]="userSrv.getFavoriteIds().includes(shop.id) ? 'danger' : 'medium'"
+                (click)="userSrv.toggleFavorite(shop)"
+                *ngIf="userSrv.isLoggedIn()"
+              ></ion-icon>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list>
+                <ion-item lines="none">
+                  <ion-icon slot="start" name="pricetag-outline"></ion-icon>
+                  <app-price [priceCategory]="shop.priceCategory"></app-price>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-icon
+                    slot="start"
+                    name="time-outline"
+                    [color]="shopFunctions.checkOpeningColor(shop.openToday).status"
+                  ></ion-icon>
+                  <ng-container *ngFor="let openingHour of shop.openToday">
+                    {{ openingHour.open === '00:00' && openingHour.close === '00:00' ? 'Heute geschlossen' :
+                    openingHour.open + ' - ' + openingHour.close }}<br />
+                  </ng-container>
+                </ion-item>
+                <ion-item lines="none" *ngIf="shopFunctions.enabledFlags(shop.flags).length > 0">
+                  <ion-icon slot="start" name="checkmark-outline" color="open"></ion-icon>
+                  {{ shopFunctions.enabledFlags(shop.flags).slice(0, 3).join(", ") }}{{
+                  shopFunctions.enabledFlags(shop.flags).length > 3 ? ', ...' : '' }}
+                </ion-item>
+                <ion-item lines="none" *ngIf="shopFunctions.disabledFlags(shop.flags).length > 0">
+                  <ion-icon slot="start" name="close-outline" color="danger"></ion-icon>
+                  {{ shopFunctions.disabledFlags(shop.flags).slice(0, 3).join(", ") }}{{
+                  shopFunctions.disabledFlags(shop.flags).length > 3 ? ', ...' : '' }}
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
 
-          <div class="buttons">
-            <ion-button
-              fill="clear"
-              [routerLink]="['/shop', {shop: shop | json, refferer: '/'}]"
-              routerDirection="forward"
-            >
-              Mehr Infos >
-            </ion-button>
-          </div>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+            <div class="buttons">
+              <ion-button fill="clear"> Mehr Infos > </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
 </ion-content>

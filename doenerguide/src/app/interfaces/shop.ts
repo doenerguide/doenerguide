@@ -5,6 +5,7 @@ export interface Shop {
   imageUrl: string;
   name: string;
   address: string;
+  distance?: number;
   rating: number;
   priceCategory: number;
   openToday: {

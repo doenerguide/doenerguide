@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   InputChangeEventDetail,
   IonContent,
@@ -26,21 +26,13 @@ import { StorageService } from '../services/storage.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [
-    IonicModule,
-    NavigationComponent,
-    RatingComponent,
-    CommonModule,
-    PriceComponent,
-    RouterModule,
-    FilterPipe,
-  ],
+  imports: [IonicModule, NavigationComponent, RatingComponent, CommonModule, PriceComponent, RouterModule, FilterPipe],
 })
 
 /**
  * Represents the home page of the application.
  */
-export class HomePage {
+export class HomePage implements OnInit {
   shops: Shop[] = [];
   shownShops: Shop[] = [];
   radiusShops: Shop[] = [];
@@ -50,6 +42,7 @@ export class HomePage {
   long: number = 13.404954;
   radius: number = 5;
   resultsShown: number = 12;
+  loading = true;
 
   logoSrc = 'assets/logo_header.png';
 
@@ -69,6 +62,14 @@ export class HomePage {
     private storageSrv: StorageService
   ) {}
 
+  ngOnInit(): void {
+    this.locationSrv.getUserLocation().then((loc) => {
+      this.lat = loc.lat;
+      this.long = loc.long;
+      this.setShops();
+    });
+  }
+
   shopFunctions = ShopFunctions;
   flagList = flagList;
 
@@ -83,14 +84,8 @@ export class HomePage {
   }
 
   async setShops() {
-    this.radiusShops = await this.databaseSrv.getShops(
-      this.lat,
-      this.long,
-      this.radius
-    );
-    this.shops = this.radiusShops.filter((shop) =>
-      this.filterShopsMethod(shop)
-    );
+    this.radiusShops = await this.databaseSrv.getShops(this.lat, this.long, this.radius);
+    this.shownShops = this.radiusShops.filter((shop) => this.filterShopsMethod(shop));
     this.setResultsShown();
   }
 
@@ -111,10 +106,7 @@ export class HomePage {
   // on scroll to bottom load more
   async onScroll(event: any) {
     const scrollElement = await this.content.getScrollElement();
-    if (
-      scrollElement.scrollTop >=
-      scrollElement.scrollHeight - scrollElement.clientHeight - 200
-    ) {
+    if (scrollElement.scrollTop >= scrollElement.scrollHeight - scrollElement.clientHeight - 200) {
       this.loadMore();
     }
   }
@@ -122,17 +114,12 @@ export class HomePage {
   filterShopsMethod(shop: Shop): boolean {
     if (this.flags.length === 0 && this.nameFilter === '') return true;
     else if (this.nameFilter === '')
-      return this.flags.every(
-        (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key]
-      );
-    else if (this.flagList.length === 0)
-      return shop.name.toLowerCase().includes(this.nameFilter.toLowerCase());
+      return this.flags.every((activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key]);
+    else if (this.flagList.length === 0) return shop.name.toLowerCase().includes(this.nameFilter.toLowerCase());
     else
       return (
         shop.name.toLowerCase().includes(this.nameFilter.toLowerCase()) &&
-        this.flags.every(
-          (activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key]
-        )
+        this.flags.every((activeFlag) => (shop.flags as unknown as IFlags)[activeFlag.key])
       );
   }
 
@@ -142,16 +129,11 @@ export class HomePage {
     } else {
       this.flags.push(flag);
     }
-    this.shops = this.radiusShops.filter((shop) =>
-      this.filterShopsMethod(shop)
-    );
+    this.shops = this.radiusShops.filter((shop) => this.filterShopsMethod(shop));
     this.setResultsShown();
   }
 
-  fitlerFlags(
-    flag: { key: string; value: string },
-    flags: { key: string; value: string }[]
-  ) {
+  fitlerFlags(flag: { key: string; value: string }, flags: { key: string; value: string }[]) {
     return flags.includes(flag);
   }
 
@@ -159,12 +141,6 @@ export class HomePage {
     this.storageSrv.darkMode().then((darkMode) => {
       if (darkMode) this.logoSrc = 'assets/logo_header_white.png';
       else this.logoSrc = 'assets/logo_header.png';
-    });
-    this.userSrv.getUserLocation().then((loc) => {
-      this.lat = loc.lat;
-      this.long = loc.long;
-      this.locationSrv.setLocation(this.lat, this.long);
-      this.setShops();
     });
     if (this.activatedRoute.snapshot.paramMap.get('message')) {
       this.toastCtrl
@@ -187,10 +163,9 @@ export class HomePage {
 
   doRefresh(event?: RefresherCustomEvent, button?: ElementRef) {
     if (button) button.nativeElement.classList.add('refreshing');
-    this.userSrv.getUserLocation().then((loc) => {
+    this.locationSrv.getUserLocation().then((loc) => {
       this.lat = loc.lat;
       this.long = loc.long;
-      this.locationSrv.setLocation(this.lat, this.long);
       this.setShops();
       if (event) event.detail.complete();
       if (button) {
@@ -212,9 +187,7 @@ export class HomePage {
 
   filterShops(event: SearchbarCustomEvent) {
     this.nameFilter = event.detail.value!;
-    this.shops = this.radiusShops.filter((shop) =>
-      this.filterShopsMethod(shop)
-    );
+    this.shops = this.radiusShops.filter((shop) => this.filterShopsMethod(shop));
     this.setResultsShown();
   }
 }
