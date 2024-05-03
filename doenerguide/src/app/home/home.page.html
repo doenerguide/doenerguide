@@ -64,7 +64,7 @@
   </div>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [scrollEvents]="true" (ionScroll)="onScroll($event)">
   <ion-refresher
     slot="fixed"
     [pullMin]="80"

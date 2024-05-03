@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import {
   InputChangeEventDetail,
+  IonContent,
   IonicModule,
   RefresherCustomEvent,
   SearchbarCustomEvent,
@@ -40,6 +41,7 @@ import { StorageService } from '../services/storage.service';
  * Represents the home page of the application.
  */
 export class HomePage {
+  shops: Shop[] = [];
   shownShops: Shop[] = [];
   radiusShops: Shop[] = [];
   flags: { key: string; value: string }[] = [];
@@ -47,11 +49,15 @@ export class HomePage {
   lat: number = 52.520008;
   long: number = 13.404954;
   radius: number = 5;
+  resultsShown: number = 12;
 
   logoSrc = 'assets/logo_header.png';
 
   @ViewChild('refreshButton', { read: ElementRef })
   refButton!: ElementRef<HTMLIonButtonElement>;
+
+  @ViewChild(IonContent)
+  content!: IonContent;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -82,9 +88,35 @@ export class HomePage {
       this.long,
       this.radius
     );
-    this.shownShops = this.radiusShops.filter((shop) =>
+    this.shops = this.radiusShops.filter((shop) =>
       this.filterShopsMethod(shop)
     );
+    this.setResultsShown();
+  }
+
+  setResultsShown() {
+    this.shownShops = this.shops.slice(0, this.resultsShown);
+  }
+
+  loadMore() {
+    this.resultsShown += 12;
+    this.setResultsShown();
+  }
+
+  loadStandard() {
+    this.resultsShown = 12;
+    this.setResultsShown();
+  }
+
+  // on scroll to bottom load more
+  async onScroll(event: any) {
+    const scrollElement = await this.content.getScrollElement();
+    if (
+      scrollElement.scrollTop >=
+      scrollElement.scrollHeight - scrollElement.clientHeight - 200
+    ) {
+      this.loadMore();
+    }
   }
 
   filterShopsMethod(shop: Shop): boolean {
@@ -110,9 +142,10 @@ export class HomePage {
     } else {
       this.flags.push(flag);
     }
-    this.shownShops = this.radiusShops.filter((shop) =>
+    this.shops = this.radiusShops.filter((shop) =>
       this.filterShopsMethod(shop)
     );
+    this.setResultsShown();
   }
 
   fitlerFlags(
@@ -179,8 +212,9 @@ export class HomePage {
 
   filterShops(event: SearchbarCustomEvent) {
     this.nameFilter = event.detail.value!;
-    this.shownShops = this.radiusShops.filter((shop) =>
+    this.shops = this.radiusShops.filter((shop) =>
       this.filterShopsMethod(shop)
     );
+    this.setResultsShown();
   }
 }
