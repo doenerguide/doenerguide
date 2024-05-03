@@ -82,9 +82,4 @@ export class UserService {
       }),
     });
   }
-
-  async getUserLocation(): Promise<{ lat: number; long: number }> {
-    let loc = await Geolocation.getCurrentPosition();
-    return { lat: loc.coords.latitude, long: loc.coords.longitude };
-  }
 }
