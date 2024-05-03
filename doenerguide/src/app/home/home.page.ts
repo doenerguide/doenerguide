@@ -46,11 +46,10 @@ export class HomePage implements OnInit {
 
   logoSrc = 'assets/logo_header.png';
 
-  @ViewChild('refreshButton', { read: ElementRef })
-  refButton!: ElementRef<HTMLIonButtonElement>;
+  @ViewChild('refreshButton', { read: ElementRef }) refButton!: ElementRef<HTMLIonButtonElement>;
+  @ViewChild('topButton', { read: ElementRef }) topButton!: ElementRef<HTMLIonButtonElement>;
 
-  @ViewChild(IonContent)
-  content!: IonContent;
+  @ViewChild(IonContent) content!: IonContent;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -114,6 +113,11 @@ export class HomePage implements OnInit {
     const scrollElement = await this.content.getScrollElement();
     if (scrollElement.scrollTop >= scrollElement.scrollHeight - scrollElement.clientHeight - 200) {
       this.loadMore();
+    }
+    if (scrollElement.scrollTop >= 50) {
+      this.topButton.nativeElement.classList.remove('ion-hide');
+    } else {
+      this.topButton.nativeElement.classList.add('ion-hide');
     }
   }
 
@@ -195,5 +199,9 @@ export class HomePage implements OnInit {
     this.nameFilter = event.detail.value!;
     this.shops = this.radiusShops.filter((shop) => this.filterShopsMethod(shop));
     this.setResultsShown();
+  }
+
+  scrollToTop() {
+    this.content.scrollToTop(500);
   }
 }

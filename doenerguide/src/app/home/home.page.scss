@@ -114,3 +114,10 @@ ion-refresher {
     transform: rotate(360deg);
   }
 }
+
+#topButton {
+  position: sticky;
+  bottom: 0px;
+  float: right;
+  z-index: 9999;
+}
