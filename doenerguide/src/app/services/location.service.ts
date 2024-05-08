@@ -63,7 +63,7 @@ export class LocationService {
   }
 
   async getUserLocation(): Promise<{ lat: number; long: number }> {
-    let loc = await Geolocation.getCurrentPosition();
+    let loc = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     this.lat = loc.coords.latitude;
     this.long = loc.coords.longitude;
     return { lat: loc.coords.latitude, long: loc.coords.longitude };

@@ -16,10 +16,6 @@ export const routes: Routes = [
         loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
       },
       {
-        path: 'shop',
-        loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
-      },
-      {
         path: 'login',
         loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
       },
@@ -44,5 +40,13 @@ export const routes: Routes = [
         loadComponent: () => import('./doeneraccount/doeneraccount.page').then((m) => m.DoeneraccountPage),
       },
     ],
+  },
+  {
+    path: 'shop',
+    loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
+  },
+  {
+    path: 'stempelkarten',
+    loadComponent: () => import('./stempelkarten/stempelkarten.page').then((m) => m.StempelkartenPage),
   },
 ];
