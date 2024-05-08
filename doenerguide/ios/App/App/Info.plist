@@ -24,6 +24,8 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Die App benötigt Zugriff auf deine Kamera um QR-Codes scannen zu können</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Die App benötigt deinen Standort um die Dönerläden in deiner Umgebung anzeigen zu können</string>
 	<key>UILaunchStoryboardName</key>

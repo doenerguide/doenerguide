@@ -21,18 +21,15 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        loadComponent: () =>
-          import('./login/login.page').then((m) => m.LoginPage),
+        loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
       },
       {
         path: 'signup',
-        loadComponent: () =>
-          import('./signup/signup.page').then((m) => m.SignupPage),
+        loadComponent: () => import('./signup/signup.page').then((m) => m.SignupPage),
       },
       {
         path: 'favorites',
-        loadComponent: () =>
-          import('./favorites/favorites.page').then((m) => m.FavoritesPage),
+        loadComponent: () => import('./favorites/favorites.page').then((m) => m.FavoritesPage),
       },
       {
         path: 'map',
@@ -40,8 +37,11 @@ export const routes: Routes = [
       },
       {
         path: 'account',
-        loadComponent: () =>
-          import('./account/account.page').then((m) => m.AccountPage),
+        loadComponent: () => import('./account/account.page').then((m) => m.AccountPage),
+      },
+      {
+        path: 'doeneraccount',
+        loadComponent: () => import('./doeneraccount/doeneraccount.page').then((m) => m.DoeneraccountPage),
       },
     ],
   },

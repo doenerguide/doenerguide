@@ -23,7 +23,7 @@ export class SignupPage implements OnInit {
 
   ngOnInit() {
     if (this.userSrv.isLoggedIn()) {
-      if (this.userSrv.getDoenerladenID() == null) {
+      if (this.userSrv.getUser().doenerladen == undefined) {
         this.router.navigate(['/account']);
       } else {
         this.router.navigate(['/doeneraccount']);

@@ -36,7 +36,8 @@ export class AccountPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.user = this.userSrv.getUser();
+    if (this.userSrv.isLoggedIn()) this.user = this.userSrv.getUser();
+    else this.router.navigate(['/login']);
   }
 
   ionViewWillEnter() {
@@ -65,13 +66,9 @@ export class AccountPage implements OnInit {
   updateUser() {
     this.databaseSrv.updateUser(this.user).then((success) => {
       if (success) {
-        if (this.passwordNew !== '' &&this.passwordOld !== '' && this.passwordOld === this.passwordConfirm) {
+        if (this.passwordNew !== '' && this.passwordOld !== '' && this.passwordOld === this.passwordConfirm) {
           this.databaseSrv.updateUserPassword(this.user.id, this.passwordOld, this.passwordNew);
-        } else if (
-          this.passwordNew !== '' &&
-          this.passwordOld !== '' &&
-          this.passwordOld !== this.passwordConfirm
-        ) {
+        } else if (this.passwordNew !== '' && this.passwordOld !== '' && this.passwordOld !== this.passwordConfirm) {
           this.toastCtrl
             .create({
               message: 'Passwörter stimmen nicht überein',
