@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnDestroy, Renderer2, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
 import { LocationService } from '../services/location.service';
 import { DatabaseService } from '../services/database.service';
+import { Shop } from '../interfaces/shop';
 
 declare let google: any;
 
@@ -23,12 +24,12 @@ export class MapPage implements OnDestroy {
   intersectionObserver: any;
   private renderer = inject(Renderer2);
 
-  shownShops: any[] = [];
+  shownShops: Shop[] = [];
 
   // Import components of the template page to be used in TypeScript
   @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
 
-  constructor(private locationSrv: LocationService, private databaseSrv: DatabaseService) {}
+  constructor(private locationSrv: LocationService, private databaseSrv: DatabaseService, private navCtrl: NavController) {}
 
   // Called every time the page is loaded, gets the user's location and sets the shops to be displayed. Will load the map
   async ionViewDidEnter() {
@@ -181,32 +182,16 @@ export class MapPage implements OnDestroy {
     this.set_circle(this.map, location, this.locationSrv.radius * 1000);
     this.renderer.addClass(mapEl, 'visible');
     await this.setShops();
-    for (const shop of this.shownShops as any[]) {
+    for (const shop of this.shownShops) {
       this.addMarker(
         new google.maps.LatLng(shop.lat, shop.lng),
-        "<img src='" +
-          shop.imageUrl +
-          "' style='width: 20em; height: auto;'><h2>" +
+        '<h2>' +
           shop.name +
           '</h2><p>' +
           shop.address +
-          '</p><p>Rating: ' +
-          shop.rating +
-          '</p><p>Price category: ' +
-          shop.priceCategory +
-          '</p><p>Opening hours: ' +
-          shop.openingHours.opens +
-          ' - ' +
-          shop.openingHours.closes +
-          '</p><p>Accepts card: ' +
-          shop.flags.acceptCard +
-          '</p><p>Has stamp card: ' +
-          shop.flags.stampCard +
-          "</p><a href='" +
-          shop.mapsUrl +
-          "'>Open in Google Maps</a><p>Tel: " +
-          shop.tel +
-          '</p>'
+          '</p><ion-button size="small" shop="' +
+          shop.id +
+          '" class="moreInfo">Mehr Informationen <ion-icon name="arrow-forward-outline" slot="end" /> </ion-button>'
       );
     }
   }
@@ -251,6 +236,17 @@ export class MapPage implements OnDestroy {
 
     const infoWindow = new google.maps.InfoWindow({
       content: `<div style="color: black !important;">${info}</div>`,
+    });
+
+    infoWindow.addListener('domready', () => {
+      let buttons = document.getElementsByClassName('moreInfo');
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', () => {
+          let shopId = buttons[i].getAttribute('shop');
+          let shop = this.shownShops.find((s) => s.id == shopId);
+          this.navCtrl.navigateForward(['/shop', { shop: JSON.stringify(shop) }]);
+        });
+      }
     });
 
     marker.addListener('click', () => {
