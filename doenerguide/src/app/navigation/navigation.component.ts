@@ -20,9 +20,7 @@ export class NavigationComponent implements OnInit {
 
   reloadTab() {
     if (this.userSrv.isLoggedIn()) {
-      let user = this.userSrv.getUser();
-      if (user.doenerladen) this.tab = 'doeneraccount';
-      else this.tab = 'account';
+      this.tab = 'account';
     } else {
       this.tab = 'login';
     }
