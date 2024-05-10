@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
 import { environment } from 'src/environments/environment';
 import { Shop } from '../interfaces/shop';
-import { Geolocation } from '@capacitor/geolocation';
 
 @Injectable({
   providedIn: 'root',
@@ -24,15 +23,9 @@ export class UserService {
     return localStorage.getItem('user') !== null;
   }
 
-  getDoenerladenID(): string {
-    let user = this.getUser();
-    return user.doenerladen;
-  }
-
   logout() {
     localStorage.removeItem('user');
-    document.cookie =
-      'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }
 
   getFavorites(): Shop[] {

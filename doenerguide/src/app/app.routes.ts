@@ -16,23 +16,16 @@ export const routes: Routes = [
         loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
       },
       {
-        path: 'shop',
-        loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
-      },
-      {
         path: 'login',
-        loadComponent: () =>
-          import('./login/login.page').then((m) => m.LoginPage),
+        loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
       },
       {
         path: 'signup',
-        loadComponent: () =>
-          import('./signup/signup.page').then((m) => m.SignupPage),
+        loadComponent: () => import('./signup/signup.page').then((m) => m.SignupPage),
       },
       {
         path: 'favorites',
-        loadComponent: () =>
-          import('./favorites/favorites.page').then((m) => m.FavoritesPage),
+        loadComponent: () => import('./favorites/favorites.page').then((m) => m.FavoritesPage),
       },
       {
         path: 'map',
@@ -40,9 +33,24 @@ export const routes: Routes = [
       },
       {
         path: 'account',
-        loadComponent: () =>
-          import('./account/account.page').then((m) => m.AccountPage),
+        loadComponent: () => import('./account/account.page').then((m) => m.AccountPage),
+      },
+      {
+        path: 'doeneraccount',
+        loadComponent: () => import('./doeneraccount/doeneraccount.page').then((m) => m.DoeneraccountPage),
       },
     ],
+  },
+  {
+    path: 'shop',
+    loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
+  },
+  {
+    path: 'stempelkarten',
+    loadComponent: () => import('./stempelkarten/stempelkarten.page').then((m) => m.StempelkartenPage),
+  },
+  {
+    path: 'card',
+    loadComponent: () => import('./card/card.page').then((m) => m.CardPage),
   },
 ];

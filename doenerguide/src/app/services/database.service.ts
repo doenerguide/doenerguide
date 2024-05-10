@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Shop } from '../interfaces/shop';
+import { Shop, ShopFunctions } from '../interfaces/shop';
 import { environment } from 'src/environments/environment';
-import { ShopFunctions } from '../interfaces/shop';
 import { User } from '../interfaces/user';
 
 @Injectable({
@@ -10,6 +9,43 @@ import { User } from '../interfaces/user';
 export class DatabaseService {
   shopCache: Shop[] = [];
   constructor() {}
+
+  async addUserStamp(identification_code: string, shopId: string): Promise<any> {
+    let response = await fetch(`${environment.endpoint}/addUserStamp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ identification_code: identification_code, shop_id: shopId }),
+    }).then((response) => response.json());
+    return response;
+  }
+
+  async getUserStamps(identificationCode: string, shopId: string): Promise<number> {
+    let response = await fetch(
+      `${environment.endpoint}/getUserStamps?identification_code=${identificationCode}&shop_id=${shopId}`
+    );
+    let stamps = await response.json();
+    return stamps.amount as number;
+  }
+
+  async getAllUserStamps(identificationCode: string): Promise<{ [id: number]: number }> {
+    let response = await fetch(`${environment.endpoint}/getUserStamps?identification_code=${identificationCode}`).then(
+      (resp) => resp.json()
+    );
+    return response['stamps'];
+  }
+
+  async removeUserStamps(identificationCode: string, shopId: string): Promise<any> {
+    let response = await fetch(`${environment.endpoint}/removeUserStamps`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ identification_code: identificationCode, shop_id: shopId }),
+    }).then((response) => response.json());
+    return response;
+  }
 
   async updateUser(user: User): Promise<boolean> {
     let response = await fetch(`${environment.endpoint}/updateUser`, {
@@ -34,10 +70,7 @@ export class DatabaseService {
   }
 
   async getShop(id: string): Promise<Shop> {
-    if (
-      this.shopCache.length > 0 &&
-      this.shopCache.find((shop) => shop.id === id) !== undefined
-    ) {
+    if (this.shopCache.length > 0 && this.shopCache.find((shop) => shop.id === id) !== undefined) {
       return this.shopCache.find((shop) => shop.id === id) as Shop;
     }
     let response = await fetch(`${environment.endpoint}/getShop?id=${id}`);
@@ -51,9 +84,7 @@ export class DatabaseService {
       `${environment.endpoint}/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`
     );
     let data = await response.json();
-    let shops = data.map((shop: any) =>
-      this.doenerladen_tuple_to_map(shop, lat, long)
-    ) as Shop[];
+    let shops = data.map((shop: any) => this.doenerladen_tuple_to_map(shop, lat, long)) as Shop[];
     this.shopCache.concat(shops);
     let set = new Set(this.shopCache);
     this.shopCache = Array.from(set);
@@ -73,13 +104,7 @@ export class DatabaseService {
    * @param digits - The number of decimal places to round the distance to (default: 2).
    * @returns The distance between the two coordinates in kilometers, rounded to the specified number of decimal places.
    */
-  lat_long_to_distance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number,
-    digits: number = 2
-  ) {
+  lat_long_to_distance(lat1: number, lon1: number, lat2: number, lon2: number, digits: number = 2) {
     let R = 6373.0;
     lat1 = this.deg2rad(lat1);
     lon1 = this.deg2rad(lon1);
@@ -89,9 +114,7 @@ export class DatabaseService {
     let dlon = lon2 - lon1;
     let dlat = lat2 - lat1;
 
-    let a =
-      Math.pow(Math.sin(dlat / 2), 2) +
-      Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+    let a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     let distance = R * c;
@@ -105,11 +128,7 @@ export class DatabaseService {
    * @param long - The longitude.
    * @returns The map object representing the doenerladen.
    */
-  doenerladen_tuple_to_map(
-    doenerladen: any,
-    lat?: number,
-    long?: number
-  ): Shop {
+  doenerladen_tuple_to_map(doenerladen: any, lat?: number, long?: number): Shop {
     let d_lat = doenerladen[9];
     let d_long = doenerladen[10];
     let address = doenerladen[3];
@@ -124,15 +143,7 @@ export class DatabaseService {
     };
     let orderedHours = Object.keys(hours)
       .sort((a, b) => {
-        let days = [
-          'Montag',
-          'Dienstag',
-          'Mittwoch',
-          'Donnerstag',
-          'Freitag',
-          'Samstag',
-          'Sonntag',
-        ];
+        let days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
         return days.indexOf(a) - days.indexOf(b);
       })
       .reduce((obj: any, key) => {
@@ -157,9 +168,7 @@ export class DatabaseService {
           halal: doenerladen[6].includes('Halal'),
           vegetarian: doenerladen[6].includes('Vegetarisch'),
           vegan: doenerladen[6].includes('Vegan'),
-          barrierFree:
-            doenerladen[6].includes('Barrierefrei') ||
-            doenerladen[6].includes('Rollstuhl'),
+          barrierFree: doenerladen[6].includes('Barrierefrei') || doenerladen[6].includes('Rollstuhl'),
           delivery: doenerladen[6].includes('Lieferung'),
           pickup:
             doenerladen[6].includes('Abholung') ||
@@ -188,9 +197,7 @@ export class DatabaseService {
           halal: doenerladen[6].includes('Halal'),
           vegetarian: doenerladen[6].includes('Vegetarisch'),
           vegan: doenerladen[6].includes('Vegan'),
-          barrierFree:
-            doenerladen[6].includes('Barrierefrei') ||
-            doenerladen[6].includes('Rollstuhl'),
+          barrierFree: doenerladen[6].includes('Barrierefrei') || doenerladen[6].includes('Rollstuhl'),
           delivery: doenerladen[6].includes('Lieferung'),
           pickup:
             doenerladen[6].includes('Abholung') ||

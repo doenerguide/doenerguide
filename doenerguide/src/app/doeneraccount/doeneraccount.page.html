@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{shop?.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title>{{shop?.name}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <div class="ion-padding">
+    <ion-button expand="block" [disabled]="!qrSupported" (click)="addStamp()">
+      <ion-icon name="qr-code-outline" slot="start"></ion-icon> Stempelkarte scannen
+    </ion-button>
+    <ion-button expand="block" [disabled]="!qrSupported" (click)="removeStamps()">
+      <ion-icon name="ribbon-outline" slot="start"></ion-icon> Stempelkarte einlösen
+    </ion-button>
+  </div>
+</ion-content>

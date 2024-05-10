@@ -22,8 +22,12 @@
           [errorCorrectionLevel]="'M'"
           *ngIf="myAngularxQrCode !== ''"
         ></qrcode>
-        {{myAngularxQrCode}}
       </ion-card-content>
+      <div id="stempel">
+        <ion-button expand="block" [routerLink]="['/stempelkarten']">
+          Stempelkarten <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
     </ion-card>
     <ion-card>
       <ion-card-header>
@@ -31,11 +35,7 @@
       </ion-card-header>
       <ion-card-content>
         <ion-item lines="none">
-          <ion-input
-            type="email"
-            label="E-Mail"
-            [(ngModel)]="user.mail"
-          ></ion-input>
+          <ion-input type="email" label="E-Mail" [(ngModel)]="user.mail"></ion-input>
         </ion-item>
         <ion-item lines="none">
           <ion-input
@@ -73,30 +73,17 @@
       </ion-card-header>
       <ion-card-content>
         <ion-item>
-          <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()">
-            Dark Mode
-          </ion-toggle>
+          <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()"> Dark Mode </ion-toggle>
         </ion-item>
       </ion-card-content>
       <div class="sureQuestions">
-        <ion-button
-          class="abbrechen"
-          fill="outline"
-          (click)="sideButton.nativeElement.classList.remove('side')"
-        >
+        <ion-button class="abbrechen" fill="outline" (click)="sideButton.nativeElement.classList.remove('side')">
           Abbrechen
         </ion-button>
-        <ion-button color="danger" class="abmelden" (click)="logout()">
-          Abmelden
-        </ion-button>
+        <ion-button color="danger" class="abmelden" (click)="logout()"> Abmelden </ion-button>
       </div>
       <div class="buttonContainer">
-        <ion-button
-          color="danger"
-          class="anim"
-          (click)="sideButton.nativeElement.classList.add('side')"
-          #sidebutton
-        >
+        <ion-button color="danger" class="anim" (click)="sideButton.nativeElement.classList.add('side')" #sidebutton>
           <ion-icon slot="start" name="log-out-outline"></ion-icon>
           Abmelden
         </ion-button>

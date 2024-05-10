@@ -208,6 +208,6 @@ export class HomePage implements OnInit {
   navigateToShop(shop: Shop, event: Event) {
     if ((event.target as Element).classList.contains('favoriteButton')) return;
 
-    this.navCtrl.navigateForward(['/shop', { shop: JSON.stringify(shop), refferer: '/' }]);
+    this.navCtrl.navigateForward(['/shop', { shop: JSON.stringify(shop) }]);
   }
 }
