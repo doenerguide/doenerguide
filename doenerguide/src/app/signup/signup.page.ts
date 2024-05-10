@@ -1,13 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { UserService } from '../services/user.service';
 import { User } from '../interfaces/user';
@@ -19,20 +14,16 @@ let endpoint = environment.endpoint;
   templateUrl: './signup.page.html',
   styleUrls: ['../login/login.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class SignupPage implements OnInit {
   @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private userSrv: UserService
-  ) {}
+  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService) {}
 
   ngOnInit() {
     if (this.userSrv.isLoggedIn()) {
-      if (this.userSrv.getDoenerladenID() == null) {
+      if (this.userSrv.getUser().doenerladen == undefined) {
         this.router.navigate(['/account']);
       } else {
         this.router.navigate(['/doeneraccount']);
@@ -67,8 +58,7 @@ export class SignupPage implements OnInit {
     }
 
     if (!this.form.valid) {
-      this.errorMessage.nativeElement.innerHTML =
-        'Bitte füllen alle Felder korrekt aus';
+      this.errorMessage.nativeElement.innerHTML = 'Bitte füllen alle Felder korrekt aus';
       return;
     }
 
@@ -76,8 +66,7 @@ export class SignupPage implements OnInit {
     let passwordConfirm = this.form.get('passwordConfirm')?.value;
 
     if (password !== passwordConfirm) {
-      this.errorMessage.nativeElement.innerHTML =
-        'Passwörter stimmen nicht überein';
+      this.errorMessage.nativeElement.innerHTML = 'Passwörter stimmen nicht überein';
       return;
     }
 
@@ -103,13 +92,9 @@ export class SignupPage implements OnInit {
           let user = data['user'] as User;
           this.setCookie('session_id', data['session_id'], 365);
           this.userSrv.setUser(user);
-          this.router.navigate([
-            '/home',
-            { message: 'Erfolgreich registriert' },
-          ]);
+          this.router.navigate(['/home', { message: 'Erfolgreich registriert' }]);
         } else {
-          this.errorMessage.nativeElement.innerHTML =
-            'Diese E-Mail Adresse ist bereits registriert';
+          this.errorMessage.nativeElement.innerHTML = 'Diese E-Mail Adresse ist bereits registriert';
         }
       })
       .catch((error) => {

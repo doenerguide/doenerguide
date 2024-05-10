@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { UserService } from '../services/user.service';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./navigation.component.scss'],
   imports: [IonicModule, CommonModule],
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
   tab = 'login';
   constructor(public userSrv: UserService) {}
 

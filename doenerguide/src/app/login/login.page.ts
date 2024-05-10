@@ -1,18 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { environment } from 'src/environments/environment';
-import { User } from '../interfaces/user';
 import { DatabaseService } from '../services/database.service';
-import { IonicStorageModule } from '@ionic/storage-angular';
+import { User } from '../interfaces/user';
 
 let endpoint = environment.endpoint;
 
@@ -21,13 +15,7 @@ let endpoint = environment.endpoint;
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    ReactiveFormsModule,
-  ],
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule, ReactiveFormsModule],
 })
 export class LoginPage implements OnInit {
   @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
@@ -41,7 +29,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     if (this.userSrv.isLoggedIn()) {
-      if (this.userSrv.getDoenerladenID() == null) {
+      if (this.userSrv.getUser().doenerladen == undefined) {
         this.router.navigate(['/account']);
       } else {
         this.router.navigate(['/doeneraccount']);
@@ -72,17 +60,13 @@ export class LoginPage implements OnInit {
         if (data['success']) {
           let userData = data['user'];
           userData['favoriten'] = await Promise.all(
-            userData['favoriten'].map(
-              async (shop: any) => await this.databaseSrv.getShop(shop)
-            )
+            userData['favoriten'].map(async (shop: any) => await this.databaseSrv.getShop(shop))
           );
-          console.log('User:', userData);
           this.setCookie('session_id', data['session_id'], 365);
-          this.userSrv.setUser(userData);
+          this.userSrv.setUser(userData as User);
           this.router.navigate(['/home', { message: 'Login erfolgreich' }]);
         } else {
-          this.errorMessage.nativeElement.innerHTML =
-            'Falsche E-Mail oder falsches Passwort';
+          this.errorMessage.nativeElement.innerHTML = 'Falsche E-Mail oder falsches Passwort';
         }
       })
       .catch((error) => {

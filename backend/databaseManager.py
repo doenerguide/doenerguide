@@ -1,16 +1,19 @@
 import sqlite3
-import os
 import hashlib
 import ast
-import logging
 import os
+import socket
 
 def hash_password(password, salt):
     password_hash = hashlib.sha256((password + salt).encode('utf-8')).hexdigest()
     return password_hash
 
 def create_connection():
-    db_file = "/backend/database.db"
+    if os.name == 'posix' and socket.gethostname() == 'bikinibottom':
+        db_file = '/backend/database.db'
+    else:
+        path = os.path.dirname(os.path.abspath(__file__))
+        db_file = path + "/database.db"
     conn = None
     try:
         conn = sqlite3.connect(db_file)
@@ -82,11 +85,11 @@ def update_user(user_id, vorname, nachname, mail):
     conn.close()
     return True
 
-def update_user_password(user_id, password):
+def update_user_password(user_id, old_password, new_password):
     password = hash_password(password, "doenerguide")
     conn = create_connection()
     try:
-        conn.execute("UPDATE [USERS] SET Password = ? WHERE ID = ?", (password, user_id))
+        conn.execute("UPDATE [USERS] SET Password = ? WHERE ID = ? AND Password = ?", (new_password, user_id, old_password))
     except sqlite3.Error as e:
         print(e)
         conn.close()
@@ -143,6 +146,8 @@ def get_shop(id):
     cursor = conn.execute("SELECT * FROM [SHOPS] WHERE [ID] = ?", (id,))
     data = cursor.fetchall()
     conn.close()
+    if len(data) == 0:
+        return None
     return data[0]
 
 
@@ -189,3 +194,87 @@ def get_user_data(mail):
             'doenerladen': data[0][7]
         }
         return user_object
+    
+def add_user_stamp(identification_code, shop_id):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [identification_code] = ?", (identification_code,))
+    data = cursor.fetchall()
+    if len(data) == 0:
+        conn.close()
+        return False
+    user = data[0]
+    stempel = user[8]
+    if stempel == None:
+        stempel = {}
+    else:
+        stempel = ast.literal_eval(stempel)
+    if shop_id in stempel:
+        stempel[shop_id] += 1
+    else:
+        stempel[shop_id] = 1
+    try:
+        conn.execute("UPDATE [USERS] SET Stempel = ? WHERE identification_code = ?", (str(stempel), identification_code))
+    except sqlite3.Error as e:
+        print(e)
+        conn.close()
+        return False
+    conn.commit()
+    conn.close()
+    return True
+
+def get_all_user_stamps(identification_code):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [identification_code] = ?", (identification_code,))
+    data = cursor.fetchall()
+    if len(data) == 0:
+        conn.close()
+        return 0
+    user = data[0]
+    stamps = user[8]
+    if stamps is None:
+        stamps = {}
+    else:
+        stamps = ast.literal_eval(stamps)
+    conn.close()
+    return stamps
+
+def get_user_stamps(identification_code, shop_id):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [identification_code] = ?", (identification_code,))
+    data = cursor.fetchall()
+    if len(data) == 0:
+        conn.close()
+        return 0
+    user = data[0]
+    stamps = user[8]
+    if stamps is None:
+        stamps = {}
+    else:
+        stamps = ast.literal_eval(stamps)
+    conn.close()
+    return stamps.get(shop_id, 0)
+
+def remove_user_stamps(identification_code, shop_id):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [identification_code] = ?", (identification_code,))
+    data = cursor.fetchall()
+    if len(data) == 0:
+        conn.close()
+        return False
+    user = data[0]
+    stamps = user[8]
+    if stamps is None:
+        stamps = {}
+        return False
+    else:
+        stamps = ast.literal_eval(stamps)
+        del stamps[shop_id]
+    try:
+        conn.execute("UPDATE [USERS] SET Stempel = ? WHERE identification_code = ?", (str(stamps), identification_code))
+    except sqlite3.Error as e:
+        print(e)
+        conn.close()
+        return False
+    conn.commit()
+    conn.close()
+    return True

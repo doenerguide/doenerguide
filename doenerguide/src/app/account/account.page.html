@@ -11,47 +11,49 @@
     </ion-toolbar>
   </ion-header>
   <div>
-    <ion-card class="stampCard">
-      <ion-card-header>
-        <ion-card-title>Stempelkarte</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <qrcode
-          [qrdata]="myAngularxQrCode"
-          [width]="256"
-          [errorCorrectionLevel]="'M'"
-          *ngIf="myAngularxQrCode !== ''"
-        ></qrcode>
-        {{myAngularxQrCode}}
-      </ion-card-content>
-    </ion-card>
+    <ng-template [ngIf]="user.doenerladen" [ngIfElse]="stampCard">
+      <div class="ion-padding">
+        <h1>{{shop?.name}}</h1>
+        <ion-button expand="block" [disabled]="!qrSupported" (click)="addStamp()">
+          <ion-icon name="qr-code-outline" slot="start"></ion-icon> Stempelkarte scannen
+        </ion-button>
+        <ion-button expand="block" [disabled]="!qrSupported" (click)="removeStamps()">
+          <ion-icon name="ribbon-outline" slot="start"></ion-icon> Stempelkarte einlösen
+        </ion-button>
+      </div>
+    </ng-template>
+    <ng-template #stampCard>
+      <ion-card class="stampCard">
+        <ion-card-header>
+          <ion-card-title>Stempelkarte</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <qrcode [qrdata]="myAngularxQrCode" [width]="256" [errorCorrectionLevel]="'M'" *ngIf="myAngularxQrCode !== ''"></qrcode>
+        </ion-card-content>
+        <div id="stempel">
+          <ion-button expand="block" [routerLink]="['/stempelkarten']">
+            Stempelkarten <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-card>
+    </ng-template>
+
     <ion-card>
       <ion-card-header>
         <ion-card-title>Deine Daten</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-item lines="none">
-          <ion-input
-            type="email"
-            label="E-Mail"
-            [(ngModel)]="user.mail"
-          ></ion-input>
+          <ion-input type="email" label="E-Mail" [(ngModel)]="user.mail"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-input
-            type="password"
-            label="Passwort"
-            placeholder="Neues Passwort"
-            [(ngModel)]="password"
-          ></ion-input>
+          <ion-input type="password" label="Altes Passwort" placeholder="Altes Passwort" [(ngModel)]="passwordOld"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-input
-            type="password"
-            label="Passwort"
-            placeholder="Passwort wiederholen"
-            [(ngModel)]="passwordConfirm"
-          ></ion-input>
+          <ion-input type="password" label="Neues Passwort" placeholder="Neues Passwort" [(ngModel)]="passwordNew"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input type="password" label="Passwort wiederholen" placeholder="Passwort wiederholen" [(ngModel)]="passwordConfirm"></ion-input>
         </ion-item>
       </ion-card-content>
       <ion-button fill="clear" (click)="updateUser()">
@@ -65,30 +67,15 @@
       </ion-card-header>
       <ion-card-content>
         <ion-item>
-          <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()">
-            Dark Mode
-          </ion-toggle>
+          <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()"> Dark Mode </ion-toggle>
         </ion-item>
       </ion-card-content>
       <div class="sureQuestions">
-        <ion-button
-          class="abbrechen"
-          fill="outline"
-          (click)="sideButton.nativeElement.classList.remove('side')"
-        >
-          Abbrechen
-        </ion-button>
-        <ion-button color="danger" class="abmelden" (click)="logout()">
-          Abmelden
-        </ion-button>
+        <ion-button class="abbrechen" fill="outline" (click)="sideButton.nativeElement.classList.remove('side')"> Abbrechen </ion-button>
+        <ion-button color="danger" class="abmelden" (click)="logout()"> Abmelden </ion-button>
       </div>
       <div class="buttonContainer">
-        <ion-button
-          color="danger"
-          class="anim"
-          (click)="sideButton.nativeElement.classList.add('side')"
-          #sidebutton
-        >
+        <ion-button color="danger" class="anim" (click)="sideButton.nativeElement.classList.add('side')" #sidebutton>
           <ion-icon slot="start" name="log-out-outline"></ion-icon>
           Abmelden
         </ion-button>

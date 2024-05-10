@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Geolocation } from '@capacitor/geolocation';
+import { Platform, ToastController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -9,7 +11,36 @@ export class LocationService {
   long: number = environment.long;
   radius: number = environment.radius;
 
-  constructor() {}
+  constructor(private toastCtrl: ToastController, private platform: Platform) {
+    if (this.platform.is('capacitor'))
+      Geolocation.checkPermissions().then((result) => {
+        if (
+          result.location === 'prompt' ||
+          result.location === 'prompt-with-rationale' ||
+          result.location === 'denied'
+        ) {
+          Geolocation.requestPermissions().then((result) => {
+            if (
+              result.location === 'prompt' ||
+              result.location === 'prompt-with-rationale' ||
+              result.location === 'denied'
+            ) {
+              console.log('Location permission denied');
+              this.toastCtrl
+                .create({
+                  message:
+                    'Die App benötigt Zugriff auf den Standort, um zu funktionieren. Bitte erlaube den Zugriff in den Einstellungen.',
+                  duration: 2000,
+                  color: 'danger',
+                  position: 'top',
+                  icon: 'location',
+                })
+                .then((toast) => toast.present());
+            }
+          });
+        }
+      });
+  }
 
   setLocation(lat: number, long: number) {
     this.lat = lat;
@@ -29,5 +60,12 @@ export class LocationService {
 
   getRadius(): number {
     return this.radius;
+  }
+
+  async getUserLocation(): Promise<{ lat: number; long: number }> {
+    let loc = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+    this.lat = loc.coords.latitude;
+    this.long = loc.coords.longitude;
+    return { lat: loc.coords.latitude, long: loc.coords.longitude };
   }
 }

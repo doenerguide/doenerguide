@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Zurück" [defaultHref]="['/stempelkarten']"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{cardInformation.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{cardInformation.name}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <div class="ion-padding">
+    <img [src]="getImageForStamps()" alt="{{cardInformation.name}} Stempelkarte" />
+    <div class="information">
+      <ion-label>{{cardInformation.amount}} / 10 Stempel</ion-label>
+      <ng-template [ngIf]="cardInformation.amount === 10">
+        <p>
+          Stempelkarte vollständig <br />
+          Um die Stempelkarte einzulösen, lasse deinen QR Code im Dönerladen {{cardInformation.name}} scannen.
+        </p>
+        <ion-button expand="block" [routerLink]="['/account']" color="success">
+          <ion-icon name="qr-code-outline" slot="start"></ion-icon> Zum QR-Code
+        </ion-button>
+      </ng-template>
+      <ion-button expand="block" (click)="back()"> <ion-icon name="arrow-back-outline" slot="start"></ion-icon> Zurück zu den Stempelkarten </ion-button>
+    </div>
+  </div>
+</ion-content>

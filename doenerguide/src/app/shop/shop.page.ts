@@ -17,7 +17,6 @@ import { UserService } from '../services/user.service';
 })
 export class ShopPage implements OnInit {
   shop: Shop | null = null;
-  refferer: string = '/';
   shopFunctions = ShopFunctions;
 
   public Object = Object;
@@ -28,8 +27,6 @@ export class ShopPage implements OnInit {
     this.route.params.subscribe((params) => {
       console.log(params);
       this.shop = JSON.parse(params['shop']) as Shop;
-      this.refferer = params['refferer'];
-      console.log(this.refferer);
     });
   }
 }

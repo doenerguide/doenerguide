@@ -35,7 +35,11 @@ declare let google: any;
   ],
 })
 export class MapPage {
-  constructor(private userSrv: UserService, private locationSrv: LocationService, private databaseSrv: DatabaseService) {}
+  constructor(
+    private userSrv: UserService,
+    private locationSrv: LocationService,
+    private databaseSrv: DatabaseService
+  ) {}
 
   @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
   map: any;
@@ -63,7 +67,7 @@ export class MapPage {
 
   async ionViewDidEnter() {
     try {
-      let loc = await this.userSrv.getUserLocation();
+      let loc = await this.locationSrv.getUserLocation();
       this.locationSrv.lat = loc.lat;
       this.locationSrv.long = loc.long;
     } catch (e) {
@@ -75,7 +79,10 @@ export class MapPage {
   async loadMap() {
     const mapEl = this.mapElementRef.nativeElement;
 
-    const location = new google.maps.LatLng(this.locationSrv.lat, this.locationSrv.long);
+    const location = new google.maps.LatLng(
+      this.locationSrv.lat,
+      this.locationSrv.long
+    );
 
     this.map = new google.maps.Map(mapEl, {
       center: location,
@@ -196,28 +203,28 @@ export class MapPage {
       this.addMarker(
         new google.maps.LatLng(shop.lat, shop.lng),
         "<img src='" +
-        shop.imageUrl +
-        "' style='width: 20em; height: auto;'><h2>" +
-        shop.name +
-        '</h2><p>' +
-        shop.address +
-        '</p><p>Rating: ' +
-        shop.rating +
-        '</p><p>Price category: ' +
-        shop.priceCategory +
-        '</p><p>Opening hours: ' +
-        shop.openingHours.opens +
-        ' - ' +
-        shop.openingHours.closes +
-        '</p><p>Accepts card: ' +
-        shop.flags.acceptCard +
-        '</p><p>Has stamp card: ' +
-        shop.flags.stampCard +
-        "</p><a href='" +
-        shop.mapsUrl +
-        "'>Open in Google Maps</a><p>Tel: " +
-        shop.tel +
-        '</p>'
+          shop.imageUrl +
+          "' style='width: 20em; height: auto;'><h2>" +
+          shop.name +
+          '</h2><p>' +
+          shop.address +
+          '</p><p>Rating: ' +
+          shop.rating +
+          '</p><p>Price category: ' +
+          shop.priceCategory +
+          '</p><p>Opening hours: ' +
+          shop.openingHours.opens +
+          ' - ' +
+          shop.openingHours.closes +
+          '</p><p>Accepts card: ' +
+          shop.flags.acceptCard +
+          '</p><p>Has stamp card: ' +
+          shop.flags.stampCard +
+          "</p><a href='" +
+          shop.mapsUrl +
+          "'>Open in Google Maps</a><p>Tel: " +
+          shop.tel +
+          '</p>'
       );
     }
   }

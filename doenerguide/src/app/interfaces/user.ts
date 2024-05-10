@@ -7,5 +7,5 @@ export interface User {
   nachname: string;
   favoriten: Shop[];
   identification_code: string;
-  doenerladen: string;
+  doenerladen?: string;
 }
