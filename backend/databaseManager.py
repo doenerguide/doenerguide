@@ -2,13 +2,14 @@ import sqlite3
 import hashlib
 import ast
 import os
+import socket
 
 def hash_password(password, salt):
     password_hash = hashlib.sha256((password + salt).encode('utf-8')).hexdigest()
     return password_hash
 
 def create_connection():
-    if os.name == 'posix':
+    if os.name == 'posix' and socket.gethostname() == 'bikinibottom':
         db_file = '/backend/database.db'
     else:
         path = os.path.dirname(os.path.abspath(__file__))
