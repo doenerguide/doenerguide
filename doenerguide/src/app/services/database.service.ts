@@ -223,6 +223,7 @@ export class DatabaseService {
         tel: doenerladen[8],
         lat: doenerladen[9],
         lng: doenerladen[10],
+        mapsUrl: doenerladen[12],
       };
     else
       return {
@@ -249,6 +250,7 @@ export class DatabaseService {
         tel: doenerladen[8],
         lat: doenerladen[9],
         lng: doenerladen[10],
+        mapsUrl: doenerladen[12],
       };
   }
 }

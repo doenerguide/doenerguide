@@ -25,6 +25,7 @@ export interface Shop {
   flags: Flags;
   lat: number;
   lng: number;
+  mapsUrl: string;
 }
 
 /**
