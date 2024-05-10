@@ -218,6 +218,22 @@ def add_user_stamp(identification_code, shop_id):
     conn.close()
     return True
 
+def get_all_user_stamps(identification_code):
+    conn = create_connection()
+    cursor = conn.execute("SELECT * FROM [USERS] WHERE [identification_code] = ?", (identification_code,))
+    data = cursor.fetchall()
+    if len(data) == 0:
+        conn.close()
+        return 0
+    user = data[0]
+    stamps = user[8]
+    if stamps is None:
+        stamps = {}
+    else:
+        stamps = ast.literal_eval(stamps)
+    conn.close()
+    return stamps
+
 def get_user_stamps(identification_code, shop_id):
     conn = create_connection()
     cursor = conn.execute("SELECT * FROM [USERS] WHERE [identification_code] = ?", (identification_code,))

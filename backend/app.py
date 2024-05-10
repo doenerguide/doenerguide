@@ -219,12 +219,14 @@ def get_user_stamps():
 
     Parameters:
     - identification_code (str): The identification code of the user.
-    - shop_id (int): The ID of the shop.
+    - shop_id (int): The ID of the shop (optional)
 
     Returns:
     - int: The number of stamps on the user's stamp card for the specified shop.
     """
     identification_code = request.args.get('identification_code')
+    if request.args.get('shop_id') is None:
+        return jsonify({'stamps': dbm.get_all_user_stamps(identification_code)})
     shop_id = int(request.args.get('shop_id'))
     amount = dbm.get_user_stamps(identification_code, shop_id)
     return jsonify({'amount': amount})

@@ -1,13 +1,38 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>stempelkarten</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button text="Zurück" [defaultHref]="['/account']"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Stempelkarten</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">stempelkarten</ion-title>
+      <ion-title size="large">Stempelkarten</ion-title>
     </ion-toolbar>
   </ion-header>
+  <div class="ion-padding">
+    <ng-template [ngIf]="loading">
+      <ion-item lines="none" class="loadingShops">
+        <ion-spinner></ion-spinner>
+        <ion-label>Stempelkarten werden geladen</ion-label>
+      </ion-item>
+    </ng-template>
+    <ng-template [ngIf]="!loading && objKeys(showStamps).length === 0" [ngIfElse]="list">
+      <ion-label class="loadingShops">
+        Keine Stempelkarten gefunden.<br />
+        Fange an Stempel zu sammeln, damit sie hier auftauchen.
+      </ion-label>
+    </ng-template>
+    <ng-template #list>
+      <ion-list>
+        <ion-item *ngFor="let stamp of showStamps | keyvalue" button (click)="navigate(stamp.value)">
+          <ion-label>{{stamp.value.name}}</ion-label>
+          <ion-badge slot="end">{{stamp.value.amount}}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+  </div>
 </ion-content>

@@ -22,9 +22,18 @@ export class DatabaseService {
   }
 
   async getUserStamps(identificationCode: string, shopId: string): Promise<number> {
-    let response = await fetch(`${environment.endpoint}/getUserStamps?identification_code=${identificationCode}&shop_id=${shopId}`);
+    let response = await fetch(
+      `${environment.endpoint}/getUserStamps?identification_code=${identificationCode}&shop_id=${shopId}`
+    );
     let stamps = await response.json();
     return stamps.amount as number;
+  }
+
+  async getAllUserStamps(identificationCode: string): Promise<{ [id: number]: number }> {
+    let response = await fetch(`${environment.endpoint}/getUserStamps?identification_code=${identificationCode}`).then(
+      (resp) => resp.json()
+    );
+    return response['stamps'];
   }
 
   async removeUserStamps(identificationCode: string, shopId: string): Promise<any> {

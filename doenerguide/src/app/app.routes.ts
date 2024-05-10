@@ -49,4 +49,8 @@ export const routes: Routes = [
     path: 'stempelkarten',
     loadComponent: () => import('./stempelkarten/stempelkarten.page').then((m) => m.StempelkartenPage),
   },
+  {
+    path: 'card',
+    loadComponent: () => import('./card/card.page').then((m) => m.CardPage),
+  },
 ];

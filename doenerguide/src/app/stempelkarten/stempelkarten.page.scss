@@ -1,0 +1,11 @@
+.loadingShops {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  width: 100%;
+  text-align: center;
+  ion-spinner {
+    margin: 0 20px;
+  }
+}
