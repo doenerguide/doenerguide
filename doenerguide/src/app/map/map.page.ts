@@ -1,12 +1,12 @@
-import { Component, ElementRef, OnDestroy, Renderer2, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
 import { LocationService } from '../services/location.service';
 import { DatabaseService } from '../services/database.service';
 import { Shop } from '../interfaces/shop';
-
-declare let google: any;
+import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -15,7 +15,7 @@ declare let google: any;
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule],
 })
-export class MapPage implements OnDestroy {
+export class MapPage implements OnDestroy, OnInit {
   map: any;
   marker: any;
   infoWindow: any;
@@ -26,13 +26,18 @@ export class MapPage implements OnDestroy {
 
   shownShops: Shop[] = [];
 
+  mapsLoader = new Loader({
+    apiKey: environment.mapsApiKey,
+    version: 'weekly',
+  });
+
   // Import components of the template page to be used in TypeScript
   @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
 
   constructor(private locationSrv: LocationService, private databaseSrv: DatabaseService, private navCtrl: NavController) {}
 
-  // Called every time the page is loaded, gets the user's location and sets the shops to be displayed. Will load the map
-  async ionViewDidEnter() {
+  // Called if the page is loaded the first time, gets the user's location and sets the shops to be displayed. Will load the map
+  async ngOnInit() {
     try {
       let loc = await this.locationSrv.getUserLocation();
       this.locationSrv.lat = loc.lat;
@@ -41,6 +46,24 @@ export class MapPage implements OnDestroy {
       console.error(e);
     }
     this.loadMap();
+  }
+
+  // Called if the page is entered, sets the shops to be displayed and adds the markers to the map
+  ionViewWillEnter() {
+    this.setShops().then(() => {
+      for (const shop of this.shownShops) {
+        this.addMarker(
+          new google.maps.LatLng(shop.lat, shop.lng),
+          '<h2>' +
+            shop.name +
+            '</h2><p>' +
+            shop.address +
+            '</p><ion-button size="small" shop="' +
+            shop.id +
+            '" class="moreInfo">Mehr Informationen <ion-icon name="arrow-forward-outline" slot="end" /> </ion-button>'
+        );
+      }
+    });
   }
 
   /**
@@ -67,170 +90,160 @@ export class MapPage implements OnDestroy {
 
     const location = new google.maps.LatLng(this.locationSrv.lat, this.locationSrv.long);
 
-    this.map = new google.maps.Map(mapEl, {
-      center: location,
-      zoom: 13.25 - 0.085 * this.locationSrv.radius,
-      scaleControl: false,
-      streetViewControl: false,
-      zoomControl: true,
-      overviewMapControl: false,
-      mapTypeControl: false,
-      fullscreenControl: false,
-      styles: [
-        {
-          featureType: 'landscape.man_made',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#f7f1df',
-            },
-          ],
-        },
-        {
-          featureType: 'landscape.natural',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#d0e3b4',
-            },
-          ],
-        },
-        {
-          featureType: 'landscape.natural.terrain',
-          elementType: 'geometry',
-          stylers: [
-            {
-              visibility: 'off',
-            },
-          ],
-        },
-        {
-          featureType: 'poi',
-          elementType: 'labels',
-          stylers: [
-            {
-              visibility: 'off',
-            },
-          ],
-        },
-        {
-          featureType: 'poi.business',
-          elementType: 'all',
-          stylers: [
-            {
-              visibility: 'off',
-            },
-          ],
-        },
-        {
-          featureType: 'poi.medical',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#fbd3da',
-            },
-          ],
-        },
-        {
-          featureType: 'poi.park',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#bde6ab',
-            },
-          ],
-        },
-        {
-          featureType: 'road',
-          elementType: 'geometry.stroke',
-          stylers: [
-            {
-              visibility: 'off',
-            },
-          ],
-        },
-        {
-          featureType: 'road',
-          elementType: 'labels',
-          stylers: [
-            {
-              visibility: 'off',
-            },
-          ],
-        },
-        {
-          featureType: 'road.highway',
-          elementType: 'geometry.fill',
-          stylers: [
-            {
-              color: '#ffe15f',
-            },
-          ],
-        },
-        {
-          featureType: 'road.highway',
-          elementType: 'geometry.stroke',
-          stylers: [
-            {
-              color: '#efd151',
-            },
-          ],
-        },
-        {
-          featureType: 'road.arterial',
-          elementType: 'geometry.fill',
-          stylers: [
-            {
-              color: '#ffffff',
-            },
-          ],
-        },
-        {
-          featureType: 'road.local',
-          elementType: 'geometry.fill',
-          stylers: [
-            {
-              color: 'black',
-            },
-          ],
-        },
-        {
-          featureType: 'transit.station.airport',
-          elementType: 'geometry.fill',
-          stylers: [
-            {
-              color: '#cfb2db',
-            },
-          ],
-        },
-        {
-          featureType: 'water',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#a2daf2',
-            },
-          ],
-        },
-      ],
-      disableDefaultUI: true,
-    });
+    this.mapsLoader.importLibrary('core').then(async () => {
+      const { Map } = (await this.mapsLoader.importLibrary('maps')) as google.maps.MapsLibrary;
 
-    this.set_circle(this.map, location, this.locationSrv.radius * 1000);
-    this.renderer.addClass(mapEl, 'visible');
-    await this.setShops();
-    for (const shop of this.shownShops) {
-      this.addMarker(
-        new google.maps.LatLng(shop.lat, shop.lng),
-        '<h2>' +
-          shop.name +
-          '</h2><p>' +
-          shop.address +
-          '</p><ion-button size="small" shop="' +
-          shop.id +
-          '" class="moreInfo">Mehr Informationen <ion-icon name="arrow-forward-outline" slot="end" /> </ion-button>'
-      );
-    }
+      this.map = new Map(mapEl, {
+        center: location,
+        zoom: 13.25 - 0.085 * this.locationSrv.radius,
+        scaleControl: false,
+        streetViewControl: false,
+        zoomControl: true,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        styles: [
+          {
+            featureType: 'landscape.man_made',
+            elementType: 'geometry',
+            stylers: [
+              {
+                color: '#f7f1df',
+              },
+            ],
+          },
+          {
+            featureType: 'landscape.natural',
+            elementType: 'geometry',
+            stylers: [
+              {
+                color: '#d0e3b4',
+              },
+            ],
+          },
+          {
+            featureType: 'landscape.natural.terrain',
+            elementType: 'geometry',
+            stylers: [
+              {
+                visibility: 'off',
+              },
+            ],
+          },
+          {
+            featureType: 'poi',
+            elementType: 'labels',
+            stylers: [
+              {
+                visibility: 'off',
+              },
+            ],
+          },
+          {
+            featureType: 'poi.business',
+            elementType: 'all',
+            stylers: [
+              {
+                visibility: 'off',
+              },
+            ],
+          },
+          {
+            featureType: 'poi.medical',
+            elementType: 'geometry',
+            stylers: [
+              {
+                color: '#fbd3da',
+              },
+            ],
+          },
+          {
+            featureType: 'poi.park',
+            elementType: 'geometry',
+            stylers: [
+              {
+                color: '#bde6ab',
+              },
+            ],
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry.stroke',
+            stylers: [
+              {
+                visibility: 'off',
+              },
+            ],
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels',
+            stylers: [
+              {
+                visibility: 'off',
+              },
+            ],
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry.fill',
+            stylers: [
+              {
+                color: '#ffe15f',
+              },
+            ],
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry.stroke',
+            stylers: [
+              {
+                color: '#efd151',
+              },
+            ],
+          },
+          {
+            featureType: 'road.arterial',
+            elementType: 'geometry.fill',
+            stylers: [
+              {
+                color: '#ffffff',
+              },
+            ],
+          },
+          {
+            featureType: 'road.local',
+            elementType: 'geometry.fill',
+            stylers: [
+              {
+                color: 'black',
+              },
+            ],
+          },
+          {
+            featureType: 'transit.station.airport',
+            elementType: 'geometry.fill',
+            stylers: [
+              {
+                color: '#cfb2db',
+              },
+            ],
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry',
+            stylers: [
+              {
+                color: '#a2daf2',
+              },
+            ],
+          },
+        ],
+        disableDefaultUI: true,
+      });
+
+      this.set_circle(this.map, location, this.locationSrv.radius * 1000);
+      this.renderer.addClass(mapEl, 'visible');
+    });
   }
 
   /**
@@ -287,7 +300,7 @@ export class MapPage implements OnDestroy {
     });
 
     marker.addListener('click', () => {
-      if (infoWindow.getMap()) {
+      if (infoWindow == this.infoWindow) {
         infoWindow.close();
         this.infoWindow = null;
       } else {
