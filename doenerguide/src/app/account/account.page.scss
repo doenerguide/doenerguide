@@ -16,7 +16,6 @@ ion-card ion-button:not(.anim) {
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  padding-bottom: 16px;
 }
 
 .buttonContainer {
@@ -61,4 +60,8 @@ ion-card ion-button:not(.anim) {
     height: 50px;
     margin-right: 0;
   }
+}
+
+#stempel {
+  margin: 10px 10px;
 }
