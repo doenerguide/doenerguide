@@ -9,11 +9,7 @@ def hash_password(password, salt):
     return password_hash
 
 def create_connection():
-    if os.name == 'posix' and socket.gethostname() == 'bikinibottom':
-        db_file = '/backend/database.db'
-    else:
-        path = os.path.dirname(os.path.abspath(__file__))
-        db_file = path + "/database.db"
+    db_file = '/backend/database.db'
     conn = None
     try:
         conn = sqlite3.connect(db_file)
