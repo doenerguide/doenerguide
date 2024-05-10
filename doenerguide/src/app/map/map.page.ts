@@ -1,20 +1,7 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, Renderer2, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
-import { UserService } from '../services/user.service';
+import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { LocationService } from '../services/location.service';
 import { DatabaseService } from '../services/database.service';
 
@@ -25,23 +12,9 @@ declare let google: any;
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
   standalone: true,
-  imports: [
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    CommonModule,
-    FormsModule,
-  ],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule],
 })
-export class MapPage {
-  constructor(
-    private userSrv: UserService,
-    private locationSrv: LocationService,
-    private databaseSrv: DatabaseService
-  ) {}
-
-  @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
+export class MapPage implements OnDestroy {
   map: any;
   marker: any;
   infoWindow: any;
@@ -52,19 +25,12 @@ export class MapPage {
 
   shownShops: any[] = [];
 
-  change_radius(event: any) {
-    this.locationSrv.setRadius(event.detail.value);
-    this.setShops();
-  }
+  // Import components of the template page to be used in TypeScript
+  @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
 
-  async setShops() {
-    this.shownShops = await this.databaseSrv.getShops(
-      this.locationSrv.lat,
-      this.locationSrv.long,
-      this.locationSrv.radius
-    );
-  }
+  constructor(private locationSrv: LocationService, private databaseSrv: DatabaseService) {}
 
+  // Called every time the page is loaded, gets the user's location and sets the shops to be displayed. Will load the map
   async ionViewDidEnter() {
     try {
       let loc = await this.locationSrv.getUserLocation();
@@ -76,13 +42,29 @@ export class MapPage {
     this.loadMap();
   }
 
+  /**
+   * Change the radius of the search circle
+   * @param event Event of the change
+   */
+  change_radius(event: any) {
+    this.locationSrv.setRadius(event.detail.value);
+    this.setShops();
+  }
+
+  /**
+   * Set the shops shown on the map
+   */
+  async setShops() {
+    this.shownShops = await this.databaseSrv.getShops(this.locationSrv.lat, this.locationSrv.long, this.locationSrv.radius);
+  }
+
+  /**
+   * Load the map
+   */
   async loadMap() {
     const mapEl = this.mapElementRef.nativeElement;
 
-    const location = new google.maps.LatLng(
-      this.locationSrv.lat,
-      this.locationSrv.long
-    );
+    const location = new google.maps.LatLng(this.locationSrv.lat, this.locationSrv.long);
 
     this.map = new google.maps.Map(mapEl, {
       center: location,
@@ -229,6 +211,13 @@ export class MapPage {
     }
   }
 
+  /**
+   * Set the circle of the area in which the shops are shown
+   * @param map Map to set the circle on
+   * @param center Center of the circle
+   * @param radius Radius of the circle
+   * @returns Circle object
+   */
   set_circle = (map: any, center: any, radius: number) => {
     return new google.maps.Circle({
       strokeColor: '#1E7FF3',
@@ -242,6 +231,11 @@ export class MapPage {
     });
   };
 
+  /**
+   * Add a marker to the map, to show a shop
+   * @param location Location of the marker
+   * @param info Information to show when the marker is clicked
+   */
   addMarker(location: any, info: string) {
     const markerIcon = {
       url: 'assets/logo.png',
@@ -274,12 +268,12 @@ export class MapPage {
     });
 
     marker.addListener('dragend', (event: any) => {
-      console.log(event.latLng.lat());
       marker.setPosition(event.latLng);
       this.map.panTo(event.latLng);
     });
   }
 
+  // Remove the listeners when the page is left
   ngOnDestroy(): void {
     if (this.mapListener) {
       google.maps.event.removeListener(this.mapListener);
@@ -289,8 +283,5 @@ export class MapPage {
       this.marker.removeEventListener('dragend', this.markerListener);
       this.markerListener = null;
     }
-
-    console.log('marker listener: ', this.markerListener);
-    console.log('map listener: ', this.mapListener);
   }
 }

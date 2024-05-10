@@ -8,31 +8,40 @@ export class StorageService {
   private _storage: Storage | null = null;
   public ready = false;
 
+  // Create a new storage instance
   constructor(private storage: Storage) {
     this.init();
   }
 
+  /**
+   * Initialize the storage service
+   */
   async init() {
-    // If using, define drivers here: await this.storage.defineDriver(/*...*/);
     const storage = await this.storage.create();
     this._storage = storage;
     this.ready = true;
   }
 
+  /**
+   * Wait until the storage is ready
+   */
   async waitTillReady() {
     while (!this.ready) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
 
-  public getDarkMode(value: boolean) {
-    this._storage?.set('darkMode', value);
-  }
-
+  /**
+   * Check if dark mode is enabled
+   * @returns True if dark mode is enabled, false otherwise
+   */
   public async darkMode(): Promise<boolean> {
     return await this._storage?.get('darkMode');
   }
 
+  /**
+   * Toggle dark mode
+   */
   public toggleDarkMode() {
     this.darkMode().then((value) => {
       this._storage?.set('darkMode', !value);

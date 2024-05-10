@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Shop, ShopFunctions } from '../interfaces/shop';
 import { IonicModule } from '@ionic/angular';
 import { PriceComponent } from '../price/price.component';
-import { DatabaseService } from '../services/database.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
 
@@ -17,15 +16,16 @@ import { UserService } from '../services/user.service';
 })
 export class ShopPage implements OnInit {
   shop: Shop | null = null;
-  shopFunctions = ShopFunctions;
 
+  // Definition of the functions and variables used in the template
+  shopFunctions = ShopFunctions;
   public Object = Object;
 
   constructor(private route: ActivatedRoute, public userSrv: UserService) {}
 
+  // Called when the page is first loaded, will load the shop from the URL parameters
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      console.log(params);
       this.shop = JSON.parse(params['shop']) as Shop;
     });
   }

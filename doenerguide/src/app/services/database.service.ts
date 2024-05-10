@@ -10,6 +10,12 @@ export class DatabaseService {
   shopCache: Shop[] = [];
   constructor() {}
 
+  /**
+   * Add a stamp to the user's stamp card.
+   * @param identification_code Identification code of the user.
+   * @param shopId Shop where the stamp is added.
+   * @returns The response of the server.
+   */
   async addUserStamp(identification_code: string, shopId: string): Promise<any> {
     let response = await fetch(`${environment.endpoint}/addUserStamp`, {
       method: 'POST',
@@ -21,21 +27,34 @@ export class DatabaseService {
     return response;
   }
 
+  /**
+   * Get the number of stamps of a user.
+   * @param identificationCode  Identification code of the user.
+   * @param shopId Shop where the stamps are counted.
+   * @returns The number of stamps of the user.
+   */
   async getUserStamps(identificationCode: string, shopId: string): Promise<number> {
-    let response = await fetch(
-      `${environment.endpoint}/getUserStamps?identification_code=${identificationCode}&shop_id=${shopId}`
-    );
+    let response = await fetch(`${environment.endpoint}/getUserStamps?identification_code=${identificationCode}&shop_id=${shopId}`);
     let stamps = await response.json();
     return stamps.amount as number;
   }
 
+  /**
+   * Get all stamps of a user.
+   * @param identificationCode Identification code of the user.
+   * @returns The stamps of the user.
+   */
   async getAllUserStamps(identificationCode: string): Promise<{ [id: number]: number }> {
-    let response = await fetch(`${environment.endpoint}/getUserStamps?identification_code=${identificationCode}`).then(
-      (resp) => resp.json()
-    );
+    let response = await fetch(`${environment.endpoint}/getUserStamps?identification_code=${identificationCode}`).then((resp) => resp.json());
     return response['stamps'];
   }
 
+  /**
+   * Remove all stamps of a user.
+   * @param identificationCode Identification code of the user.
+   * @param shopId Shop where the stamps are removed.
+   * @returns The response of the server.
+   */
   async removeUserStamps(identificationCode: string, shopId: string): Promise<any> {
     let response = await fetch(`${environment.endpoint}/removeUserStamps`, {
       method: 'POST',
@@ -47,6 +66,11 @@ export class DatabaseService {
     return response;
   }
 
+  /**
+   * Update the user data
+   * @param user The user object which should be updated.
+   * @returns If the update was successful.
+   */
   async updateUser(user: User): Promise<boolean> {
     let response = await fetch(`${environment.endpoint}/updateUser`, {
       method: 'POST',
@@ -58,6 +82,13 @@ export class DatabaseService {
     return response.ok;
   }
 
+  /**
+   * Update the password of a user.
+   * @param userId User ID of the user.
+   * @param passwordOld Old password of the user.
+   * @param passwordNew New password of the user.
+   * @returns If the update was successful.
+   */
   async updateUserPassword(userId: number, passwordOld: string, passwordNew: string): Promise<boolean> {
     let response = await fetch(`${environment.endpoint}/updateUserPassword`, {
       method: 'POST',
@@ -69,6 +100,11 @@ export class DatabaseService {
     return response.ok;
   }
 
+  /**
+   * Get the shop object by the ID.
+   * @param id ID of the shop.
+   * @returns Shop object.
+   */
   async getShop(id: string): Promise<Shop> {
     if (this.shopCache.length > 0 && this.shopCache.find((shop) => shop.id === id) !== undefined) {
       return this.shopCache.find((shop) => shop.id === id) as Shop;
@@ -79,10 +115,15 @@ export class DatabaseService {
     return shop;
   }
 
+  /**
+   * Get the shops based on the latitude, longitude and radius.
+   * @param lat Latitude
+   * @param long Longitude
+   * @param radius Radius
+   * @returns List of shops.
+   */
   async getShops(lat: number, long: number, radius: number): Promise<Shop[]> {
-    let response = await fetch(
-      `${environment.endpoint}/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`
-    );
+    let response = await fetch(`${environment.endpoint}/getShops?lat=${lat}&long=${long}&radius=${radius}&price_category=0&flags=[]`);
     let data = await response.json();
     let shops = data.map((shop: any) => this.doenerladen_tuple_to_map(shop, lat, long)) as Shop[];
     this.shopCache.concat(shops);
@@ -91,6 +132,11 @@ export class DatabaseService {
     return shops;
   }
 
+  /**
+   * Calculates degrees to radians.
+   * @param deg Degrees.
+   * @returns Radians.
+   */
   deg2rad(deg: number) {
     return deg * (Math.PI / 180);
   }
@@ -170,10 +216,7 @@ export class DatabaseService {
           vegan: doenerladen[6].includes('Vegan'),
           barrierFree: doenerladen[6].includes('Barrierefrei') || doenerladen[6].includes('Rollstuhl'),
           delivery: doenerladen[6].includes('Lieferung'),
-          pickup:
-            doenerladen[6].includes('Abholung') ||
-            doenerladen[6].includes('Mitnehmen') ||
-            doenerladen[6].includes('vor Ort'),
+          pickup: doenerladen[6].includes('Abholung') || doenerladen[6].includes('Mitnehmen') || doenerladen[6].includes('vor Ort'),
         },
         openToday: hoursToday,
         openingHours: orderedHours,
@@ -199,10 +242,7 @@ export class DatabaseService {
           vegan: doenerladen[6].includes('Vegan'),
           barrierFree: doenerladen[6].includes('Barrierefrei') || doenerladen[6].includes('Rollstuhl'),
           delivery: doenerladen[6].includes('Lieferung'),
-          pickup:
-            doenerladen[6].includes('Abholung') ||
-            doenerladen[6].includes('Mitnehmen') ||
-            doenerladen[6].includes('vor Ort'),
+          pickup: doenerladen[6].includes('Abholung') || doenerladen[6].includes('Mitnehmen') || doenerladen[6].includes('vor Ort'),
         },
         openToday: hoursToday,
         openingHours: orderedHours,

@@ -11,25 +11,16 @@ export class LocationService {
   long: number = environment.long;
   radius: number = environment.radius;
 
+  // Check if the location permission is granted, if not, request it
   constructor(private toastCtrl: ToastController, private platform: Platform) {
     if (this.platform.is('capacitor'))
       Geolocation.checkPermissions().then((result) => {
-        if (
-          result.location === 'prompt' ||
-          result.location === 'prompt-with-rationale' ||
-          result.location === 'denied'
-        ) {
+        if (result.location === 'prompt' || result.location === 'prompt-with-rationale' || result.location === 'denied') {
           Geolocation.requestPermissions().then((result) => {
-            if (
-              result.location === 'prompt' ||
-              result.location === 'prompt-with-rationale' ||
-              result.location === 'denied'
-            ) {
-              console.log('Location permission denied');
+            if (result.location === 'prompt' || result.location === 'prompt-with-rationale' || result.location === 'denied') {
               this.toastCtrl
                 .create({
-                  message:
-                    'Die App benötigt Zugriff auf den Standort, um zu funktionieren. Bitte erlaube den Zugriff in den Einstellungen.',
+                  message: 'Die App benötigt Zugriff auf den Standort, um zu funktionieren. Bitte erlaube den Zugriff in den Einstellungen.',
                   duration: 2000,
                   color: 'danger',
                   position: 'top',
@@ -42,11 +33,20 @@ export class LocationService {
       });
   }
 
+  /**
+   * Set current locatiom
+   * @param lat Latitude
+   * @param long Longitude
+   */
   setLocation(lat: number, long: number) {
     this.lat = lat;
     this.long = long;
   }
 
+  /**
+   * Get the current location
+   * @returns Location object with latitude and longitude
+   */
   getLocation(): { lat: number; long: number } {
     return {
       lat: this.lat,
@@ -54,14 +54,26 @@ export class LocationService {
     };
   }
 
+  /**
+   * Set the radius which was set by the user
+   * @param radius Radius
+   */
   setRadius(radius: number) {
     this.radius = radius;
   }
 
+  /**
+   * Get the radius which was set by the user
+   * @returns Radius
+   */
   getRadius(): number {
     return this.radius;
   }
 
+  /**
+   * Get current users location
+   * @returns The location of the user with latitude and longitude
+   */
   async getUserLocation(): Promise<{ lat: number; long: number }> {
     let loc = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     this.lat = loc.coords.latitude;

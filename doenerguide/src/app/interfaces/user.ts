@@ -1,5 +1,8 @@
 import { Shop } from './shop';
 
+/**
+ * User interface
+ */
 export interface User {
   id: number;
   mail: string;

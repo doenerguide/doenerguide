@@ -17,20 +17,10 @@ let endpoint = environment.endpoint;
   imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class SignupPage implements OnInit {
+  // Import components of the template page to be used in TypeScript
   @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService) {}
-
-  ngOnInit() {
-    if (this.userSrv.isLoggedIn()) {
-      if (this.userSrv.getUser().doenerladen == undefined) {
-        this.router.navigate(['/account']);
-      } else {
-        this.router.navigate(['/doeneraccount']);
-      }
-    }
-  }
-
+  // Definition of the signup form
   form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -40,6 +30,19 @@ export class SignupPage implements OnInit {
     terms: [false, Validators.requiredTrue],
   });
 
+  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService) {}
+
+  // Called when the page is first loaded, checks if the user is already logged in
+  ngOnInit() {
+    if (this.userSrv.isLoggedIn()) {
+      this.router.navigate(['/account']);
+    }
+  }
+
+  /**
+   * Check if the register button should be disabled
+   * @returns True if the button should be disabled
+   */
   checkRegisterButton(): boolean {
     return !(
       this.form.get('email')?.valid &&
@@ -51,6 +54,10 @@ export class SignupPage implements OnInit {
     );
   }
 
+  /**
+   * Handle the registration of the user
+   * @returns void, but will navigate to the home page if successful
+   */
   register() {
     this.errorMessage.nativeElement.innerHTML = '';
     if (this.checkRegisterButton()) {
@@ -102,6 +109,12 @@ export class SignupPage implements OnInit {
       });
   }
 
+  /**
+   * Set a cookie
+   * @param name Name of the cookie
+   * @param value Value of the cookie
+   * @param days Days until the cookie expires
+   */
   setCookie(name: string, value: string, days: number) {
     let expires = '';
     if (days) {
