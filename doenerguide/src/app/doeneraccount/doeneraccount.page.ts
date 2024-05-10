@@ -32,15 +32,16 @@ export class DoeneraccountPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    if (this.userSrv.isLoggedIn() && (this.user = this.userSrv.getUser()).doenerladen)
+    if (this.userSrv.isLoggedIn() && (this.user = this.userSrv.getUser()).doenerladen) {
       this.shop = await this.databaseSrv.getShop(this.user.doenerladen);
+    }
     else this.router.navigate(['/account']);
     BarcodeScanner.isSupported().then((result) => {
       this.qrSupported = result.supported;
     });
   }
 
-  async scanQR(): Promise<void> {
+  async scanQR(): Promise<string> {
     const grantedPerms = await BarcodeScanner.checkPermissions();
     if (grantedPerms.camera === 'denied') {
       let perms = await BarcodeScanner.requestPermissions();
@@ -53,7 +54,7 @@ export class DoeneraccountPage implements OnInit {
             icon: 'camera-off',
           })
           .then((toast) => toast.present());
-        return;
+        return '';
       }
     }
     if (this.platform.is('android')) {
@@ -62,7 +63,7 @@ export class DoeneraccountPage implements OnInit {
       }
     }
     const { barcodes } = await BarcodeScanner.scan();
-    if (barcodes.length === 0) return;
+    if (barcodes.length === 0) return '';
     const barcode = barcodes[0];
     if (barcode.format !== 'QR_CODE') {
       await this.toastCtrl
@@ -73,37 +74,73 @@ export class DoeneraccountPage implements OnInit {
           icon: 'barcode',
         })
         .then((toast) => toast.present());
-      return;
+      return '';
     }
     let barcodeData = barcode.displayValue;
-    if (barcodeData === this.user?.identification_code) {
-      await this.toastCtrl
-        .create({
-          message: 'Du kannst nicht deinen eigenen Code scannen',
-          duration: 2000,
-          color: 'danger',
-          icon: 'person',
-        })
-        .then((toast) => toast.present());
-      return;
-    }
-    let ok = await this.databaseSrv.addUserStamp(barcodeData, this.shop!.id);
-    if (ok) {
+    return barcodeData;
+  }
+
+  async addStamp() {
+    let identificationCode = await this.scanQR();
+    if (identificationCode === '') return;
+    let doenerladen_id = this.user?.doenerladen;
+    if (doenerladen_id === undefined) return;
+    let result = await this.databaseSrv.addUserStamp(identificationCode, doenerladen_id);
+    if (result['success']) {
       this.toastCtrl
         .create({
           message: 'Stempel hinzugefügt',
           duration: 2000,
           color: 'success',
-          icon: 'checkmark',
+          position: 'top',
         })
         .then((toast) => toast.present());
     } else {
       this.toastCtrl
         .create({
-          message: 'Fehler beim Hinzufügen des Stempels. Bitte versuche es später erneut.',
+          message: result['message'],
           duration: 2000,
           color: 'danger',
-          icon: 'close',
+          position: 'top',
+        })
+        .then((toast) => toast.present());
+    }
+  }
+
+  async removeStamps() {
+    let identificationCode = await this.scanQR();
+    if (identificationCode === '') return;
+    let doenerladen_id = this.user?.doenerladen;
+    if (doenerladen_id === undefined) return;
+    let amount = await this.databaseSrv.getUserStamps(identificationCode, doenerladen_id);
+    if (amount !== 10) {
+      this.toastCtrl
+        .create({
+          message: 'Nicht genügend Stempel. Es fehlen noch ' + (10 - amount) + ' Stempel',
+          duration: 2000,
+          color: 'danger',
+          position: 'top',
+        })
+        .then((toast) => toast.present());
+      return;
+    }
+    let result = await this.databaseSrv.removeUserStamps(identificationCode, doenerladen_id);
+    if (result['success']) {
+      this.toastCtrl
+        .create({
+          message: 'Stempelkarte wurde eingelöst!',
+          duration: 2000,
+          color: 'success',
+          position: 'top',
+        })
+        .then((toast) => toast.present());
+    } else {
+      this.toastCtrl
+        .create({
+          message: result['message'],
+          duration: 2000,
+          color: 'danger',
+          position: 'top',
         })
         .then((toast) => toast.present());
     }

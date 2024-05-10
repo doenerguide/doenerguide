@@ -10,15 +10,32 @@ export class DatabaseService {
   shopCache: Shop[] = [];
   constructor() {}
 
-  async addUserStamp(userId: string, shopId: string): Promise<boolean> {
+  async addUserStamp(identification_code: string, shopId: string): Promise<any> {
     let response = await fetch(`${environment.endpoint}/addUserStamp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user_id: userId, shop_id: shopId }),
-    });
-    return response.ok;
+      body: JSON.stringify({ identification_code: identification_code, shop_id: shopId }),
+    }).then((response) => response.json());
+    return response;
+  }
+
+  async getUserStamps(identificationCode: string, shopId: string): Promise<number> {
+    let response = await fetch(`${environment.endpoint}/getUserStamps?identification_code=${identificationCode}&shop_id=${shopId}`);
+    let stamps = await response.json();
+    return stamps.amount as number;
+  }
+
+  async removeUserStamps(identificationCode: string, shopId: string): Promise<any> {
+    let response = await fetch(`${environment.endpoint}/removeUserStamps`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ identification_code: identificationCode, shop_id: shopId }),
+    }).then((response) => response.json());
+    return response;
   }
 
   async updateUser(user: User): Promise<boolean> {

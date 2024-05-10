@@ -6,7 +6,7 @@ import os
 import hashlib
 
 app = flask.Flask(__name__)
-CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}, r'/getShop': {"origins": "*"}, r'/updateFavoriten': {"origins": "*"}, r'/getUserBySession': {"origins": "*"}})
+CORS(app, resources={r'/login': {"origins": "*"}, r'/signup': {"origins": "*"}, r'/getShops': {"origins": "*"}, r'/getShop': {"origins": "*"}, r'/updateFavoriten': {"origins": "*"}, r'/getUserBySession': {"origins": "*"}, r'/updateUser': {"origins": "*"}, r'/updateUserPassword': {"origins": "*"}, r'/addUserStamp': {"origins": "*"}, r'/getUserStamps': {"origins": "*"}, r'/removeUserStamps': {"origins": "*"}})
 
 def hash_string(s):
     """
@@ -190,6 +190,65 @@ def update_password():
         return jsonify({'success': True})
     else:
         return jsonify({'success': False})
+    
+@app.route('/addUserStamp', methods=['POST'])
+def add_user_stamp():
+    """
+    Adds a stamp to the user's stamp card.
+
+    Retrieves the user ID and the shop ID from the request body and adds a stamp to the user's stamp card in the database.
+
+    Returns:
+        A JSON response indicating the success of the operation.
+    """
+    body = request.get_json()
+    identification_code = body['identification_code']
+    shop_id = body['shop_id']
+    amount = dbm.get_user_stamps(identification_code, shop_id)
+    if amount >= 10:
+        return jsonify({'success': False, 'message': 'Stempelkarte ist bereits voll.'})
+    if dbm.add_user_stamp(identification_code, shop_id):
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'message': 'Stempel konnte nicht hinzugefügt werden.'})
+    
+@app.route('/getUserStamps', methods=['GET'])
+def get_user_stamps():
+    """
+    Retrieves the user's stamp card for a specific shop.
+
+    Parameters:
+    - identification_code (str): The identification code of the user.
+    - shop_id (int): The ID of the shop.
+
+    Returns:
+    - int: The number of stamps on the user's stamp card for the specified shop.
+    """
+    identification_code = request.args.get('identification_code')
+    shop_id = int(request.args.get('shop_id'))
+    amount = dbm.get_user_stamps(identification_code, shop_id)
+    return jsonify({'amount': amount})
+
+@app.route('/removeUserStamps', methods=['POST'])
+def remove_user_stamps():
+    """
+    Removes all stamps from the user's stamp card for a specific shop.
+
+    Retrieves the user ID and the shop ID from the request body and removes all stamps from the user's stamp card for the specified shop in the database.
+
+    Returns:
+        A JSON response indicating the success of the operation.
+    """
+    body = request.get_json()
+    identification_code = body['identification_code']
+    shop_id = body['shop_id']
+    if dbm.remove_user_stamps(identification_code, shop_id):
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'message': 'Stempel konnten nicht entfernt werden.'})
+
+    
+
 
 def create_session(email):
     """
