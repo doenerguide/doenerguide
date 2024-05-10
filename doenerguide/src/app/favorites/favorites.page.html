@@ -12,13 +12,7 @@
   </ion-header>
   <ion-grid>
     <ion-row>
-      <ion-col
-        size="12"
-        size-sm="6"
-        size-md="4"
-        size-lg="3"
-        *ngFor="let shop of userSrv.getFavorites()"
-      >
+      <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let shop of userSrv.getFavorites()">
         <ion-card>
           <ion-card-header class="title">
             <div>
@@ -43,18 +37,13 @@
                 [color]="shopFunctions.checkOpeningColor(shop.openToday).status"
               ></ion-icon>
               <ng-container *ngFor="let openingHour of shop.openToday">
-                {{ openingHour.open === '00:00' && openingHour.close === '00:00'
-                ? 'Heute geschlossen' : openingHour.open + ' - ' +
-                openingHour.close }}<br />
+                {{ openingHour.open === '00:00' && openingHour.close === '00:00' ? 'Heute geschlossen' :
+                openingHour.open + ' - ' + openingHour.close }}<br />
               </ng-container>
             </ion-item>
           </ion-card-content>
           <div class="buttons">
-            <ion-button
-              fill="clear"
-              [routerLink]="['/shop', {shop: shop | json, refferer: '/favorites'}]"
-              routerDirection="forward"
-            >
+            <ion-button fill="clear" [routerLink]="['/shop', {shop: shop | json}]" routerDirection="forward">
               Mehr Infos >
             </ion-button>
           </div>
