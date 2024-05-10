@@ -7,6 +7,7 @@ import { UserService } from '../services/user.service';
 import { environment } from 'src/environments/environment';
 import { DatabaseService } from '../services/database.service';
 import { User } from '../interfaces/user';
+import { StorageService } from '../services/storage.service';
 
 let endpoint = environment.endpoint;
 
@@ -27,7 +28,13 @@ export class LoginPage implements OnInit {
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService, private databaseSrv: DatabaseService) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private userSrv: UserService,
+    private databaseSrv: DatabaseService,
+    private storageSrv: StorageService
+  ) {}
 
   // Called when the page is first loaded, checks if the user is already logged in
   ngOnInit() {
@@ -57,7 +64,7 @@ export class LoginPage implements OnInit {
         if (data['success']) {
           let userData = data['user'];
           userData['favoriten'] = await Promise.all(userData['favoriten'].map(async (shop: any) => await this.databaseSrv.getShop(shop)));
-          this.setCookie('session_id', data['session_id'], 365);
+          this.storageSrv.setSessionToken(data['session_id']);
           this.userSrv.setUser(userData as User);
           this.router.navigate(['/home', { message: 'Login erfolgreich' }]);
         } else {
@@ -67,22 +74,6 @@ export class LoginPage implements OnInit {
       .catch((error) => {
         console.error('Error:', error);
       });
-  }
-
-  /**
-   * Set a cookie
-   * @param name Name of the cookie
-   * @param value Value of the cookie
-   * @param days Expire time of the cookie
-   */
-  setCookie(name: string, value: string, days: number) {
-    let expires = '';
-    if (days) {
-      let date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = '; expires=' + date.toUTCString();
-    }
-    document.cookie = name + '=' + (value || '') + expires + '; path=/';
   }
 
   /**

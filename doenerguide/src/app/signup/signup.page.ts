@@ -6,6 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { UserService } from '../services/user.service';
 import { User } from '../interfaces/user';
+import { StorageService } from '../services/storage.service';
 
 let endpoint = environment.endpoint;
 
@@ -30,7 +31,7 @@ export class SignupPage implements OnInit {
     terms: [false, Validators.requiredTrue],
   });
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService) {}
+  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService, private storageSrv: StorageService) {}
 
   // Called when the page is first loaded, checks if the user is already logged in
   ngOnInit() {
@@ -97,7 +98,7 @@ export class SignupPage implements OnInit {
       .then((data) => {
         if (data.success) {
           let user = data['user'] as User;
-          this.setCookie('session_id', data['session_id'], 365);
+          this.storageSrv.setSessionToken(data['session_id']);
           this.userSrv.setUser(user);
           this.router.navigate(['/home', { message: 'Erfolgreich registriert' }]);
         } else {
@@ -107,21 +108,5 @@ export class SignupPage implements OnInit {
       .catch((error) => {
         console.error('Error:', error);
       });
-  }
-
-  /**
-   * Set a cookie
-   * @param name Name of the cookie
-   * @param value Value of the cookie
-   * @param days Days until the cookie expires
-   */
-  setCookie(name: string, value: string, days: number) {
-    let expires = '';
-    if (days) {
-      let date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = '; expires=' + date.toUTCString();
-    }
-    document.cookie = name + '=' + (value || '') + expires + '; path=/';
   }
 }

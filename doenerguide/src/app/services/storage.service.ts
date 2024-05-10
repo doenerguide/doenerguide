@@ -47,4 +47,27 @@ export class StorageService {
       this._storage?.set('darkMode', !value);
     });
   }
+
+  /**
+   * Save the users session token
+   * @param token The session token
+   */
+  public async setSessionToken(token: string): Promise<void> {
+    await this._storage?.set('sessionToken', token);
+  }
+
+  /**
+   * Get the users session token
+   * @returns The session token
+   */
+  public async getSessionToken(): Promise<string | undefined> {
+    return (await this._storage?.get('sessionToken')) ?? undefined;
+  }
+
+  /**
+   * Remove the users session token
+   */
+  public async removeSessionToken(): Promise<void> {
+    await this._storage?.remove('sessionToken');
+  }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
 import { environment } from 'src/environments/environment';
 import { Shop } from '../interfaces/shop';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { Shop } from '../interfaces/shop';
 export class UserService {
   private endpoint = environment.endpoint;
 
-  constructor() {}
+  constructor(private storageSrv: StorageService) {}
 
   /**
    * Set the user
@@ -40,7 +41,7 @@ export class UserService {
    */
   logout() {
     localStorage.removeItem('user');
-    document.cookie = 'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    this.storageSrv.removeSessionToken();
   }
 
   /**
