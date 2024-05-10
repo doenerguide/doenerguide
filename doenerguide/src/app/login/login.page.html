@@ -7,43 +7,21 @@
     </div>
   </div>
   <div class="login">
-    <ion-label
-      >Bitte gib deine Daten ein oder registriere dich.<br
-    /></ion-label>
+    <ion-label>Bitte gib deine Daten ein oder registriere dich.<br /></ion-label>
     <ion-label>Mit einem Nutzerkonto hast du folgende Vorteile:</ion-label>
     <ul>
       <li>Speichern von Favoriten</li>
       <li>Stempelkarte</li>
+      <li>Dark-Mode</li>
     </ul>
     <form id="input" [formGroup]="form">
-      <ion-input
-        formControlName="email"
-        label="E-Mail"
-        labelPlacement="floating"
-        placeholder="Deine E-Mail Adresse"
-      >
-      </ion-input>
-      <ion-input
-        formControlName="password"
-        label="Passwort"
-        labelPlacement="floating"
-        placeholder="Dein Passwort"
-        type="password"
-      >
-      </ion-input>
+      <ion-input formControlName="email" label="E-Mail" labelPlacement="floating" placeholder="Deine E-Mail Adresse"> </ion-input>
+      <ion-input formControlName="password" label="Passwort" labelPlacement="floating" placeholder="Dein Passwort" type="password"> </ion-input>
     </form>
     <div slot="label" #errorMessage></div>
     <div id="buttons">
-      <ion-button
-        id="login"
-        type="submit"
-        form="input"
-        [disabled]="checkLoginButton()"
-        (click)="handleLogin()"
-      >
-        Login
-      </ion-button>
-      <ion-button [routerLink]="['/signup']"> Registrieren </ion-button>
+      <ion-button id="login" type="submit" form="input" [disabled]="checkLoginButton()" (click)="handleLogin()"> Login </ion-button>
+      <ion-button [routerLink]="['/signup']" fill="outline"> Zur Registrierung <ion-icon name="arrow-forward-outline" slot="end"></ion-icon> </ion-button>
     </div>
   </div>
 </ion-content>

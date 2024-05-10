@@ -11,30 +11,9 @@
     <ion-label>Bitte fülle alle Felder aus, um sich zu registrieren.</ion-label>
 
     <form id="input" [formGroup]="form">
-      <ion-input
-        formControlName="vorname"
-        label="Vorname"
-        labelPlacement="floating"
-        placeholder="Dein Vorname"
-        required="true"
-      >
-      </ion-input>
-      <ion-input
-        formControlName="nachname"
-        labelPlacement="floating"
-        label="Nachname"
-        placeholder="Dein Nachname"
-        required="true"
-      >
-      </ion-input>
-      <ion-input
-        formControlName="email"
-        label="E-Mail"
-        labelPlacement="floating"
-        placeholder="Deine E-Mail Adresse"
-        required="true"
-      >
-      </ion-input>
+      <ion-input formControlName="vorname" label="Vorname" labelPlacement="floating" placeholder="Dein Vorname" required="true"> </ion-input>
+      <ion-input formControlName="nachname" labelPlacement="floating" label="Nachname" placeholder="Dein Nachname" required="true"> </ion-input>
+      <ion-input formControlName="email" label="E-Mail" labelPlacement="floating" placeholder="Deine E-Mail Adresse" required="true"> </ion-input>
       <ion-input
         formControlName="password"
         label="Passwort"
@@ -57,23 +36,12 @@
         required="true"
       >
       </ion-input>
-      <ion-checkbox id="nutzungsbedingungen" formControlName="terms" slot="" required="true">
-        Nutzungsbedingungen
-      </ion-checkbox>
+      <ion-checkbox id="nutzungsbedingungen" formControlName="terms" slot="" required="true"> Nutzungsbedingungen </ion-checkbox>
     </form>
     <div slot="label" #errorMessage></div>
     <div id="buttons">
-      <ion-button [routerLink]="['/login']"> Login </ion-button>
-      <ion-button
-        id="signup"
-        [disabled]="checkRegisterButton()"
-        (click)="register()"
-        size="medium"
-        form="input"
-        type="submit"
-      >
-        Registrieren
-      </ion-button>
+      <ion-button [routerLink]="['/login']" fill="outline"> <ion-icon name="arrow-back-outline" slot="start"></ion-icon> Zurück zum Login </ion-button>
+      <ion-button id="signup" [disabled]="checkRegisterButton()" (click)="register()" size="medium" form="input" type="submit"> Registrieren </ion-button>
     </div>
   </div>
 </ion-content>
