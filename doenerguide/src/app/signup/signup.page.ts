@@ -6,6 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { UserService } from '../services/user.service';
 import { User } from '../interfaces/user';
+import { StorageService } from '../services/storage.service';
 
 let endpoint = environment.endpoint;
 
@@ -17,20 +18,10 @@ let endpoint = environment.endpoint;
   imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class SignupPage implements OnInit {
+  // Import components of the template page to be used in TypeScript
   @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService) {}
-
-  ngOnInit() {
-    if (this.userSrv.isLoggedIn()) {
-      if (this.userSrv.getUser().doenerladen == undefined) {
-        this.router.navigate(['/account']);
-      } else {
-        this.router.navigate(['/doeneraccount']);
-      }
-    }
-  }
-
+  // Definition of the signup form
   form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -40,6 +31,19 @@ export class SignupPage implements OnInit {
     terms: [false, Validators.requiredTrue],
   });
 
+  constructor(private formBuilder: FormBuilder, private router: Router, private userSrv: UserService, private storageSrv: StorageService) {}
+
+  // Called when the page is first loaded, checks if the user is already logged in
+  ngOnInit() {
+    if (this.userSrv.isLoggedIn()) {
+      this.router.navigate(['/account']);
+    }
+  }
+
+  /**
+   * Check if the register button should be disabled
+   * @returns True if the button should be disabled
+   */
   checkRegisterButton(): boolean {
     return !(
       this.form.get('email')?.valid &&
@@ -51,6 +55,10 @@ export class SignupPage implements OnInit {
     );
   }
 
+  /**
+   * Handle the registration of the user
+   * @returns void, but will navigate to the home page if successful
+   */
   register() {
     this.errorMessage.nativeElement.innerHTML = '';
     if (this.checkRegisterButton()) {
@@ -90,7 +98,7 @@ export class SignupPage implements OnInit {
       .then((data) => {
         if (data.success) {
           let user = data['user'] as User;
-          this.setCookie('session_id', data['session_id'], 365);
+          this.storageSrv.setSessionToken(data['session_id']);
           this.userSrv.setUser(user);
           this.router.navigate(['/home', { message: 'Erfolgreich registriert' }]);
         } else {
@@ -100,15 +108,5 @@ export class SignupPage implements OnInit {
       .catch((error) => {
         console.error('Error:', error);
       });
-  }
-
-  setCookie(name: string, value: string, days: number) {
-    let expires = '';
-    if (days) {
-      let date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = '; expires=' + date.toUTCString();
-    }
-    document.cookie = name + '=' + (value || '') + expires + '; path=/';
   }
 }

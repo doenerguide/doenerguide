@@ -1,5 +1,8 @@
 import { Flags, IFlags, getPrettyPrint } from './flags';
 
+/**
+ * Interface for the shop object
+ */
 export interface Shop {
   id: string;
   imageUrl: string;
@@ -22,9 +25,18 @@ export interface Shop {
   flags: Flags;
   lat: number;
   lng: number;
+  mapsUrl: string;
 }
 
+/**
+ * Class for the functions to manage the shop object
+ */
 export class ShopFunctions {
+  /**
+   * Returns the pretty print of the flags
+   * @param flags Flags which should be pretty printed
+   * @returns Array of pretty printed flags
+   */
   static enabledFlags(flags?: Flags) {
     if (!flags) {
       return [];
@@ -39,6 +51,11 @@ export class ShopFunctions {
     return enabledFlags;
   }
 
+  /**
+   * Returns the pretty print of the flags which are disabled
+   * @param flags Flags which should be pretty printed
+   * @returns Array of pretty printed flags
+   */
   static disabledFlags(flags?: Flags) {
     if (!flags) {
       return [];
@@ -53,6 +70,11 @@ export class ShopFunctions {
     return disabledFlags;
   }
 
+  /**
+   * Check if a shop is open
+   * @param openingHours Opening hours of the shop
+   * @returns Object with the status if the shop is open and the color of the status
+   */
   static checkOpeningColor(openingHours?: { open: string; close: string }[]): {
     status: string;
     open: boolean;

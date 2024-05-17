@@ -7,6 +7,7 @@ import { UserService } from '../services/user.service';
 import { environment } from 'src/environments/environment';
 import { DatabaseService } from '../services/database.service';
 import { User } from '../interfaces/user';
+import { StorageService } from '../services/storage.service';
 
 let endpoint = environment.endpoint;
 
@@ -18,30 +19,33 @@ let endpoint = environment.endpoint;
   imports: [IonicModule, CommonModule, FormsModule, RouterModule, ReactiveFormsModule],
 })
 export class LoginPage implements OnInit {
+  // Import components of the template page to be used in TypeScript
   @ViewChild('errorMessage', { read: ElementRef }) errorMessage!: ElementRef;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private userSrv: UserService,
-    private databaseSrv: DatabaseService
-  ) {}
-
-  ngOnInit() {
-    if (this.userSrv.isLoggedIn()) {
-      if (this.userSrv.getUser().doenerladen == undefined) {
-        this.router.navigate(['/account']);
-      } else {
-        this.router.navigate(['/doeneraccount']);
-      }
-    }
-  }
-
+  // Definition of the login form
   form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private userSrv: UserService,
+    private databaseSrv: DatabaseService,
+    private storageSrv: StorageService
+  ) {}
+
+  // Called when the page is first loaded, checks if the user is already logged in
+  ngOnInit() {
+    if (this.userSrv.isLoggedIn()) {
+      this.router.navigate(['/account']);
+    }
+  }
+
+  /**
+   * Handles the login of the user
+   */
   handleLogin() {
     if (!this.form.valid) {
       return;
@@ -56,13 +60,10 @@ export class LoginPage implements OnInit {
     })
       .then((response) => response.json())
       .then(async (data) => {
-        console.log(data);
         if (data['success']) {
           let userData = data['user'];
-          userData['favoriten'] = await Promise.all(
-            userData['favoriten'].map(async (shop: any) => await this.databaseSrv.getShop(shop))
-          );
-          this.setCookie('session_id', data['session_id'], 365);
+          userData['favoriten'] = await Promise.all(userData['favoriten'].map(async (shop: any) => await this.databaseSrv.getShop(shop)));
+          this.storageSrv.setSessionToken(data['session_id']);
           this.userSrv.setUser(userData as User);
           this.router.navigate(['/home', { message: 'Login erfolgreich' }]);
         } else {
@@ -74,17 +75,10 @@ export class LoginPage implements OnInit {
       });
   }
 
-  // set cookie function
-  setCookie(name: string, value: string, days: number) {
-    let expires = '';
-    if (days) {
-      let date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = '; expires=' + date.toUTCString();
-    }
-    document.cookie = name + '=' + (value || '') + expires + '; path=/';
-  }
-
+  /**
+   * Checks if the login button should be disabled
+   * @returns True if the button should be disabled
+   */
   checkLoginButton(): boolean {
     return !this.form.valid;
   }

@@ -12,17 +12,9 @@ import { RouterModule } from '@angular/router';
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    RatingComponent,
-    RouterModule,
-  ],
+  imports: [IonicModule, CommonModule, FormsModule, RatingComponent, RouterModule],
 })
 export class FavoritesPage {
   shopFunctions = ShopFunctions;
   constructor(public userSrv: UserService) {}
-
-  ionViewWillEnter() {}
 }

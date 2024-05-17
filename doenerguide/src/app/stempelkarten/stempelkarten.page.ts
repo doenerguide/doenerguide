@@ -1,43 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonList,
-  IonSpinner,
-  IonLabel,
-  IonItem,
-  IonButtons,
-  IonBackButton,
-  IonBadge,
-  NavController,
-} from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database.service';
 import { UserService } from '../services/user.service';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-stempelkarten',
   templateUrl: './stempelkarten.page.html',
   styleUrls: ['./stempelkarten.page.scss'],
   standalone: true,
-  imports: [
-    IonBadge,
-    IonBackButton,
-    IonButtons,
-    IonItem,
-    IonLabel,
-    IonSpinner,
-    IonList,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    CommonModule,
-    FormsModule,
-  ],
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class StempelkartenPage {
   stamps: {
@@ -51,13 +25,14 @@ export class StempelkartenPage {
   } = {};
   loading = true;
 
+  // Definition of the functions and variables used in the template
   objKeys = Object.keys;
 
   constructor(public databaseSrv: DatabaseService, private userSrv: UserService, private navCtrl: NavController) {}
 
+  // Called every time the page is loaded, will load the user's stamps
   async ionViewWillEnter() {
     this.stamps = await this.databaseSrv.getAllUserStamps(this.userSrv.getUser().identification_code);
-    console.log(this.stamps);
     for (const key in this.stamps) {
       if (this.stamps[key] > 0) {
         this.showStamps[key] = {
@@ -66,10 +41,13 @@ export class StempelkartenPage {
         };
       }
     }
-    console.log(this.showStamps);
     this.loading = false;
   }
 
+  /**
+   * Navigate to the card page
+   * @param cardInformation Information about the card to be shown
+   */
   navigate(cardInformation: { name: string; amount: number }) {
     this.navCtrl.navigateForward(['/card', { stamps: JSON.stringify(cardInformation) }]);
   }

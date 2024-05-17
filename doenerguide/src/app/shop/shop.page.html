@@ -25,11 +25,7 @@
         <app-price [priceCategory]="shop?.priceCategory ?? 0"> </app-price>
       </ion-item>
       <ion-item lines="none">
-        <ion-icon
-          slot="start"
-          name="time-outline"
-          [color]="shopFunctions.checkOpeningColor(shop?.openToday).status"
-        ></ion-icon>
+        <ion-icon slot="start" name="time-outline" [color]="shopFunctions.checkOpeningColor(shop?.openToday).status"></ion-icon>
         <div class="openingHours">
           <ng-container *ngFor="let day of Object.keys(shop!.openingHours)">
             <ng-container *ngIf="shop!.openingHours[day].length > 0">
@@ -55,10 +51,10 @@
       </ion-item>
     </ion-list>
     <hr />
-    <!-- <ion-button expand="block" [href]="shop!.mapsUrl">
+    <ion-button expand="block" [href]="shop?.mapsUrl" target="_blank" color="secondary" id="maps">
       <ion-icon slot="start" name="map-outline"></ion-icon>
       Google Maps
-    </ion-button> -->
+    </ion-button>
     <ion-button expand="block" [href]="'tel:' + shop?.tel">
       <ion-icon slot="start" name="call-outline"></ion-icon>
       Anrufen

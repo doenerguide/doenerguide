@@ -41,6 +41,10 @@ export class AccountPage implements OnInit {
     private platform: Platform
   ) {}
 
+  /*
+    * Called when the page is initialized
+    * Loads the user data and checks if dark mode is enabled
+    */
   ngOnInit() {
     if (this.userSrv.isLoggedIn()) this.user = this.userSrv.getUser();
     else this.router.navigate(['/login']);
@@ -52,6 +56,10 @@ export class AccountPage implements OnInit {
     }
   }
 
+  /*
+    * Called when the page is entered
+    * Loads the user data and checks if dark mode is enabled
+    */
   ionViewWillEnter() {
     this.user = this.userSrv.getUser();
     this.generateQRCode();
@@ -60,21 +68,37 @@ export class AccountPage implements OnInit {
     });
   }
 
+  /*
+    * Generates the QR-Code for the user identification code
+    */
   generateQRCode() {
     this.myAngularxQrCode = this.user.identification_code ?? '';
   }
 
+  /*
+   * Logs out the user and navigates to the home page
+   * Removes the side class from the side button and calls the logout function from the user service
+   */
   logout() {
     this.sideButton.nativeElement.classList.remove('side');
     this.userSrv.logout();
     this.router.navigate(['/home', { message: 'Logout erfolgreich' }]);
   }
 
+  /*
+    * Toggles the dark mode
+    * Updates the dark mode in the storage and adds/removes the dark class from the body
+    */
   toggleDarkMode() {
     this.storageSrv.toggleDarkMode();
     document.body.classList.toggle('dark');
   }
 
+  /*
+   * Updates the user data and password
+   * If the password is not empty, the password is updated
+   * If the old password does not match the current password, an error message is shown
+   */
   updateUser() {
     this.databaseSrv.updateUser(this.user).then((success) => {
       if (success) {
@@ -111,6 +135,10 @@ export class AccountPage implements OnInit {
     });
   }
 
+  /**
+   * Scans a QR-Code and adds a stamp to the user
+   * If the QR-Code is not a valid stamp, an error message is shown
+   */
   async scanQR(): Promise<string> {
     const grantedPerms = await BarcodeScanner.checkPermissions();
     if (grantedPerms.camera === 'denied') {
@@ -150,6 +178,9 @@ export class AccountPage implements OnInit {
     return barcodeData;
   }
 
+  /**
+   * Adds a stamp to the user
+   */
   async addStamp() {
     let identificationCode = await this.scanQR();
     if (identificationCode === '') return;
@@ -177,6 +208,10 @@ export class AccountPage implements OnInit {
     }
   }
 
+  /**
+   * Removes 10 stamps from the user to redeem a free Döner
+   * If the user does not have 10 stamps, an error message is shown
+   */
   async removeStamps() {
     let identificationCode = await this.scanQR();
     if (identificationCode === '') return;
