@@ -38,18 +38,18 @@ export const routes: Routes = [
         path: 'account',
         loadComponent: () => import('./account/account.page').then((m) => m.AccountPage),
       },
-      {
-        path: 'shop',
-        loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
-      },
-      {
-        path: 'stempelkarten',
-        loadComponent: () => import('./stempelkarten/stempelkarten.page').then((m) => m.StempelkartenPage),
-      },
-      {
-        path: 'card',
-        loadComponent: () => import('./card/card.page').then((m) => m.CardPage),
-      },
     ],
-  }
+  },
+  {
+    path: 'shop',
+    loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
+  },
+  {
+    path: 'stempelkarten',
+    loadComponent: () => import('./stempelkarten/stempelkarten.page').then((m) => m.StempelkartenPage),
+  },
+  {
+    path: 'card',
+    loadComponent: () => import('./card/card.page').then((m) => m.CardPage),
+  },
 ];
