@@ -66,7 +66,6 @@ def getData(url):
     tel = ""
     tel_elements = driver.find_elements(By.CLASS_NAME, "AeaXub")
     for t in tel_elements:
-        print(t.get_attribute("outerHTML"))
         if "Odf5Vc google-symbols NhBTye PHazN" in t.get_attribute("outerHTML"):
             print("Found tel")
             tel = t.text.replace("\n", "").strip()
@@ -120,6 +119,7 @@ def getData(url):
 if __name__ == "__main__":
     with open("backend/shops_url.txt", "r") as f:
         urls = f.readlines()
+    amount = len(urls)
     driver.get("https://www.google.com/maps")
     button_class = "XWZjwc"
     button = driver.find_element(By.CLASS_NAME, button_class)
@@ -128,13 +128,13 @@ if __name__ == "__main__":
     successful_shops = []
     for i, url in enumerate(urls):
         # clear the console
-        # print("\033[H\033[J")
+        print("\033[H\033[J")
         print("Creating shop: " + url.split("/")[5])
         print("URL: " + url)
         print("Success: " + str(len(successful_shops)) + " Failed: " + str(len(failed_shops)))
         print("Already done: " + str(len(successful_shops) + len(failed_shops)))
-        print("Remaining: " + str(len(urls) - i))
-        print("Total: " + str(len(urls)))
+        print("Remaining: " + str(len(urls)))
+        print("Total: " + str(amount))
         url = url.strip()
         name, imageURL, address, rating, priceCategory, flags, openingHours, tel, lat, long, maps_url = getData(url)
         if name is not None:

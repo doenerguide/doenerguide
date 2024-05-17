@@ -41,7 +41,10 @@ export class AccountPage implements OnInit {
     private platform: Platform
   ) {}
 
-  //Called when the page is first loaded, checks if the user is logged in and if so, loads the user data and check if BarcodeScanner is supported
+  /*
+    * Called when the page is initialized
+    * Loads the user data and checks if dark mode is enabled
+    */
   ngOnInit() {
     if (this.userSrv.isLoggedIn()) this.user = this.userSrv.getUser();
     else this.router.navigate(['/login']);
@@ -53,7 +56,10 @@ export class AccountPage implements OnInit {
     }
   }
 
-  //Called every time the page is entered, updates the user data and the QR-Code
+  /*
+    * Called when the page is entered
+    * Loads the user data and checks if dark mode is enabled
+    */
   ionViewWillEnter() {
     this.user = this.userSrv.getUser();
     this.generateQRCode();
@@ -62,15 +68,16 @@ export class AccountPage implements OnInit {
     });
   }
 
-  /**
-   * Generates the QR-Code for the user
-   */
+  /*
+    * Generates the QR-Code for the user identification code
+    */
   generateQRCode() {
     this.myAngularxQrCode = this.user.identification_code ?? '';
   }
 
-  /**
-   * Logs the user out and navigates to the home page
+  /*
+   * Logs out the user and navigates to the home page
+   * Removes the side class from the side button and calls the logout function from the user service
    */
   logout() {
     this.sideButton.nativeElement.classList.remove('side');
@@ -78,16 +85,19 @@ export class AccountPage implements OnInit {
     this.router.navigate(['/home', { message: 'Logout erfolgreich' }]);
   }
 
-  /**
-   * Toggles the dark mode
-   */
+  /*
+    * Toggles the dark mode
+    * Updates the dark mode in the storage and adds/removes the dark class from the body
+    */
   toggleDarkMode() {
     this.storageSrv.toggleDarkMode();
     document.body.classList.toggle('dark');
   }
 
-  /**
+  /*
    * Updates the user data and password
+   * If the password is not empty, the password is updated
+   * If the old password does not match the current password, an error message is shown
    */
   updateUser() {
     this.databaseSrv.updateUser(this.user).then((success) => {

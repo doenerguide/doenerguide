@@ -54,6 +54,7 @@ def getStadt(url, driver):
 if __name__ == "__main__":
     with open("backend/plz.txt", "r") as f:
         plzs = f.read().split("\n")
+    amount = len(plzs)
     driver.get("https://www.google.com/maps")
     button_class = "XWZjwc"
     button = driver.find_element(By.CLASS_NAME, button_class)
@@ -67,7 +68,8 @@ if __name__ == "__main__":
         url = "https://www.google.com/maps/search/" + plz + "%20Doenerladen"
         print("URL: " + url)
         print("Already done: " + str(i))
-        print("Total: " + str(len(plzs)))
+        print("Remaining: " + str(len(plzs)))
+        print("Total: " + str(amount))
         getStadt(url, driver)
         # delete the plz from the list
         plzs = plzs[1:]

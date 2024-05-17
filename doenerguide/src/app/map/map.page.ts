@@ -53,7 +53,9 @@ export class MapPage implements OnDestroy, OnInit {
     this.loadMap();
   }
 
-  // Called if the page is entered, sets the circle and the shops to be displayed
+  /**
+   * Called when the page is entered, will update the map and the shops shown
+   */
   ionViewWillEnter() {
     this.storageSrv.darkMode().then((dark) => {
       if (dark != this.currentDark) {
@@ -82,7 +84,7 @@ export class MapPage implements OnDestroy, OnInit {
   }
 
   /**
-   * Change the radius of the search circle
+   * Called when the user changes the radius, will update the shops shown
    * @param event Event of the change
    */
   change_radius(event: any) {
@@ -91,7 +93,7 @@ export class MapPage implements OnDestroy, OnInit {
   }
 
   /**
-   * Set the shops shown on the map
+   * Set the shops to be shown
    */
   async setShops() {
     this.shownShops = await this.databaseSrv.getShops(this.locationSrv.lat, this.locationSrv.long, this.locationSrv.radius);
@@ -124,11 +126,11 @@ export class MapPage implements OnDestroy, OnInit {
   }
 
   /**
-   * Set the circle of the area in which the shops are shown
+   * Set a circle on the map
    * @param map Map to set the circle on
    * @param center Center of the circle
    * @param radius Radius of the circle
-   * @returns Circle object
+   * @returns The circle
    */
   set_circle = (map: any, center: any, radius: number) => {
     return new google.maps.Circle({
@@ -144,9 +146,9 @@ export class MapPage implements OnDestroy, OnInit {
   };
 
   /**
-   * Add a marker to the map, to show a shop
+   * Add a marker to the map
    * @param location Location of the marker
-   * @param info Information to show when the marker is clicked
+   * @param info Info to be shown in the info window
    */
   addMarker(location: any, info: string) {
     const markerIcon = {

@@ -26,16 +26,16 @@ import { StorageService } from '../services/storage.service';
  * Represents the home page of the application.
  */
 export class HomePage implements OnInit {
-  shownShops: Shop[] = [];
-  shops: Shop[] = [];
-  radiusShops: Shop[] = [];
-  flags: { key: string; value: string }[] = [];
-  nameFilter: string = '';
-  lat: number = 52.520008;
-  long: number = 13.404954;
-  radius: number = 5;
-  resultsShown: number = 12;
-  loading = true;
+  shownShops: Shop[] = []; // List of shops to be shown on the page. Gets updated when the user scrolls to bottom
+  shops: Shop[] = []; // List of all filtered shops
+  radiusShops: Shop[] = []; // List of all shops in the radius
+  flags: { key: string; value: string }[] = []; // List of active flags to filter the shops
+  nameFilter: string = ''; // Name filter to filter the shops
+  lat: number = 52.520008; // Latitude of the user
+  long: number = 13.404954; // Longitude of the user
+  radius: number = 5; // Radius in which the shops should be shown
+  resultsShown: number = 12; // Amount of shops to be shown. Gets updated when the user scrolls to bottom
+  loading = true; // Loading variable to show the loading spinner
 
   logoSrc = 'assets/logo_header.png';
 
@@ -94,18 +94,17 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Formats the pin value
-   * @param value number value of the pin
-   * @returns String representation of the pin value
+   * Formatter for the distance
+   * @param value Value to be formatted
+   * @returns The formatted value
    */
   pinFormatter(value: number) {
     return `${value}km`;
   }
 
   /**
-   * Event which is triggered when the radius is changed
-   * Will set the new radius and update the shops
-   * @param event Event which triggered the change
+   * Changes the radius of the shops to be shown
+   * @param event Event that triggered the change
    */
   change_radius(event: any) {
     this.radius = event.detail.value;
@@ -114,8 +113,7 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Filters the shops based on the flags and the name filter and sets the shown shops
-   * If the page is loading, it will set the loading variable to false
+   * Sets the shops based on the user's location
    */
   async setShops() {
     this.radiusShops = (await this.databaseSrv.getShops(this.lat, this.long, this.radius)).sort((a, b) => {
@@ -128,15 +126,14 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Sets the shown shops based on the results shown variable
-   * The results shown variable is the amount of shops that are shown on the page
+   * Adds shops to the list of shown shops
    */
   setResultsShown() {
     this.shownShops = this.shops.slice(0, this.resultsShown);
   }
 
   /**
-   * Loads 12 more shops to be shown
+   * Loads more shops to be shown
    */
   loadMore() {
     this.resultsShown += 12;
@@ -144,7 +141,7 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Loads the standard amount of shops to be shown (12)
+   * Loads the standard amount of shops to be shown
    */
   loadStandard() {
     this.resultsShown = 12;
@@ -152,10 +149,9 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Method to be called when the user scrolls
-   * Will check if the user has scrolled to the bottom of the page and load more shops if necessary
-   * Will also show the top button if the user has scrolled down to show the button to scroll to the top
-   * @param event Event which triggered the scroll
+   * Handles the scroll event
+   * Will load more shops if the user scrolls to the bottom of the page
+   * @param event Event that triggered the scroll
    */
   async onScroll(event: any) {
     const scrollElement = await this.content.getScrollElement();
@@ -170,7 +166,7 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Helper method to filter the shops based on the flags and the name filter
+   * Filters the shops based on the flags and name filter
    * @param shop Shop to be checked
    * @returns True if the shop should be shown, false otherwise
    */
@@ -185,9 +181,9 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Handle if the flag is clicked
-   * Will add the flag to the active flags if it is not already in the list, otherwise remove it
-   * @param flag flag that was clicked
+   * Handles the flag selection
+   * Will add the flag to the list of active flags if it is not in the list and remove it if it is in the list
+   * @param flag Flag to be handled
    */
   handleFlag(flag: { key: string; value: string }) {
     if (this.flags.includes(flag)) {
@@ -200,20 +196,19 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Checks if the flag is in the array of flags
+   * Checks if the flag is in the list of active flags
    * @param flag Flag to be checked
-   * @param flags Array of flags to be checked against
-   * @returns True if the flag is in the array, false otherwise
+   * @param flags List of active flags
+   * @returns True if the flag is in the list, false otherwise
    */
   fitlerFlags(flag: { key: string; value: string }, flags: { key: string; value: string }[]) {
     return flags.includes(flag);
   }
 
   /**
-   * Handles the refresh of the shops
-   * Will get the user's location and set the shops based on the new location
+   * Refreshes the shops to be shown
    * @param event Event that triggered the refresh
-   * @param button Button that triggered the refresh (optional)
+   * @param button Button that triggered the refresh
    */
   doRefresh(event?: RefresherCustomEvent, button?: ElementRef) {
     if (button) button.nativeElement.classList.add('refreshing');
@@ -240,8 +235,8 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Filter the shops based on the name filter
-   * @param event Event that triggered the filter
+   * Filters the shops based on the name filter
+   * @param event Event that triggered the search
    */
   filterShops(event: SearchbarCustomEvent) {
     this.nameFilter = event.detail.value!;
@@ -257,10 +252,9 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Navigate to the shop page to show the details of the shop
+   * Navigates to the shop page
    * @param shop Shop to be shown
    * @param event Event that triggered the navigation
-   * @returns If the event was triggered by the favorite button, the function will return. In this case no navigation will be done
    */
   navigateToShop(shop: Shop, event: Event) {
     if ((event.target as Element).classList.contains('favoriteButton')) return;

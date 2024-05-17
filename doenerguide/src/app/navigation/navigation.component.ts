@@ -20,7 +20,7 @@ export class NavigationComponent implements OnInit {
   }
 
   /**
-   * Reload the tab to show the correct one, based on the user's login status
+   * Reloads the tab to show the correct one
    */
   reloadTab() {
     if (this.userSrv.isLoggedIn()) {

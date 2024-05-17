@@ -44,8 +44,7 @@ export class LoginPage implements OnInit {
   }
 
   /**
-   * Handle the login of the user
-   * @returns void
+   * Handles the login of the user
    */
   handleLogin() {
     if (!this.form.valid) {
@@ -77,8 +76,8 @@ export class LoginPage implements OnInit {
   }
 
   /**
-   * Check if the login button should be disabled
-   * @returns boolean if the login button should be disabled
+   * Checks if the login button should be disabled
+   * @returns True if the button should be disabled
    */
   checkLoginButton(): boolean {
     return !this.form.valid;

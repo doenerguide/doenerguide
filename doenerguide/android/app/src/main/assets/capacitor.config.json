@@ -1,0 +1,8 @@
+{
+	"appId": "de.doenerguide.app",
+	"appName": "doenerguide",
+	"webDir": "www",
+	"server": {
+		"androidScheme": "https"
+	}
+}

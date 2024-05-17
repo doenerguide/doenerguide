@@ -30,7 +30,10 @@ export class CardPage implements OnInit {
 
   constructor(private route: ActivatedRoute, private location: Location) {}
 
-  //Called when the page is first loaded, gets the card information from the URL
+  /*
+    * Called when the page is initialized
+    * Loads the card information from the route
+    */
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.cardInformation = JSON.parse(params['stamps']);
